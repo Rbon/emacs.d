@@ -1,7 +1,4 @@
-; (general-def :states '(normal motion emacs) "SPC" nil) ; unbind SPC
-; (general-def :states '(insert) "TAB" 'dabbrev-expand) ; tab completion in insert mode
-
-(evil-define-key 'normal 'global
+(evil-define-key '(normal emacs) 'global
   (kbd "SPC SPC")   '("run a command" . smex)
   (kbd "SPC TAB")   '("open last buffer" . my-switch-to-buffer)
   (kbd "SPC DEL")   '("go to last location" . pop-global-mark)
@@ -9,7 +6,7 @@
   (kbd "SPC f f")   '("find a file" . find-file)
   (kbd "SPC f s")   '("save this file" . save-buffer)
   (kbd "SPC f r")   '("recent files" . recentf-open-files)
-  (kbd "SPC f b")   '("open file browser" . dired-jump)
+  (kbd "SPC f b")   '("open file browser" . magit-dired-jump)
   (kbd "SPC f r")   '("recent files" . recentf-open-files)
   (kbd "SPC f c")   '("open a user config file" . find-config-file)
   (kbd "SPC b")     '("buffers")
@@ -24,16 +21,37 @@
   (kbd "SPC n w")   '("widen" . widen)
   (kbd "SPC s")     '("selection")
   (kbd "SPC s n")   '("narrow to selection" . narrow-to-region)
-  (kbd "SPC h")     '("help")
   (kbd "SPC h f")   '("describe a function" . describe-function)
   (kbd "SPC h k")   '("describe a key" . describe-key)
   (kbd "SPC h v")   '("describe a variable" . describe-variable)
   (kbd "SPC h b")   '("list current key bindings" . describe-bindings)
-  (kbd "SPC o")     '("org mode")
-  (kbd "SPC o s")   '("scedule a task" . org-schedul)
+  (kbd "SPC q")     '("quit")
   (kbd "SPC q q")   '("quit emacs" . save-buffers-kill-terminal)
-  ; "o d"   '(org-deadline                       :wk "set a deadline")
-  ; "o a"   '(org-agenda                         :wk "open the agenda")
+  (kbd "SPC h S")   '("search everything" . apropos)
+  (kbd "SPC h C")   '("search commands" . apropos-command)
+  (kbd "SPC h D")   '("search documentation" . apropos-documentation)
+  (kbd "SPC h V")   '("search variable" . apropos-variable)
+  (kbd "SPC w")     '("window")
+  (kbd "SPC w c")   '("close this window" . delete-window)
+  (kbd "SPC w f")   '("fullscreen this window" . delete-other-windows)
+  (kbd "SPC w H")   '("split this window horizontally" . split-h-and-change-focus)
+  (kbd "SPC w V")   '("split this window vertically" . split-window-vertically)
+  (kbd "SPC w h")   '("move window focus left" . windmove-left)
+  (kbd "SPC w l")   '("move window focus right" . windmove-right)
+  (kbd "SPC w k")   '("move window focus up" . windmove-up)
+  (kbd "SPC w j")   '("move window focus down" . windmove-down)
+  (kbd "SPC j")     '("jump")
+  (kbd "SPC j d")   '("jump to definition" . lsp-find-definition)
+  (kbd "SPC o")     '("org mode")
+  (kbd "SPC o a")   '("open the agenda" . org-agenda)
+  )
+
+(evil-define-key 'insert 'global (kbd "TAB") 'dabbrev-expand) ; tab completion in insert mode
+
+; help mode
+(evil-set-initial-state 'help-mode 'normal)
+(evil-define-key 'normal help-mode-map
+  (kbd "q") 'quit-window
   )
 
 ; org-mode
@@ -41,6 +59,8 @@
   (kbd "SPC n t") '("narrow to subtree" . org-narrow-to-subtree)
   (kbd "SPC s b") '("make bold" . make-bold)
   (kbd "SPC s b") '("make bold" . make-bold)
+  (kbd "SPC o s") '("scedule a task" . org-schedule)
+  (kbd "SPC o d") '("set a deadline" . org-deadline)
   )
   
 (if (eq system-type 'darwin)
@@ -54,81 +74,46 @@
       (kbd "C-b") '("make bold" . make-bold)
       )
   )
-; ;; org-mode
-; (general-define-key
-  ; :states '(normal motion emacs insert)
-  ; :keymaps 'org-mode-map
-  ; "s-b"   '(make-bold            :wk "make bold")
 
 ; lsp-mode (doesn't work?)
 (evil-define-key 'normal lsp-mode-map
   (kbd "SPC b f") '("format this buffer" . lsp-format-buffer)
   (kbd "SPC s f") '("format selection" . lsp-format-region)
+  (kbd "SPC h s") '("describe this session" . lsp-describe-session)
+  (kbd "SPC h t") '("describe thing at point" . lsp-describe-thing-at-point)
   )
 
+; buffer menu
 (evil-define-key 'motion Buffer-menu-mode-map
   (kbd "RET") 'Buffer-menu-1-window ; rebound this because default behavior breaks my-switch-to-last-buffer
   (kbd "l") 'Buffer-menu-1-window
   )
 
-; THIS WILL BLEED INTO OTHER MODES WHYYYYYY
-;(evil-define-key 'normal recentf-mode-map
-;  (kbd "l") 'widget-button-press
-;  (kbd "q") 'recentf-cancel-dialog
-; )
-  ; "r"     '(:ignore t                          :wk "REPL")
-  ; "r r"   '(haskell-process-restart            :wk "restart REPL")
-  ; "b l"   '(run-code                           :wk "load buffer in REPL")
-  ; "l"     '(:ignore t                          :wk "LSP")
-  ; "l f"   '(:ignore t                          :wk "format this buffer")
-  ; ; "l f r" '(lsp-format-region                  :wk "format this buffer")
-  ; "l f b" '(lsp-format-buffer                  :wk "format this buffer")
-  ; ; "h r"   '(lsp-find-references                :wk "find references")
-  ; "h s"   '(lsp-describe-session               :wk "describe this session")
-  ; "h t"   '(lsp-describe-thing-at-point        :wk "describe thing at point")
-  ; "h S"   '(apropos                            :wk "search everything")
-  ; "h C"   '(apropos-command                    :wk "search commands")
-  ; "h D"   '(apropos-documentation              :wk "search documentation")
-  ; "h V"   '(apropos-variable                   :wk "search variable")
-  ; "j"     '(:ignore t                          :wk "jump")
-  ; "j d"   '(lsp-find-definition                :wk "jump to definition")
-  ; "e b"   '(eval-buffer                        :wk "eval this buffer")
-  ; "e c"   '(load-init                          :wk "eval all user configs")
-  ; "f"     '(:ignore t                          :wk "files")
-  ; "w"     '(:ignore t                          :wk "windows")
-  ; "w c"   '(delete-window                      :wk "close this window")
-  ; "w f"   '(delete-other-windows               :wk "fullscreen this window")
-  ; "w H"   '(split-h-and-change-focus           :wk "split this window horizontally")
-  ; "w V"   '(split-window-vertically            :wk "split this window vertically")
-  ; "w h"   '(windmove-left                      :wk "move window focus left")
-  ; "w l"   '(windmove-right                     :wk "move window focus right")
-  ; "w k"   '(windmove-up                        :wk "move window focus up")
-  ; "w j"   '(windmove-down                      :wk "move window focus down")
-  ; "q"     '(:ignore t                          :wk "quit")
-  ; "q q"   '(save-buffers-kill-terminal         :wk "quit emacs")
+; recentf-dialog-mode
+(evil-define-key 'normal recentf-dialog-mode-map
+  (kbd "l") 'widget-button-press
+  (kbd "h") 'nop
+  (kbd "q") 'recentf-cancel-dialog
+  )
 
 ; org-agenda stuff
-; (general-define-key
-  ; :keymaps 'org-agenda-mode-map
-  ; "j" 'org-agenda-next-line
-  ; "k" 'org-agenda-previous-line
-  ; "l" 'org-agenda-later
-  ; "h" 'org-agenda-earlier
-  ; )
+(evil-define-key 'emacs org-agenda-mode-map
+  (kbd "j") 'org-agenda-next-line
+  (kbd "k") 'org-agenda-previous-line
+  (kbd "l") 'org-agenda-later
+  (kbd "h") 'org-agenda-earlier
+  )
 
-; ; dired stuff
-; (evil-set-initial-state 'dired-mode 'emacs)
-; (general-define-key
- ; :keymaps 'dired-mode-map
-  ; "h" 'dired-up-directory
-  ; "j" 'dired-next-line
-  ; "k" 'dired-previous-line
-  ; "l" 'dired-find-file
-  ; "/" 'evil-search-forward
-  ; "t" 'touch-file
-  ; )
-
-
+; dired stuff
+(evil-set-initial-state 'dired-mode 'emacs) ; needed because normal mode bleeds into other buffers
+(evil-define-key 'emacs 'dired-mode-map
+  (kbd "h") 'dired-up-directory
+  (kbd "j") 'dired-next-line
+  (kbd "k") 'dired-previous-line
+  (kbd "l") 'dired-find-file
+  (kbd "/") 'evil-search-forward
+  (kbd "t") 'touch-file
+  )
 
 ; haskell-interactive
 ; (evil-set-initial-state 'haskell-interactive-mode 'emacs)
@@ -160,73 +145,3 @@
   ; "."     '(:ignore t                          :wk "dired")
   ; ". f"   '(dired-create-empty-file            :wk "find definition")
   ; )
-
-
-; (evil-set-initial-state 'error-mode 'emacs)
-
-; (my-leader-def
-  ; :states '(normal motion emacs)
-  ; :prefix "SPC"
-  ; ; :keymaps 'override
-  ; ; "SPC"   '(execute-extended-command           :wk "run a command")
-  ; "SPC"   '(smex                               :wk "run a command")
-  ; "TAB"   '(my-switch-to-buffer                :wk "open last buffer")
-  ; "DEL"   '(pop-global-mark                    :wk "go to last location")
-  ; "n"     '(:ignore t                          :wk "narrow to...")
-  ; "n w"   '(widen                              :wk "widen")
-  ; "n s"   '(org-narrow-to-subtree              :wk "narrow to subtree")
-  ; "s"     '(:ignore t                          :wk "selection")
-  ; "s f"   '(lsp-format-region                  :wk "format selection")
-  ; "r"     '(:ignore t                          :wk "REPL")
-  ; "r r"   '(haskell-process-restart            :wk "restart REPL")
-  ; "b l"   '(run-code                           :wk "load buffer in REPL")
-  ; "l"     '(:ignore t                          :wk "LSP")
-  ; "l f"   '(:ignore t                          :wk "format this buffer")
-  ; ; "l f r" '(lsp-format-region                  :wk "format this buffer")
-  ; "l f b" '(lsp-format-buffer                  :wk "format this buffer")
-  ; "h"     '(:ignore t                          :wk "help")
-  ; "h f"   '(describe-function                  :wk "describe a function")
-  ; "h k"   '(describe-key                       :wk "describe a key")
-  ; "h v"   '(describe-variable                  :wk "describe a variable")
-  ; "h b"   '(describe-bindings                  :wk "list current key bindings")
-  ; ; "h r"   '(lsp-find-references                :wk "find references")
-  ; "h s"   '(lsp-describe-session               :wk "describe this session")
-  ; "h t"   '(lsp-describe-thing-at-point        :wk "describe thing at point")
-  ; "h S"   '(apropos                            :wk "search everything")
-  ; "h C"   '(apropos-command                    :wk "search commands")
-  ; "h D"   '(apropos-documentation              :wk "search documentation")
-  ; "h V"   '(apropos-variable                   :wk "search variable")
-  ; "j"     '(:ignore t                          :wk "jump")
-  ; "j d"   '(lsp-find-definition                :wk "jump to definition")
-  ; "e b"   '(eval-buffer                        :wk "eval this buffer")
-  ; "e c"   '(load-init                          :wk "eval all user configs")
-  ; "f"     '(:ignore t                          :wk "files")
-  ; "f f"   '(find-file                          :wk "find a file")
-  ; "f s"   '(save-buffer                        :wk "save this file")
-  ; "f r"   '(recentf-open-files                 :wk "recent files")
-  ; "f b"   '(dired-jump                         :wk "open file browser")
-  ; "b"     '(:ignore t                          :wk "buffers")
-  ; "b s"   '(save-buffer                        :wk "save this buffer")
-  ; "b c"   '(kill-this-buffer                   :wk "close this buffer")
-  ; "b k"   '(kill-this-buffer                   :wk "kill this buffer")
-  ; "b b"   '(buffer-menu                        :wk "open the buffer list")
-  ; "b f"   '(lsp-format-buffer                  :wk "format this buffer")
-  ; "b TAB" '(my-switch-to-buffer                :wk "open last buffer")
-  ; "o"     '(:ignore t                          :wk "open / org")
-  ; "o s"   '(org-schedule                       :wk "scedule a task")
-  ; "o d"   '(org-deadline                       :wk "set a deadline")
-  ; "o a"   '(org-agenda                         :wk "open the agenda")
-  ; "o f"   '(find-file                          :wk "open a file")
-  ; "o c"   '(find-config-file                   :wk "open a user config file")
-  ; "w"     '(:ignore t                          :wk "windows")
-  ; "w c"   '(delete-window                      :wk "close this window")
-  ; "w f"   '(delete-other-windows               :wk "fullscreen this window")
-  ; "w H"   '(split-h-and-change-focus           :wk "split this window horizontally")
-  ; "w V"   '(split-window-vertically            :wk "split this window vertically")
-  ; "w h"   '(windmove-left                      :wk "move window focus left")
-  ; "w l"   '(windmove-right                     :wk "move window focus right")
-  ; "w k"   '(windmove-up                        :wk "move window focus up")
-  ; "w j"   '(windmove-down                      :wk "move window focus down")
-  ; "q"     '(:ignore t                          :wk "quit")
-  ; )
-  

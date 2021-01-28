@@ -1,3 +1,7 @@
+(defun nop ()
+  "Needed to unbind keys. Yes."
+  (interactive))
+
 (setq which-key-enable-extended-define-key t)
 (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
   "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
@@ -146,6 +150,7 @@
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
 (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
+(add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
 (setq-default fill-column 80)
 
 ;; (setq-default mode-line-format "") ; get rid of status line
