@@ -1,3 +1,18 @@
+(setq mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+(mini-modeline-mode t)
+(eyebrowse-mode t)
+
+(setq mini-modeline-r-format
+      (list
+      '("%e"
+        mode-line-buffer-identification
+        mode-line-modified) " "
+       '(:eval (eyebrowse-mode-line-indicator))))
+
+; (powerline-default-theme)
+
+
+
 (defun nop ()
   "Needed to unbind keys. Yes."
   (interactive))
@@ -112,6 +127,7 @@
 (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
 (tool-bar-mode -1) ; disable toolbar
 (scroll-bar-mode -1) ; disable scroll bar
+(tab-bar-mode 1) ; enable tab bar
 (setq inhibit-splash-screen t) ; disable splash screen
 (evil-mode 1) ; enable evil
 (which-key-mode) ; enable which-key

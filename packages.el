@@ -3,8 +3,8 @@
   undo-tree
   flycheck
   which-key
-  general
-;;  smooth-scrolling-mode
+  ; general
+  ;smooth-scrolling-mode
   ;; helm
   markdown-mode
   haskell-mode
@@ -17,6 +17,9 @@
   exec-path-from-shell ; fix path on macos
   smex ; better than M-x
   magit
+  eyebrowse ; because tab-bar-mode doesn't work on mac
+  ;powerline
+  mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
   ))
 
 (require 'package)

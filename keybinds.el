@@ -1,6 +1,5 @@
 (evil-define-key '(normal emacs) 'global
   (kbd "SPC SPC")   '("run a command" . smex)
-  (kbd "SPC TAB")   '("open last buffer" . my-switch-to-buffer)
   (kbd "SPC DEL")   '("go to last location" . pop-global-mark)
   (kbd "SPC f")     '("files")
   (kbd "SPC f f")   '("find a file" . find-file)
@@ -21,6 +20,7 @@
   (kbd "SPC n w")   '("widen" . widen)
   (kbd "SPC s")     '("selection")
   (kbd "SPC s n")   '("narrow to selection" . narrow-to-region)
+  (kbd "SPC s a")   '("select everything" . mark-whole-buffer)
   (kbd "SPC h f")   '("describe a function" . describe-function)
   (kbd "SPC h k")   '("describe a key" . describe-key)
   (kbd "SPC h v")   '("describe a variable" . describe-variable)
@@ -44,6 +44,25 @@
   (kbd "SPC j d")   '("jump to definition" . lsp-find-definition)
   (kbd "SPC o")     '("org mode")
   (kbd "SPC o a")   '("open the agenda" . org-agenda)
+  (kbd "SPC `")     '("workspace")
+  (kbd "SPC TAB")   '("last used workspace" . eyebrowse-last-window-config)
+  (kbd "SPC ` h")   '("previous workspace" . eyebrowse-prev-window-config)
+  (kbd "SPC ` l")   '("next workspace" . eyebrowse-next-window-config)
+  (kbd "SPC ` TAB") '("last used workspace" . eyebrowse-last-window-config)
+  (kbd "SPC ` c")   '("close workspace" . eyebrowse-close-window-config)
+  (kbd "SPC ` r")   '("rename workspace" . eyebrowse-rename-window-config)
+  (kbd "SPC ` s")   '("switch to workspace..." . eyebrowse-switch-to-window-config)
+  (kbd "SPC ` 0")   '("switch to workspace 0" . eyebrowse-switch-to-window-config-0)
+  (kbd "SPC ` 1")   '("switch to workspace 1" . eyebrowse-switch-to-window-config-1)
+  (kbd "SPC ` 2")   '("switch to workspace 2" . eyebrowse-switch-to-window-config-2)
+  (kbd "SPC ` 3")   '("switch to workspace 3" . eyebrowse-switch-to-window-config-3)
+  (kbd "SPC ` 4")   '("switch to workspace 4" . eyebrowse-switch-to-window-config-4)
+  (kbd "SPC ` 5")   '("switch to workspace 5" . eyebrowse-switch-to-window-config-5)
+  (kbd "SPC ` 6")   '("switch to workspace 6" . eyebrowse-switch-to-window-config-6)
+  (kbd "SPC ` 7")   '("switch to workspace 7" . eyebrowse-switch-to-window-config-7)
+  (kbd "SPC ` 8")   '("switch to workspace 8" . eyebrowse-switch-to-window-config-8)
+  (kbd "SPC ` 9")   '("switch to workspace 9" . eyebrowse-switch-to-window-config-9)
+  (kbd "SPC ` n")   '("new workspace" . eyebrowse-create-window-config)
   )
 
 (evil-define-key 'insert 'global (kbd "TAB") 'dabbrev-expand) ; tab completion in insert mode
@@ -113,6 +132,16 @@
   (kbd "l") 'dired-find-file
   (kbd "/") 'evil-search-forward
   (kbd "t") 'touch-file
+  )
+
+; apropos
+(evil-set-initial-state 'apropos-mode 'normal)
+(evil-define-key 'normal 'apropos-mode-map
+  (kbd "q") 'quit-window
+  )
+
+(evil-define-key 'normal 'haskell-mode-map
+  (kbd "SPC b l") 'run-code
   )
 
 ; haskell-interactive
