@@ -1,13 +1,21 @@
-(setq mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+(setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (mini-modeline-mode t)
-(eyebrowse-mode t)
+; (eyebrowse-mode t)
+(setq-default mode-line-format nil)
+(setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
+; (setq-default mini-modeline-display-gui-line t)
+(setq-default window-divider-default-places t) ; display divider on all sides
 
-(setq mini-modeline-r-format
-      (list
-      '("%e"
-        mode-line-buffer-identification
-        mode-line-modified) " "
-       '(:eval (eyebrowse-mode-line-indicator))))
+(setq-default window-divider-default-bottom-width 1) ; must be defined before the mode is turned on 
+(setq-default window-divider-default-right-width 1) ; same
+(window-divider-mode t)
+; 
+; (setq-default mini-modeline-r-format
+      ; (list
+      ; '("%e"
+        ; mode-line-buffer-identification
+        ; mode-line-modified) " "
+       ; '(:eval (eyebrowse-mode-line-indicator))))
 
 ; (powerline-default-theme)
 
@@ -236,7 +244,6 @@
 
 (pixel-scroll-mode t)
 
-; start emacs in dired-mode
 (defvar booted nil)
 (unless booted (progn 
   ; (switch-to-buffer "Untitled")
