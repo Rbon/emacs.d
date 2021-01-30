@@ -1,6 +1,6 @@
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (mini-modeline-mode t)
-; (eyebrowse-mode t)
+(eyebrowse-mode t)
 (setq-default mode-line-format nil)
 (setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
 ; (setq-default mini-modeline-display-gui-line t)
@@ -10,12 +10,12 @@
 (setq-default window-divider-default-right-width 1) ; same
 (window-divider-mode t)
 ; 
-; (setq-default mini-modeline-r-format
-      ; (list
-      ; '("%e"
-        ; mode-line-buffer-identification
-        ; mode-line-modified) " "
-       ; '(:eval (eyebrowse-mode-line-indicator))))
+(setq-default mini-modeline-r-format
+      (list
+      '("%e"
+        mode-line-buffer-identification
+        mode-line-modified) " "
+       '(:eval (eyebrowse-mode-line-indicator))))
 
 ; (powerline-default-theme)
 
@@ -249,7 +249,8 @@
   ; (switch-to-buffer "Untitled")
   ; (text-mode) ; needed for spell check
   ; (dired ".")
-  (recentf-open-files)
+  (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
+    (recentf-open-files))
   (setq booted t))) 
 
 
