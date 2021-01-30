@@ -20,7 +20,9 @@
   eyebrowse ; because tab-bar-mode doesn't work on mac
   ;powerline
   mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
-  ))
+  ; multiple-cursors
+  evil-mc ; multiple cursors
+ ))
 
 (require 'package)
 (add-to-list 'package-archives

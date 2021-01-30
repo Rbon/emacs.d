@@ -1,3 +1,32 @@
+(defun rbon/escape ()
+  "Get rid of extra cursors while also normally escaping."
+  (interactive)
+  (evil-mc-undo-all-cursors)
+  (evil-force-normal-state)
+  )
+
+(defun rbon/add-cursor-move-down ()
+  (interactive)
+  (evil-mc-make-cursor-here) 
+  (evil-mc-pause-cursors) 
+  (next-line)
+  (evil-mc-resume-cursors))
+
+(defun rbon/add-cursor-move-up ()
+  (interactive)
+  (evil-mc-make-cursor-here) 
+  (evil-mc-pause-cursors) 
+  (previous-line)
+  (evil-mc-resume-cursors))
+
+
+(defun rbon/make-cursor-in-visual-selection-beg ()
+  (interactive)
+  (evil-mc-make-cursor-in-visual-selection-beg)
+  (evil-mc-make-cursor-in-visual-selection-beg)
+  )
+
+(global-evil-mc-mode  1)
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (mini-modeline-mode t)
 (eyebrowse-mode t)
@@ -135,7 +164,7 @@
 (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
 (tool-bar-mode -1) ; disable toolbar
 (scroll-bar-mode -1) ; disable scroll bar
-(tab-bar-mode 1) ; enable tab bar
+; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
 (setq inhibit-splash-screen t) ; disable splash screen
 (evil-mode 1) ; enable evil
 (which-key-mode) ; enable which-key
