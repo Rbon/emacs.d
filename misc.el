@@ -1,11 +1,36 @@
+(defun rbon/haskell-interactive-mode-kill-whole-line ()
+  (interactive)
+  (call-interactively 'evil-append-line)
+  (call-interactively 'haskell-interactive-mode-kill-whole-line)
+  (evil-normal-state))
+
+
+(defun rbon/haskell-interactive-mode-history-previous ()
+  (interactive)
+  (call-interactively 'evil-append-line)
+  (call-interactively 'haskell-interactive-mode-history-previous)
+  (evil-normal-state))
+
+(defun rbon/haskell-interactive-mode-history-next ()
+  (interactive)
+  (call-interactively 'evil-append-line)
+  (call-interactively 'haskell-interactive-mode-history-next)
+  (evil-normal-state))
+
+(defun rbon/insert-heading-respect-content ()
+  "Insert a heading and then change to insert state."
+  (interactive)
+  (org-insert-heading-respect-content)
+  (evil-append 0))
+
 (defun rbon/escape ()
   "Get rid of extra cursors while also normally escaping."
   (interactive)
   (evil-mc-undo-all-cursors)
-  (evil-force-normal-state)
-  )
+  (evil-force-normal-state))
 
 (defun rbon/add-cursor-move-down ()
+  "Add a cursor, and then move down one line."
   (interactive)
   (evil-mc-make-cursor-here) 
   (evil-mc-pause-cursors) 
@@ -13,26 +38,28 @@
   (evil-mc-resume-cursors))
 
 (defun rbon/add-cursor-move-up ()
+  "Add a cursor, and then move up one line."
   (interactive)
   (evil-mc-make-cursor-here) 
   (evil-mc-pause-cursors) 
   (previous-line)
   (evil-mc-resume-cursors))
 
-
-(defun rbon/make-cursor-in-visual-selection-beg ()
+(defun rbon/evil-mc-make-cursor-in-visual-selection-beg ()
   (interactive)
-  (evil-mc-make-cursor-in-visual-selection-beg)
-  (evil-mc-make-cursor-in-visual-selection-beg)
+  (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
+  (call-interactively 'evil-force-normal-state)
+  (call-interactively 'evil-next-visual-line)
+  ;(call-interactively 'evil-insert-line))
   )
 
 (global-evil-mc-mode  1)
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
-(mini-modeline-mode t)
 (eyebrowse-mode t)
+(mini-modeline-mode t)
 (setq-default mode-line-format nil)
 (setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
-; (setq-default mini-modeline-display-gui-line t)
+(setq-default mini-modeline-display-gui-line t)
 (setq-default window-divider-default-places t) ; display divider on all sides
 
 (setq-default window-divider-default-bottom-width 1) ; must be defined before the mode is turned on 
@@ -188,7 +215,7 @@
 (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
 (add-hook 'haskell-mode-hook #'lsp)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'nteractive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+(add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
 (add-hook 'haskell-literate-mode-hook #'lsp)
 (add-hook 'error-mode-hook 'evil-emacs-state)
 

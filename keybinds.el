@@ -1,3 +1,36 @@
+; (defun foo (leader &rest args)
+;   (dolist (a args)
+;     (let ((key (concat leader " " (nth 0 a)))
+;           (desc (nth 1 a))
+;           (f (nth 2 a)))
+;       ; (evil-define-key 'normal 'global key f))
+;       (progn
+;         (define-key evil-normal-state-map (kbd key) f)
+;         (which-key-add-keymap-based-replacements evil-normal-state-map
+;           key desc)
+;         )
+;       )
+;     )
+;   ;; or
+;   ;; "f" "foo" (see the docstring))
+;   )
+
+(defun rbon/define-key (state keymap key &rest bindings)
+  (evil-define-key fdfdfd keymap (kbd key) bindings))
+
+(rbon/define-key 'normal 'global
+                 "SPC i" '("do a thing" . baz)
+                 )
+
+(defun bar () (interactive) (message "wow"))
+(defun baz () (interactive) (message "baz"))
+
+; (define-prefix-command 'bar-map)
+; (foo "SPC"
+;      '("p" "do a bar" bar-map)
+;      '("p i" "do a baz" baz)
+;      )
+
 (evil-define-key '(normal visual motion emacs) 'global (kbd "<escape>") 'rbon/escape)
 
 (evil-define-key '(visual) 'global
@@ -41,6 +74,7 @@
   (kbd "SPC c j")        '("add and go down a line" . rbon/add-cursor-next-line)
   (kbd "SPC c u")        '("undo last cursor" . evil-mc-undo-last-added-cursor) 
   (kbd "SPC c n")        '("add next match" . evil-mc-make-and-goto-next-match) 
+  (kbd "SPC c I")        '("do thing" . "I")
 ; (kbd "SPC c ?")        'evil-mc-make-and-goto-prev-match
 ; (kbd "SPC c ?")        'evil-mc-skip-and-goto-next-match
 ; (kbd "SPC c ?")        'evil-mc-skip-and-goto-prev-match
@@ -58,6 +92,7 @@
   (kbd "SPC h f")        '("describe a function" . describe-function)
   (kbd "SPC h k")        '("describe a key" . describe-key)
   (kbd "SPC h v")        '("describe a variable" . describe-variable)
+  (kbd "SPC h m")        '("describe this mode" . describe-mode)
   (kbd "SPC h b")        '("list current key bindings" . describe-bindings)
   (kbd "SPC q")          '("quit")
   (kbd "SPC q q")        '("quit emacs" . save-buffers-kill-terminal)
@@ -101,110 +136,93 @@
 
 (evil-define-key 'insert 'global (kbd "TAB") 'dabbrev-expand) ; tab completion in insert mode
 
-; help mode
 (evil-set-initial-state 'help-mode 'normal)
-(evil-define-key 'normal help-mode-map
-  (kbd "q") 'quit-window
+(defun rbon/help-bindings ()
+  (evil-local-set-key 'normal (kbd "q") 'quit-window)
   )
+(add-hook 'help-mode-hook 'rbon/help-bindings)
 
-; org-mode
-(evil-define-key 'normal org-mode-map
-  (kbd "SPC n t") '("narrow to subtree" . org-narrow-to-subtree)
-  (kbd "SPC s b") '("make bold" . make-bold)
-  (kbd "SPC s b") '("make bold" . make-bold)
-  (kbd "SPC o s") '("scedule a task" . org-schedule)
-  (kbd "SPC o d") '("set a deadline" . org-deadline)
-  )
-  
-(if (eq system-type 'darwin)
-    (evil-define-key 'normal org-mode-map
-      (kbd "s-i") '("make italic" . make-italic)
-      (kbd "s-b") '("make bold" . make-bold)
-      (kbd "<s-return>")  'org-insert-heading-respect-content
-      )
-    (evil-define-key 'normal org-mode-map
-      (kbd "C-i") '("make italic" . make-italic)
-      (kbd "C-b") '("make bold" . make-bold)
-      )
-  )
+(defun rbon/org-bindings ()
+  (evil-local-set-key 'normal (kbd "SPC n t") '("narrow to subtree" . org-narrow-to-subtree))
+  (evil-local-set-key 'normal (kbd "SPC s b") '("make bold" . make-bold))
+  (evil-local-set-key 'normal (kbd "SPC s b") '("make bold" . make-bold))
+  (evil-local-set-key 'normal (kbd "SPC o s") '("scedule a task" . org-schedule))
+  (evil-local-set-key 'normal (kbd "SPC o d") '("set a deadline" . org-deadline))
 
-; lsp-mode (doesn't work?)
-(evil-define-key 'normal lsp-mode-map
-  (kbd "SPC b f") '("format this buffer" . lsp-format-buffer)
-  (kbd "SPC s f") '("format selection" . lsp-format-region)
-  (kbd "SPC h s") '("describe this session" . lsp-describe-session)
-  (kbd "SPC h t") '("describe thing at point" . lsp-describe-thing-at-point)
-  )
+  (if (eq system-type 'darwin) ; macOS
+      (progn
+        (evil-local-set-key 'normal (kbd "s-i") '("make italic" . make-italic))
+        (evil-local-set-key 'normal (kbd "s-b") '("make bold" . make-bold))
+        (evil-local-set-key 'normal (kbd "<s-return>")  'rbon/insert-heading-respect-content)
+        )
+    (progn
+      (evil-local-set-key 'normal (kbd "C-i") '("make italic" . make-italic))
+      (evil-local-set-key 'normal (kbd "C-b") '("make bold" . make-bold))
+      (evil-local-set-key 'normal (kbd "<C-return>")  'rbon/insert-heading-respect-content)
+      )))
+(add-hook 'org-mode-hook 'rbon/org-bindings)
 
-; buffer menu
-(evil-define-key 'motion Buffer-menu-mode-map
-  (kbd "RET") 'Buffer-menu-1-window ; rebound this because default behavior breaks my-switch-to-last-buffer
-  (kbd "l") 'Buffer-menu-1-window
+(defun rbon/lsp-bindings ()
+  (evil-local-set-key 'normal (kbd "SPC b f") '("format this buffer" . lsp-format-buffer))
+  (evil-local-set-key 'normal (kbd "SPC s f") '("format selection" . lsp-format-region))
+  (evil-local-set-key 'normal (kbd "SPC h s") '("describe this session" . lsp-describe-session))
+  (evil-local-set-key 'normal (kbd "SPC h t") '("describe thing at point" . lsp-describe-thing-at-point))
   )
+(add-hook 'lsp-mode-hook 'rbon/lsp-bindings)
 
-; recentf-dialog-mode
-(evil-define-key 'normal recentf-dialog-mode-map
-  (kbd "l") 'widget-button-press
-  (kbd "h") 'nop
-  (kbd "q") 'recentf-cancel-dialog
+; FIX LATER
+; (evil-set-initial-state 'Buffer-menu-mode 'motion) ; set to motion because normal state is wierd in this mode
+; (defun rbon/buffer-menu-bindings ()
+  ; (evil-local-set-key 'motion (kbd "l") 'Buffer-menu-1-window)
+  ; )
+;  add-hook 'recentf-Buffer-menu-mode-hook 'rbon/Buffer-menu-bindings)
+
+(defun rbon/recentf-dialog-bindings ()
+  (evil-local-set-key 'normal (kbd "l") 'widget-button-press)
+  (evil-local-set-key 'normal (kbd "h") 'nop)
+  (evil-local-set-key 'normal (kbd "q") 'recentf-cancel-dialog)
   )
+(add-hook 'recentf-dialog-mode-hook 'rbon/recentf-dialog-bindings)
 
-; org-agenda stuff
-(evil-define-key 'emacs org-agenda-mode-map
-  (kbd "j") 'org-agenda-next-line
-  (kbd "k") 'org-agenda-previous-line
-  (kbd "l") 'org-agenda-later
-  (kbd "h") 'org-agenda-earlier
+(defun rbon/org-agenda-bindings ()
+  (evil-local-set-key 'normal (kbd "j") 'org-agenda-next-line)
+  (evil-local-set-key 'normal (kbd "k") 'org-agenda-previous-line)
+  (evil-local-set-key 'normal (kbd "l") 'org-agenda-later)
+  (evil-local-set-key 'normal (kbd "h") 'org-agenda-earlier)
   )
+(add-hook 'org-agenda-mode-hook 'rbon/org-agenda-bindings)
 
-; dired stuff
-(evil-set-initial-state 'dired-mode 'emacs) ; needed because normal mode bleeds into other buffers
-(evil-define-key 'emacs 'dired-mode-map
-  (kbd "h") 'dired-up-directory
-  (kbd "j") 'dired-next-line
-  (kbd "k") 'dired-previous-line
-  (kbd "l") 'dired-find-file
-  (kbd "/") 'evil-search-forward
-  (kbd "t") 'touch-file
+(defun rbon/dired-bindings ()
+  (evil-local-set-key 'normal (kbd "h") 'dired-up-directory)
+  (evil-local-set-key 'normal (kbd "j") 'dired-next-line)
+  (evil-local-set-key 'normal (kbd "k") 'dired-previous-line)
+  (evil-local-set-key 'normal (kbd "l") 'dired-find-file)
+  (evil-local-set-key 'normal (kbd "/") 'evil-search-forward)
+  (evil-local-set-key 'normal (kbd "t") 'touch-file)
   )
+(add-hook 'dired-mode-hook 'rbon/dired-bindings)
 
-; apropos
 (evil-set-initial-state 'apropos-mode 'normal)
-(evil-define-key 'normal 'apropos-mode-map
-  (kbd "q") 'quit-window
+(defun rbon/apropos-bindings ()
+  (evil-local-set-key 'normal (kbd "q") 'quit-window)
   )
+(add-hook 'apropos-mode-hook 'rbon/apropos-bindings)
 
-(evil-define-key 'normal 'haskell-mode-map
-  (kbd "SPC b l") 'run-code
+(defun rbon/haskell-bindings ()
+  (evil-local-set-key 'normal (kbd "SPC b l") '("load this buffer" . run-code))
   )
+(add-hook 'haskell-mode-hook 'rbon/haskell-bindings)
 
-; haskell-interactive
-; (evil-set-initial-state 'haskell-interactive-mode 'emacs)
-; (general-define-key
-  ; :states '(emacs)
-  ; :keymaps 'haskell-interactive-mode-map
-  ; "j" 'haskell-interactive-mode-history-next
-  ; "k" 'haskell-interactive-mode-history-previous
-  ; "i" 'evil-insert-state
-  ; )
+(defun rbon/haskell-interactive-bindings ()
+  (evil-local-set-key 'insert (kbd "TAB") 'haskell-interactive-mode-tab)
+  (evil-local-set-key 'insert (kbd "SPC") 'haskell-interactive-mode-space)
+  (evil-local-set-key 'normal (kbd "J") 'rbon/haskell-interactive-mode-history-next)
+  (evil-local-set-key 'normal (kbd "K") 'rbon/haskell-interactive-mode-history-previous)
+  (evil-local-set-key 'normal (kbd "<S-backspace>") 'rbon/haskell-interactive-mode-kill-whole-line)
+  )
+(add-hook 'haskell-interactive-mode-hook 'rbon/haskell-interactive-bindings)
 
-; (general-define-key
-  ; :states '(insert)
-  ; :keymaps 'haskell-interactive-mode-map
-  ; "<ESC>" 'evil-emacs-state
-  ; )
-; 
-  ; )
-; (general-define-key
-  ; :states '(normal motion emacs insert)
-  ; :keymaps 'org-mode-map
-  ; "C-b"   '(make-bold            :wk "make bold")
-  ; )
-; )
-; (my-leader-def
-  ; :states '(normal motion emacs)
-  ; :keymaps 'dired-mode-map
-  ; :prefix "SPC"
-  ; "."     '(:ignore t                          :wk "dired")
-  ; ". f"   '(dired-create-empty-file            :wk "find definition")
-  ; )
+(defun rbon/haskell-error-bindings ()
+  (evil-local-set-key 'normal (kbd "q") 'quit-window)
+  )
+(add-hook 'haskell-error-mode-hook 'rbon/haskell-error-bindings)
