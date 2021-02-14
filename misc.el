@@ -5,7 +5,7 @@
 
 Examples:
 
-  (rbon/local-set-key 'normal \"q\" 'myfun1))
+  (rbon/local-set-key 'normal '(\"q\" myfun1))
 
   (rbon/local-set-key 'insert
     '(\"TAB\" myfun1)

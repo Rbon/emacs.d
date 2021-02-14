@@ -187,3 +187,8 @@
 (defun rbon/haskell-error-bindings ()
   (rbon/local-set-key 'normal "q" 'quit-window))
 (add-hook 'haskell-error-mode-hook 'rbon/haskell-error-bindings)
+
+(defun rbon/with-editor-bindings ()
+  (rbon/local-set-key 'normal '("SPC q f" with-editor-finish))
+  (rbon/local-set-key 'normal '("SPC q c" with-editor-cancel)))
+(add-hook 'with-editor-mode-hook 'rbon/with-editor-bindings)
