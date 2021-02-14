@@ -1,3 +1,7 @@
+(defun rbon/local-set-key (state key def)
+  "Wrapper for `evil-local-set-key', automatically applying `kbd' to KEY."
+  (evil-local-set-key state (kbd key) def))
+
 (defun rbon/haskell-interactive-mode-kill-whole-line ()
   (interactive)
   (call-interactively 'evil-append-line)
@@ -6,12 +10,14 @@
 
 
 (defun rbon/haskell-interactive-mode-history-previous ()
+  "Wraps `haskell-interactive-mode-history-previous' to work with evil."
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-history-previous)
   (evil-normal-state))
 
 (defun rbon/haskell-interactive-mode-history-next ()
+  "Wraps `haskell-interactive-mode-history-next' to work with evil."
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-history-next)
