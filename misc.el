@@ -1,13 +1,20 @@
-(defun rbon/local-set-key (state key def)
+(setq confirm-kill-processes nil)
+
+(defun rbon/local-set-key-single (state key def)
   "Wrapper for `evil-local-set-key', automatically applying `kbd' to KEY."
   (evil-local-set-key state (kbd key) def))
+
+(defun rbon/local-set-key (state &rest bindings)
+  "Bind muiltple keys at once, using `evil-local-set-key'."
+  (dolist (b bindings)
+    (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
+    
 
 (defun rbon/haskell-interactive-mode-kill-whole-line ()
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-kill-whole-line)
   (evil-normal-state))
-
 
 (defun rbon/haskell-interactive-mode-history-previous ()
   "Wraps `haskell-interactive-mode-history-previous' to work with evil."
