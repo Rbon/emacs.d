@@ -1,11 +1,25 @@
 (setq confirm-kill-processes nil)
 
-(defun rbon/local-set-key-single (state key def)
-  "Wrapper for `evil-local-set-key', automatically applying `kbd' to KEY."
-  (evil-local-set-key state (kbd key) def))
-
 (defun rbon/local-set-key (state &rest bindings)
-  "Bind muiltple keys at once, using `evil-local-set-key'."
+  "Define one or more buffer local bindings, using `evil-local-set-key'. All key names are automatically applied to `kbd'. Best used in conjuntion with `add-hook' to create mode-specific bindings.
+
+Examples:
+
+  (rbon/local-set-key 'normal \"q\" 'myfun1))
+
+  (rbon/local-set-key 'insert
+    '(\"TAB\" myfun1)
+    '(\"SPC b l\" myfun2))
+
+If `which-key-enable-extended-define-key' is non-nil, then you can optionally add a string to replace the function name when using which-key.
+
+Examples:
+
+  (rbon/local-set-key 'normal '(\"SPC a\" (\"name of function\" . myfun1))))
+
+  (rbon/local-set-key 'normal
+    '(\"k\" (\"make stuff\" . myfun1))
+    '(\"j\" (\"do the thing\" . myfun2))))"
   (dolist (b bindings)
     (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
     
@@ -66,7 +80,7 @@
   ;(call-interactively 'evil-insert-line))
   )
 
-(global-evil-mc-mode  1)
+(global-evil-mc-mode  1) ; multiple cursors
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (eyebrowse-mode t)
 (mini-modeline-mode t)
@@ -95,6 +109,7 @@
   (interactive))
 
 (setq which-key-enable-extended-define-key t)
+
 (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
   "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
   :type '(repeat string))
