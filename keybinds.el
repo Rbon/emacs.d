@@ -1,8 +1,8 @@
 (evil-define-key '(normal visual motion emacs) 'global (kbd "<escape>") 'rbon/escape)
 
 (evil-define-key '(visual) 'global
-  (kbd "I")   'evil-mc-make-cursor-in-visual-selection-beg
-  (kbd "A")   'evil-mc-make-cursor-in-visual-selection-end)
+  (kbd "I") 'evil-mc-make-cursor-in-visual-selection-beg
+  (kbd "A") 'evil-mc-make-cursor-in-visual-selection-end)
 
 ; cursor shortcuts
 (evil-define-key '(normal) 'global
@@ -101,37 +101,31 @@
 (evil-define-key 'insert 'global (kbd "TAB") 'dabbrev-expand) ; tab completion in insert mode
 
 (evil-set-initial-state 'help-mode 'normal)
-(defun rbon/help-bindings ()
-  (rbon/local-set-key 'normal '("q" quit-window)))
-(add-hook 'help-mode-hook 'rbon/help-bindings)
+(rbon/mode-binding 'help-mode-hook 'normal '("q" quit-window))
 
-(defun rbon/org-bindings ()
-  (rbon/local-set-key 'normal
-    '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-    '("SPC s b" ("make bold" . make-bold))
-    '("SPC s b" ("make bold" . make-bold))
-    '("SPC o s" ("scedule a task" . org-schedule))
-    '("SPC o d" ("set a deadline" . org-deadline)))
+(rbon/mode-binding 'org-mode-hook 'normal
+  '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
+  '("SPC s b" ("make bold" . make-bold))
+  '("SPC s b" ("make bold" . make-bold))
+  '("SPC o s" ("scedule a task" . org-schedule))
+  '("SPC o d" ("set a deadline" . org-deadline)))
 
-  (if (eq system-type 'darwin) ; macOS
-      (rbon/local-set-key 'normal
-        '("s-i" ("make italic" . make-italic))
-        '("s-b" ("make bold" . make-bold))
-        '("<s-return>" rbon/insert-heading-respect-content))
-      (rbon/local-set-key 'normal
-        '("C-i" ("make italic" . make-italic))
-        '("C-b" ("make bold" . make-bold))
-        '("<C-return>"  rbon/insert-heading-respect-content))))
-(add-hook 'org-mode-hook 'rbon/org-bindings)
+(if (eq system-type 'darwin) ; macOS
+    (rbon/mode-binding 'org-mode-hook 'normal
+      '("s-i" ("make italic" . make-italic))
+      '("s-b" ("make bold" . make-bold))
+      '("<s-return>" rbon/insert-heading-respect-content))
+    (rbon/mode-binding 'org-mode-hook 'normal
+      '("C-i" ("make italic" . make-italic))
+      '("C-b" ("make bold" . make-bold))
+      '("<C-return>"  rbon/insert-heading-respect-content)))
  
-(defun rbon/lsp-bindings ()
-  (rbon/local-set-key 'normal
-    '("SPC b f" ("format this buffer" . lsp-format-buffer))
-    '("SPC s f" ("format selection" . lsp-format-region))
-    '("SPC h s" ("describe this session" . lsp-describe-session))
-    '("SPC h t" ("describe thing at point" . lsp-describe-thing-at-point))
-    '("SPC j d" ("jump to definition" . lsp-find-definition))))
-(add-hook 'lsp-mode-hook 'rbon/lsp-bindings)
+(rbon/mode-binding 'lsp-mode-hook 'normal
+  '("SPC b f" ("format this buffer" . lsp-format-buffer))
+  '("SPC s f" ("format selection" . lsp-format-region))
+  '("SPC h s" ("describe this session" . lsp-describe-session))
+  '("SPC h t" ("describe thing at point" . lsp-describe-thing-at-point))
+  '("SPC j d" ("jump to definition" . lsp-find-definition)))
 
 ; FIX LATER
 ; (evil-set-initial-state 'Buffer-menu-mode 'motion) ; set to motion because normal state is wierd in this mode
@@ -140,63 +134,47 @@
   ; )
 ;  add-hook 'recentf-Buffer-menu-mode-hook 'rbon/Buffer-menu-bindings)
 
-(defun rbon/recentf-dialog-bindings ()
-  (rbon/local-set-key 'normal
-   '("l" widget-button-press)
-   '("h" nop)
-   '("q" recentf-cancel-dialog)))
-(add-hook 'recentf-dialog-mode-hook 'rbon/recentf-dialog-bindings)
+(rbon/mode-binding 'recentf-dialog-mode-hook 'normal
+  '("l" widget-button-press)
+  '("h" nop)
+  '("q" recentf-cancel-dialog))
 
-(defun rbon/org-agenda-bindings ()
-  (rbon/local-set-key 'normal
-   '("j" org-agenda-next-line)
-   '("k" org-agenda-previous-line)
-   '("l" org-agenda-later)
-   '("h" org-agenda-earlier)))
-(add-hook 'org-agenda-mode-hook 'rbon/org-agenda-bindings)
+(rbon/mode-binding 'org-agenda-mode-hook 'normal
+  '("j" org-agenda-next-line)
+  '("k" org-agenda-previous-line)
+  '("l" org-agenda-later)
+  '("h" org-agenda-earlier))
 
-(defun rbon/dired-bindings ()
-  (rbon/local-set-key 'normal
-    '("h" dired-up-directory)
-    '("j" dired-next-line)
-    '("k" dired-previous-line)
-    '("l" dired-find-file)
-    '("/" evil-search-forward)
-    '("t" touch-file)))
-(add-hook 'dired-mode-hook 'rbon/dired-bindings)
+(rbon/mode-binding 'dired-mode-hook 'normal
+  '("h" dired-up-directory)
+  '("j" dired-next-line)
+  '("k" dired-previous-line)
+  '("l" dired-find-file)
+  '("/" evil-search-forward)
+  '("t" touch-file))
 
-(evil-set-initial-state 'apropos-mode 'normal)
-(defun rbon/apropos-bindings ()
-  (rbon/local-set-key 'normal '("q" quit-window)))
-(add-hook 'apropos-mode-hook 'rbon/apropos-bindings)
+(rbon/mode-binding 'apropos-mode-hook 'normal '("q" quit-window))
 
-(defun rbon/haskell-bindings ()
-  (rbon/local-set-key 'normal '("SPC b l" ("load this buffer" . run-code))))
-(add-hook 'haskell-mode-hook 'rbon/haskell-bindings)
+(rbon/mode-binding 'haskell-mode-hook 'normal
+  '("SPC b l" ("load this buffer" . run-code)))
 
-(defun rbon/haskell-interactive-bindings ()
-  (rbon/local-set-key 'insert
-    '("TAB" haskell-interactive-mode-tab)
-    '("SPC" haskell-interactive-mode-space))
-  (rbon/local-set-key 'normal
-    '("J" rbon/haskell-interactive-mode-history-next)
-    '("K" rbon/haskell-interactive-mode-history-previous)
-    '("<S-backspace>" rbon/haskell-interactive-mode-kill-whole-line)))
-(add-hook 'haskell-interactive-mode-hook 'rbon/haskell-interactive-bindings)
+(rbon/mode-binding 'haskell-interactive-mode-hook 'insert
+  '("TAB" haskell-interactive-mode-tab)
+  '("SPC" haskell-interactive-mode-space))
 
-(defun rbon/haskell-error-bindings ()
-  (rbon/local-set-key 'normal "q" 'quit-window))
-(add-hook 'haskell-error-mode-hook 'rbon/haskell-error-bindings)
+(rbon/mode-binding 'haskell-interactive-mode-hook 'normal
+  '("J" rbon/haskell-interactive-mode-history-next)
+  '("K" rbon/haskell-interactive-mode-history-previous)
+  '("<S-backspace>" rbon/haskell-interactive-mode-kill-whole-line))
 
-(defun rbon/with-editor-bindings ()
-  (rbon/local-set-key 'normal '("SPC q f" with-editor-finish))
-  (rbon/local-set-key 'normal '("SPC q c" with-editor-cancel)))
-(add-hook 'with-editor-mode-hook 'rbon/with-editor-bindings)
+(rbon/mode-binding 'haskell-error-mode-hook 'normal '("q" quit-window))
 
-(defun rbon/magit-bindings ()
-  (rbon/local-set-key 'emacs
-    '("J" magit-status-jump)
-    '("j" magit-next-line)
-    '("k" magit-previous-line)
-    '("H" magit-discard)))
-(add-hook 'magit-mode-hook 'rbon/magit-bindings)
+(rbon/mode-binding 'with-editor-mode-hook 'normal
+  '("SPC q f" with-editor-finish)
+  '("SPC q c" with-editor-cancel))
+
+(rbon/mode-binding 'magit-mode-hook 'emacs
+  '("J" magit-status-jump)
+  '("j" magit-next-line)
+  '("k" magit-previous-line)
+  '("H" magit-discard))
