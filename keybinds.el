@@ -192,3 +192,11 @@
   (rbon/local-set-key 'normal '("SPC q f" with-editor-finish))
   (rbon/local-set-key 'normal '("SPC q c" with-editor-cancel)))
 (add-hook 'with-editor-mode-hook 'rbon/with-editor-bindings)
+
+(defun rbon/magit-bindings ()
+  (rbon/local-set-key 'emacs
+    '("J" magit-status-jump)
+    '("j" magit-next-line)
+    '("k" magit-previous-line)
+    '("H" magit-discard)))
+(add-hook 'magit-mode-hook 'rbon/magit-bindings)
