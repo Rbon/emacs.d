@@ -1,103 +1,5 @@
 (evil-mode 1) ; enable evil
-
 (setq confirm-kill-processes nil)
-
-(defun rbon--local-set-key (state bindings)
-  (dolist (b bindings)
-    (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
-
-(defun rbon--global-set-key (state binding)
-  (let ((key (kbd (nth 0 binding)))
-        (def (nth 1 binding)))
-    (evil-define-key state 'global key def)))
-
-(defun rbon-define-key (mode state &rest bindings)
-  "Define one or more key bindings.
-MODE should be a symbol. If it is 'global, then bind keys globally. Otherwise, create buffer-local binds when that mode is activated, which means mode-specific binds will never leave their designated mode.
-STATE can either be a symbol or list of symbols, just as you would use with 'evil-define-key'.
-BINDINGS should be in the form of '(KEY DEF), where KEY is a string, and DEF is a function.
-KEY is automatically applied to `kbd'.
-
-Examples:
-
-  (rbon-define-key 'global 'normal '(\"q\" myfun1))
-
-  (rbon-define-key 'some-mode 'insert
-    '(\"TAB\" myfun1)
-    '(\"SPC b l\" myfun2))
-
-If `which-key-enable-extended-define-key' is non-nil, then you can optionally add a string to replace the function name when using which-key. In which case, BINDINGS should take the form of '(KEY (REPLACEMENT . DEF)), where REPLACEMENT is a string.
-
-Examples:
-
-  (rbon-define-key 'another-mode '(normal visual emacs)
-    '(\"SPC a\" (\"name of function\" . myfun1)))
-
-  (rbon-define-key 'global 'normal
-    '(\"k\" (\"make stuff\" . myfun1))
-    '(\"j\" (\"do the thing\" . myfun2)))"
-  (if (eq mode 'global)
-      (mapcar (apply-partially 'rbon--global-set-key state) bindings)
-    (add-hook
-     (intern (concat (symbol-name mode) "-hook"))
-     (apply-partially 'rbon--local-set-key state bindings))))
-
-(defun rbon-haskell-interactive-mode-kill-whole-line ()
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-kill-whole-line)
-  (evil-normal-state))
-
-(defun rbon-haskell-interactive-mode-history-previous ()
-  "Wraps `haskell-interactive-mode-history-previous' to work with evil."
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-history-previous)
-  (evil-normal-state))
-
-(defun rbon-haskell-interactive-mode-history-next ()
-  "Wraps `haskell-interactive-mode-history-next' to work with evil."
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-history-next)
-  (evil-normal-state))
-
-(defun rbon-insert-heading-respect-content ()
-  "Insert a heading and then change to insert state."
-  (interactive)
-  (org-insert-heading-respect-content)
-  (evil-append 0))
-
-(defun rbon-escape ()
-  "Get rid of extra cursors while also normally escaping."
-  (interactive)
-  (evil-mc-undo-all-cursors)
-  (evil-force-normal-state))
-
-(defun rbon-add-cursor-move-down ()
-  "Add a cursor, and then move down one line."
-  (interactive)
-  (evil-mc-make-cursor-here) 
-  (evil-mc-pause-cursors) 
-  (next-line)
-  (evil-mc-resume-cursors))
-
-(defun rbon-add-cursor-move-up ()
-  "Add a cursor, and then move up one line."
-  (interactive)
-  (evil-mc-make-cursor-here) 
-  (evil-mc-pause-cursors) 
-  (previous-line)
-  (evil-mc-resume-cursors))
-
-(defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
-  (interactive)
-  (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
-  (call-interactively 'evil-force-normal-state)
-  (call-interactively 'evil-next-visual-line)
-  ;(call-interactively 'evil-insert-line))
-  )
-
 (global-evil-mc-mode  1) ; multiple cursors
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (eyebrowse-mode t)
@@ -106,11 +8,10 @@ Examples:
 (setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
 (setq-default mini-modeline-display-gui-line t)
 (setq-default window-divider-default-places t) ; display divider on all sides
-
 (setq-default window-divider-default-bottom-width 1) ; must be defined before the mode is turned on 
 (setq-default window-divider-default-right-width 1) ; same
 (window-divider-mode t)
-; 
+
 (setq-default mini-modeline-r-format
       (list
       '("%e"
@@ -120,74 +21,19 @@ Examples:
 
 ; (powerline-default-theme)
 
-
-
-(defun nop ()
-  "Needed to unbind keys. Yes."
-  (interactive))
-
 (setq which-key-enable-extended-define-key t)
 
 (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
   "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
   :type '(repeat string))
 
-(defun my-change-buffer (change-buffer)
-  "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
-  (let ((initial (current-buffer)))
-    (funcall change-buffer)
-    (let ((first-change (current-buffer)))
-      (catch 'loop
-        (while (member (buffer-name) my-skippable-buffers)
-          (funcall change-buffer)
-          (when (eq (current-buffer) first-change)
-            (switch-to-buffer initial)
-            (throw 'loop t)))))))
-
-(defun my-next-buffer ()
-  "Variant of `next-buffer' that skips `my-skippable-buffers'."
-  (interactive)
-  (my-change-buffer 'next-buffer))
-
-(defun my-previous-buffer ()
-  "Variant of `previous-buffer' that skips `my-skippable-buffers'."
-  (interactive)
-  (my-change-buffer 'previous-buffer))
-
 (global-set-key [remap next-buffer] 'my-next-buffer)
 (global-set-key [remap previous-buffer] 'my-previous-buffer)
 
 (setq org-hide-emphasis-markers t)
 
-
-(defun narrow-and-unfold ()
-  (interactive)
-  (evil-open-fold)
-  (evil-end-of-line)
-  (narrow-to-defun)
-  (evil-digit-argument-or-evil-beginning-of-line))
-
-(defun widen-and-fold ()
-  (interactive)
-  (evil-close-folds)
-  (widen))
-
-
-(defun make-bold ()
-  (interactive)
-  (org-emphasize ?*))
-
-(defun make-italic ()
-  (interactive)
-  (org-emphasize ?/))
-
 ; (setq dired-omit-extensions '(".hi" ".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs"))
 
-(defun run-code ()
-  (interactive)
-  (haskell-process-load-file)
-  (other-window 1)
-  (evil-append-line 1))
 
 (setq default-directory "~/") 
 
@@ -200,39 +46,7 @@ Examples:
 (setq evil-undo-system 'undo-tree)
 (setq backup-directory-alist '(("." . "~/.emacs_saves")))
 (ido-mode 1) ; better find-file
-
-(defun my-switch-to-buffer ()
-  "Switch buffers, excluding special buffers."
-  (interactive)
-  (let ((completion-regexp-list '("\\`[^*]"
-                                  "\\`\\([^T]\\|T\\($\\|[^A]\\|A\\($\\|[^G]\\|G\\($\\|[^S]\\|S.\\)\\)\\)\\).*")))
-    (switch-to-buffer nil)))
-
-(defun touch-file (file)
-  "Create a file called FILE.
-  If FILE already exists, signal an error."
-  (interactive
-  (list (read-file-name "Create file: " (dired-current-directory))))
-  (let* ((expanded (expand-file-name file))
-  (try expanded)
-  (dir (directory-file-name (file-name-directory expanded)))
-  new)
-  (if (file-exists-p expanded)
-  (error "Cannot create file %s: file exists" expanded))
-  ;; Find the topmost nonexistent parent dir (variable `new')
-  (while (and try (not (file-exists-p try)) (not (equal new try)))
-  (setq new try
-    try (directory-file-name (file-name-directory try))))
-  (when (not (file-exists-p dir))
-  (make-directory dir t))
-  (write-region "" nil expanded t)
-  (when new
-  (dired-add-file new)
-  (dired-move-to-filename))))
-
 (exec-path-from-shell-initialize) ; fix PATH on macos
-
-
 (set-custom-file-path (expand-file-name "custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
 (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
 (tool-bar-mode -1) ; disable toolbar
@@ -279,34 +93,6 @@ Examples:
 (setq-default fill-column 80)
 
 ;; (setq-default mode-line-format "") ; get rid of status line
-
-(defun evil-recentf ()
-  (interactive)
-  (recentf-open-files)
-  (evil-normal-state))
-
-(defun display-startup-echo-area-message ()
-  "This function replaces the startup minibuffer message with nil."
-  (message nil))
-
-(defun find-init ()
-  (interactive)
-  (find-file init-path))
-
-(defun find-config-file ()
-  (interactive)
-  (cd user-emacs-directory)
-  (call-interactively 'find-file))
-
-(defun load-init ()
-  (interactive)
-  (load-user-file "init.el"))
-
-(defun split-h-and-change-focus ()
-  (interactive)
-  (split-window-horizontally)
-  (other-window 1))
-
 (setq ispell-program-name "/opt/local/bin/ispell") ; teach emacs how to spell
 
 ;; enable spell check for text-mode

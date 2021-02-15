@@ -10,12 +10,14 @@
   (interactive)
   (load-user-file "packages.el")
   (sync-all-packages)
+  (load-user-file "functions.el")
   (load-user-file "misc.el")
   (load-user-file "keybinds.el"))
 
 (if (file-directory-p (expand-file-name "elpa" user-emacs-directory))
   (progn 
     (load-user-file "packages.el")
+    (load-user-file "functions.el")
     (load-user-file "misc.el")
     (load-user-file "keybinds.el")))
 (put 'narrow-to-region 'disabled nil)
