@@ -1,68 +1,80 @@
+(evil-mode 1) ; enable evil
+
 (setq confirm-kill-processes nil)
 
-(defun rbon/local-set-key (state bindings)
-  "Use `evil-local-set-key' to set multiple bindings at once."
+(defun rbon--local-set-key (state bindings)
   (dolist (b bindings)
     (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
 
-(defun rbon/mode-binding (mode state &rest bindings)
-  "Define one or more mode-specific binding. All key names are automatically applied to `kbd'. Uses `evil-local-set-key' and `add-hook' under the hood to make sure bindings don't get out of their designated mode.
+(defun rbon--global-set-key (state binding)
+  (let ((key (kbd (nth 0 binding)))
+        (def (nth 1 binding)))
+    (evil-define-key state 'global key def)))
+
+(defun rbon-define-key (mode state &rest bindings)
+  "Define one or more key bindings.
+MODE should be a symbol. If it is 'global, then bind keys globally. Otherwise, create buffer-local binds when that mode is activated, which means mode-specific binds will never leave their designated mode.
+STATE can either be a symbol or list of symbols, just as you would use with 'evil-define-key'.
+BINDINGS should be in the form of '(KEY DEF), where KEY is a string, and DEF is a function.
+KEY is automatically applied to `kbd'.
 
 Examples:
 
-  (rbon/mode-binding 'some-mode 'normal '(\"q\" myfun1))
+  (rbon-define-key 'global 'normal '(\"q\" myfun1))
 
-  (rbon/mode-binding 'another-mode 'insert
+  (rbon-define-key 'some-mode 'insert
     '(\"TAB\" myfun1)
     '(\"SPC b l\" myfun2))
 
-If `which-key-enable-extended-define-key' is non-nil, then you can optionally add a string to replace the function name when using which-key.
+If `which-key-enable-extended-define-key' is non-nil, then you can optionally add a string to replace the function name when using which-key. In which case, BINDINGS should take the form of '(KEY (REPLACEMENT . DEF)), where REPLACEMENT is a string.
 
 Examples:
 
-  (rbon/mode-binding 'that-mode-over-there 'normal
-    '(\"SPC a\" (\"name of function\" . myfun1))))
+  (rbon-define-key 'another-mode '(normal visual emacs)
+    '(\"SPC a\" (\"name of function\" . myfun1)))
 
-  (rbon/mode-binding 'a-mode-by-any-other-name 'normal
+  (rbon-define-key 'global 'normal
     '(\"k\" (\"make stuff\" . myfun1))
-    '(\"j\" (\"do the thing\" . myfun2))))"
-  (add-hook
-   (intern (concat (symbol-name mode) "-hook"))
-   (apply-partially 'rbon/local-set-key state bindings)))
+    '(\"j\" (\"do the thing\" . myfun2)))"
+  (if (eq mode 'global)
+      (mapcar (apply-partially 'rbon--global-set-key state) bindings)
+    (add-hook
+     (intern (concat (symbol-name mode) "-hook"))
+     (apply-partially 'rbon--local-set-key state bindings))))
 
-(defun rbon/haskell-interactive-mode-kill-whole-line ()
+(defun rbon-haskell-interactive-mode-kill-whole-line ()
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-kill-whole-line)
   (evil-normal-state))
 
-(defun rbon/haskell-interactive-mode-history-previous ()
+(defun rbon-haskell-interactive-mode-history-previous ()
   "Wraps `haskell-interactive-mode-history-previous' to work with evil."
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-history-previous)
   (evil-normal-state))
 
-(defun rbon/haskell-interactive-mode-history-next ()
+(defun rbon-haskell-interactive-mode-history-next ()
   "Wraps `haskell-interactive-mode-history-next' to work with evil."
   (interactive)
   (call-interactively 'evil-append-line)
   (call-interactively 'haskell-interactive-mode-history-next)
   (evil-normal-state))
 
-(defun rbon/insert-heading-respect-content ()
+(defun rbon-insert-heading-respect-content ()
   "Insert a heading and then change to insert state."
   (interactive)
   (org-insert-heading-respect-content)
   (evil-append 0))
 
-(defun rbon/escape ()
+(defun rbon-escape ()
   "Get rid of extra cursors while also normally escaping."
   (interactive)
   (evil-mc-undo-all-cursors)
   (evil-force-normal-state))
 
-(defun rbon/add-cursor-move-down ()
+(defun rbon-add-cursor-move-down ()
   "Add a cursor, and then move down one line."
   (interactive)
   (evil-mc-make-cursor-here) 
@@ -70,7 +82,7 @@ Examples:
   (next-line)
   (evil-mc-resume-cursors))
 
-(defun rbon/add-cursor-move-up ()
+(defun rbon-add-cursor-move-up ()
   "Add a cursor, and then move up one line."
   (interactive)
   (evil-mc-make-cursor-here) 
@@ -78,7 +90,7 @@ Examples:
   (previous-line)
   (evil-mc-resume-cursors))
 
-(defun rbon/evil-mc-make-cursor-in-visual-selection-beg ()
+(defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
   (interactive)
   (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
   (call-interactively 'evil-force-normal-state)
@@ -227,7 +239,6 @@ Examples:
 (scroll-bar-mode -1) ; disable scroll bar
 ; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
 (setq inhibit-splash-screen t) ; disable splash screen
-(evil-mode 1) ; enable evil
 (which-key-mode) ; enable which-key
 ;; (which-key-setup-side-window-bottom)
 (setq which-key-idle-secondary-delay 0)
