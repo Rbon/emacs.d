@@ -5,14 +5,14 @@
   (dolist (b bindings)
     (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
 
-(defun rbon/mode-binding (hook state &rest bindings)
+(defun rbon/mode-binding (mode state &rest bindings)
   "Define one or more mode-specific binding. All key names are automatically applied to `kbd'. Uses `evil-local-set-key' and `add-hook' under the hood to make sure bindings don't get out of their designated mode.
 
 Examples:
 
-  (rbon/mode-binding 'some-mode-hook 'normal '(\"q\" myfun1))
+  (rbon/mode-binding 'some-mode 'normal '(\"q\" myfun1))
 
-  (rbon/mode-binding 'another-mode-hook 'insert
+  (rbon/mode-binding 'another-mode 'insert
     '(\"TAB\" myfun1)
     '(\"SPC b l\" myfun2))
 
@@ -20,13 +20,15 @@ If `which-key-enable-extended-define-key' is non-nil, then you can optionally ad
 
 Examples:
 
-  (rbon/mode-binding 'that-mode-over-there-hook 'normal
+  (rbon/mode-binding 'that-mode-over-there 'normal
     '(\"SPC a\" (\"name of function\" . myfun1))))
 
-  (rbon/mode-binding 'a-mode-by-any-other-name-hook 'normal
+  (rbon/mode-binding 'a-mode-by-any-other-name 'normal
     '(\"k\" (\"make stuff\" . myfun1))
     '(\"j\" (\"do the thing\" . myfun2))))"
-  (add-hook hook (apply-partially 'rbon/local-set-key state bindings)))
+  (add-hook
+   (intern (concat (symbol-name mode) "-hook"))
+   (apply-partially 'rbon/local-set-key state bindings)))
 
 (defun rbon/haskell-interactive-mode-kill-whole-line ()
   (interactive)

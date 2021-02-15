@@ -101,9 +101,9 @@
 (evil-define-key 'insert 'global (kbd "TAB") 'dabbrev-expand) ; tab completion in insert mode
 
 (evil-set-initial-state 'help-mode 'normal)
-(rbon/mode-binding 'help-mode-hook 'normal '("q" quit-window))
+(rbon/mode-binding 'help-mode 'normal '("q" quit-window))
 
-(rbon/mode-binding 'org-mode-hook 'normal
+(rbon/mode-binding 'org-mode 'normal
   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
   '("SPC s b" ("make bold" . make-bold))
   '("SPC s b" ("make bold" . make-bold))
@@ -111,16 +111,16 @@
   '("SPC o d" ("set a deadline" . org-deadline)))
 
 (if (eq system-type 'darwin) ; macOS
-    (rbon/mode-binding 'org-mode-hook 'normal
+    (rbon/mode-binding 'org-mode 'normal
       '("s-i" ("make italic" . make-italic))
       '("s-b" ("make bold" . make-bold))
       '("<s-return>" rbon/insert-heading-respect-content))
-    (rbon/mode-binding 'org-mode-hook 'normal
+    (rbon/mode-binding 'org-mode 'normal
       '("C-i" ("make italic" . make-italic))
       '("C-b" ("make bold" . make-bold))
       '("<C-return>"  rbon/insert-heading-respect-content)))
  
-(rbon/mode-binding 'lsp-mode-hook 'normal
+(rbon/mode-binding 'lsp-mode 'normal
   '("SPC b f" ("format this buffer" . lsp-format-buffer))
   '("SPC s f" ("format selection" . lsp-format-region))
   '("SPC h s" ("describe this session" . lsp-describe-session))
@@ -134,18 +134,18 @@
   ; )
 ;  add-hook 'recentf-Buffer-menu-mode-hook 'rbon/Buffer-menu-bindings)
 
-(rbon/mode-binding 'recentf-dialog-mode-hook 'normal
+(rbon/mode-binding 'recentf-dialog-mode 'normal
   '("l" widget-button-press)
   '("h" nop)
   '("q" recentf-cancel-dialog))
 
-(rbon/mode-binding 'org-agenda-mode-hook 'normal
+(rbon/mode-binding 'org-agenda-mode 'normal
   '("j" org-agenda-next-line)
   '("k" org-agenda-previous-line)
   '("l" org-agenda-later)
   '("h" org-agenda-earlier))
 
-(rbon/mode-binding 'dired-mode-hook 'normal
+(rbon/mode-binding 'dired-mode 'normal
   '("h" dired-up-directory)
   '("j" dired-next-line)
   '("k" dired-previous-line)
@@ -153,27 +153,27 @@
   '("/" evil-search-forward)
   '("t" touch-file))
 
-(rbon/mode-binding 'apropos-mode-hook 'normal '("q" quit-window))
+(rbon/mode-binding 'apropos-mode 'normal '("q" quit-window))
 
-(rbon/mode-binding 'haskell-mode-hook 'normal
+(rbon/mode-binding 'haskell-mode 'normal
   '("SPC b l" ("load this buffer" . run-code)))
 
-(rbon/mode-binding 'haskell-interactive-mode-hook 'insert
+(rbon/mode-binding 'haskell-interactive-mode 'insert
   '("TAB" haskell-interactive-mode-tab)
   '("SPC" haskell-interactive-mode-space))
 
-(rbon/mode-binding 'haskell-interactive-mode-hook 'normal
+(rbon/mode-binding 'haskell-interactive-mode 'normal
   '("J" rbon/haskell-interactive-mode-history-next)
   '("K" rbon/haskell-interactive-mode-history-previous)
   '("<S-backspace>" rbon/haskell-interactive-mode-kill-whole-line))
 
-(rbon/mode-binding 'haskell-error-mode-hook 'normal '("q" quit-window))
+(rbon/mode-binding 'haskell-error-mode 'normal '("q" quit-window))
 
-(rbon/mode-binding 'with-editor-mode-hook 'normal
+(rbon/mode-binding 'with-editor-mode 'normal
   '("SPC q f" with-editor-finish)
   '("SPC q c" with-editor-cancel))
 
-(rbon/mode-binding 'magit-mode-hook 'emacs
+(rbon/mode-binding 'magit-mode 'emacs
   '("J" magit-status-jump)
   '("j" magit-next-line)
   '("k" magit-previous-line)
