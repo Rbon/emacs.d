@@ -1,4 +1,5 @@
-(rbon-define-key 'global '(normal visual motion emacs) '("<escape>" rbon-escape))
+(rbon-define-key 'global '(normal visual motion emacs)
+  '("<escape>" rbon-escape))
 
 (rbon-define-key 'global 'visual
   '("I" evil-mc-make-cursor-in-visual-selection-beg)
@@ -40,20 +41,6 @@
   '("SPC c u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
   '("SPC c n"        ("add next match" . evil-mc-make-and-goto-next-match))
   '("SPC c I"        ("do thing" . "I"))
-; '("SPC c ?"        evil-mc-make-and-goto-prev-match
-; '("SPC c ?"        evil-mc-skip-and-goto-next-match
-; '("SPC c ?"        evil-mc-skip-and-goto-prev-match
-; '("SPC c ?"        evil-mc-make-and-goto-prev-cursor
-; '("SPC c ?"        evil-mc-make-and-goto-next-cursor
-; '("SPC c ?"        evil-mc-skip-and-goto-prev-cursor
-; '("SPC c ?"        evil-mc-skip-and-goto-next-cursor
-; '("SPC c ?"        evil-mc-make-and-goto-first-cursor
-; '("SPC c ?"        evil-mc-make-and-goto-last-cursor
-; '("SPC c ?"        evil-mc-make-cursor-here
-; '("SPC c ?"        evil-mc-pause-cursors
-; '("SPC c ?"        evil-mc-resume-cursors
-; '("SPC c I"        ("add start of lines" . evil-mc-make-cursor-in-visual-selection-beg) 
-; '("SPC c A"        ("add end of lines" . evil-mc-make-cursor-in-visual-selection-end) 
   '("SPC h f"        ("describe a function" . describe-function))
   '("SPC h k"        ("describe a key" . describe-key))
   '("SPC h v"        ("describe a variable" . describe-variable))
@@ -68,7 +55,8 @@
   '("SPC w"          ("window"))
   '("SPC w c"        ("close this window" . delete-window))
   '("SPC w f"        ("fullscreen this window" . delete-other-windows))
-  '("SPC w H"        ("split this window horizontally" . split-h-and-change-focus))
+  '("SPC w H"        ("split this window horizontally" .
+                      split-h-and-change-focus))
   '("SPC w V"        ("split this window vertically" . split-window-vertically))
   '("SPC w h"        ("move window focus left" . windmove-left))
   '("SPC w l"        ("move window focus right" . windmove-right))
@@ -85,21 +73,52 @@
   '("SPC ` TAB"      ("last used workspace" . eyebrowse-last-window-config))
   '("SPC ` c"        ("close workspace" . eyebrowse-close-window-config))
   '("SPC ` r"        ("rename workspace" . eyebrowse-rename-window-config))
-  '("SPC ` s"        ("switch to workspace..." . eyebrowse-switch-to-window-config))
-  '("SPC ` 0"        ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-  '("SPC ` 1"        ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-  '("SPC ` 2"        ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-  '("SPC ` 3"        ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-  '("SPC ` 4"        ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-  '("SPC ` 5"        ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-  '("SPC ` 6"        ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-  '("SPC ` 7"        ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-  '("SPC ` 8"        ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-  '("SPC ` 9"        ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-  '("SPC ` n"        ("new workspace" . eyebrowse-create-window-config))
-  )
+  '("SPC ` s"        ("switch to workspace..." .
+                      eyebrowse-switch-to-window-config))
+  '("SPC ` 0"        ("switch to workspace 0" .
+                      eyebrowse-switch-to-window-config-0))
+  '("SPC 0"          ("switch to workspace 0" .
+                      eyebrowse-switch-to-window-config-0))
+  '("SPC ` 1"        ("switch to workspace 1" .
+                      eyebrowse-switch-to-window-config-1))
+  '("SPC 1"          ("switch to workspace 1" .
+                      eyebrowse-switch-to-window-config-1))
+  '("SPC ` 2"        ("switch to workspace 2" .
+                      eyebrowse-switch-to-window-config-2))
+  '("SPC 2"          ("switch to workspace 2" .
+                      eyebrowse-switch-to-window-config-2))
+  '("SPC ` 3"        ("switch to workspace 3" .
+                      eyebrowse-switch-to-window-config-3))
+  '("SPC 3"          ("switch to workspace 3" .
+                      eyebrowse-switch-to-window-config-3))
+  '("SPC ` 4"        ("switch to workspace 4" .
+                      eyebrowse-switch-to-window-config-4))
+  '("SPC 4"        ("switch to workspace 4" .
+                      eyebrowse-switch-to-window-config-4))
+  '("SPC ` 5"        ("switch to workspace 5" .
+                      eyebrowse-switch-to-window-config-5))
+  '("SPC 5"        ("switch to workspace 5" .
+                      eyebrowse-switch-to-window-config-5))
+  '("SPC ` 6"        ("switch to workspace 6" .
+                      eyebrowse-switch-to-window-config-6))
+  '("SPC 6"        ("switch to workspace 6" .
+                      eyebrowse-switch-to-window-config-6))
+  '("SPC ` 7"        ("switch to workspace 7" .
+                      eyebrowse-switch-to-window-config-7))
+  '("SPC 7"        ("switch to workspace 7" .
+                      eyebrowse-switch-to-window-config-7))
+  '("SPC ` 8"        ("switch to workspace 8" .
+                      eyebrowse-switch-to-window-config-8))
+  '("SPC 8"        ("switch to workspace 8" .
+                      eyebrowse-switch-to-window-config-8))
+  '("SPC ` 9"        ("switch to workspace 9" .
+                      eyebrowse-switch-to-window-config-9))
+  '("SPC 9"        ("switch to workspace 9" .
+                      eyebrowse-switch-to-window-config-9))
+  '("SPC ` n"        ("new workspace" . eyebrowse-create-window-config)))
 
-(rbon-define-key 'global 'insert '("TAB" dabbrev-expand)) ; tab completion in insert mode
+(rbon-define-key 'global 'insert '("TAB" dabbrev-expand))
+                                        ; tab completion in insert mode
 
 (evil-set-initial-state 'help-mode 'normal)
 (rbon-define-key 'help-mode 'normal '("q" quit-window))
@@ -109,7 +128,8 @@
   '("SPC s b" ("make bold" . make-bold))
   '("SPC s b" ("make bold" . make-bold))
   '("SPC o s" ("scedule a task" . org-schedule))
-  '("SPC o d" ("set a deadline" . org-deadline)))
+  '("SPC o d" ("set a deadline" . org-deadline))
+  '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))
 
 (if (eq system-type 'darwin) ; macOS
     (rbon-define-key 'org-mode 'normal
