@@ -195,7 +195,8 @@
   '("SPC q c" with-editor-cancel))
 
 (rbon-define-key 'magit-mode 'emacs
-  '("J" magit-status-jump)
-  '("j" magit-next-line)
-  '("k" magit-previous-line)
-  '("H" magit-discard))
+  '("J"        magit-status-jump)
+  '("j"        magit-next-line)
+  '("k"        magit-previous-line)
+  '("H"        magit-discard)
+  '("<escape>" transient-quit-one))
