@@ -1,3 +1,11 @@
+(defun rbon-center-frame ()
+  "Move the current frame to the center of the display.
+Why is this not a built-in function?"
+  (interactive)
+  (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
+        (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
+    (set-frame-position (selected-frame) h-offset v-offset)))
+
 (defun my-change-buffer (change-buffer)
   "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
   (let ((initial (current-buffer)))

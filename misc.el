@@ -140,4 +140,7 @@
     (recentf-open-files))
   (setq booted t))) 
 
-
+;; this is called last to ensure frame is properly centered
+(when window-system
+  ; (set-frame-size (selected-frame) 80 40)
+  (rbon-center-frame))

@@ -15,6 +15,9 @@
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC SPC"        ("run a command" . smex))
   '("SPC DEL"        ("go to last location" . pop-global-mark))
+  '("SPC a"          ("applications"))
+  '("SPC a d"        dired)
+  '("SPC a m"        magit)
   '("SPC f"          ("files"))
   '("SPC f f"        ("find a file" . find-file))
   '("SPC f s"        ("save this file" . save-buffer))
@@ -22,6 +25,8 @@
   '("SPC f b"        ("open file browser" . magit-dired-jump))
   '("SPC f r"        ("recent files" . recentf-open-files))
   '("SPC f c"        ("open a user config file" . find-config-file))
+  '("SPC F"          ("frame"))
+  '("SPC F c"        ("center this frame" . rbon-center-frame))
   '("SPC b"          ("buffers"))
   '("SPC b s"        ("save this buffer" . save-buffer))
   '("SPC b c"        ("close this buffer" . kill-this-buffer))
@@ -186,7 +191,8 @@
 (rbon-define-key 'haskell-interactive-mode 'normal
   '("J" rbon-haskell-interactive-mode-history-next)
   '("K" rbon-haskell-interactive-mode-history-previous)
-  '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line))
+  '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
+  '("RET" haskell-interactive-mode-return))
 
 (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
 
