@@ -2,10 +2,14 @@
   (interactive)
   (display-buffer-pop-up-frame (goet-buffer-create "scratch")))
 
-(defun rbon-goto-haskell-prompt-start ()
+(defun rbon-insert-haskell-prompt-start ()
   (interactive)
   (goto-char haskell-interactive-mode-prompt-start)
   (call-interactively 'evil-insert))
+
+(defun rbon-goto-haskell-prompt-start ()
+  (interactive)
+  (goto-char haskell-interactive-mode-prompt-start))
 
 (defun rbon-center-frame ()
   "Move the current frame to the center of the display.

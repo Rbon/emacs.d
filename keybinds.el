@@ -193,7 +193,8 @@
 (rbon-define-key 'haskell-interactive-mode 'normal
   '("J" rbon-haskell-interactive-mode-history-next)
   '("K" rbon-haskell-interactive-mode-history-previous)
-  '("I" rbon-goto-haskell-prompt-start)
+  '("I" rbon-insert-haskell-prompt-start)
+  '("^" rbon-goto-haskell-prompt-start)
   '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
   '("RET" haskell-interactive-mode-return))
 
