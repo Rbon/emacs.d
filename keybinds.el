@@ -27,6 +27,8 @@
   '("SPC f c"        ("open a user config file" . find-config-file))
   '("SPC F"          ("frame"))
   '("SPC F c"        ("center this frame" . rbon-center-frame))
+  '("SPC F m"        ("toggle maximized" . toggle-frame-maximized))
+  '("SPC F f"        ("toggle fullscreen" . toggle-frame-fullscreen))
   '("SPC b"          ("buffers"))
   '("SPC b s"        ("save this buffer" . save-buffer))
   '("SPC b c"        ("close this buffer" . kill-this-buffer))
@@ -182,7 +184,7 @@
 (rbon-define-key 'apropos-mode 'normal '("q" quit-window))
 
 (rbon-define-key 'haskell-mode 'normal
-  '("SPC b l" ("load this buffer" . run-code)))
+  '("SPC b e" ("eval this buffer" . run-code)))
 
 (rbon-define-key 'haskell-interactive-mode 'insert
   '("TAB" haskell-interactive-mode-tab)
@@ -191,6 +193,7 @@
 (rbon-define-key 'haskell-interactive-mode 'normal
   '("J" rbon-haskell-interactive-mode-history-next)
   '("K" rbon-haskell-interactive-mode-history-previous)
+  '("I" rbon-goto-haskell-prompt-start)
   '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
   '("RET" haskell-interactive-mode-return))
 

@@ -1,4 +1,6 @@
+(setq smex-prompt-string "Run command: ")
 (evil-mode 1) ; enable evil
+(global-evil-surround-mode 1)
 (setq confirm-kill-processes nil)
 (global-evil-mc-mode  1) ; multiple cursors
 (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think

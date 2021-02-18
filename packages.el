@@ -22,6 +22,7 @@
   mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
   ; multiple-cursors
   evil-mc ; multiple cursors
+  evil-surround
  ))
 
 (require 'package)
