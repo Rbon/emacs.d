@@ -1,3 +1,69 @@
+(with-eval-after-load 'helm-command
+  (defun helm-M-x-read-extended-command (collection &optional predicate history)
+    "Read or execute action on command name in COLLECTION or HISTORY.
+
+This function has been copied verbatim from its original location and now lives
+in `~/.emacs.d/functions.el', with one line changed to allow user to change the
+prompt from \"M-x\" to something else.
+Customize `helm-M-x-prompt-string' to change the prompt.
+
+When `helm-M-x-use-completion-styles' is used, several actions as
+of `helm-type-command' are used and executed from here, otherwise
+this function returns the command as a symbol.
+
+Helm completion is not provided when executing or defining kbd
+macros.
+
+Arg COLLECTION should be an `obarray' but can be any object
+suitable for `try-completion'.  Arg PREDICATE is a function that
+default to `commandp' see also `try-completion'.  Arg HISTORY
+default to `extended-command-history'."
+    (let* ((helm--mode-line-display-prefarg t)
+          (minibuffer-completion-confirm t)
+          (pred (or predicate #'commandp))
+          (metadata (unless (assq 'flex completion-styles-alist)
+                      '(metadata (display-sort-function
+                                  .
+                                  (lambda (candidates)
+                                    (sort candidates #'helm-generic-sort-fn))))))
+          (sources `(,(helm-make-source "Emacs Commands history" 'helm-M-x-class
+                        :candidates (helm-dynamic-completion
+                                      ;; A list of strings.
+                                      (or history extended-command-history)
+                                      (lambda (str) (funcall pred (intern-soft str)))
+                                      nil 'nosort t))
+                      ,(helm-make-source "Emacs Commands" 'helm-M-x-class
+                        :candidates (helm-dynamic-completion
+                                      collection pred
+                                      nil metadata t))))
+          (prompt (concat (cond
+                            ((eq helm-M-x-prefix-argument '-) "- ")
+                            ((and (consp helm-M-x-prefix-argument)
+                                  (eq (car helm-M-x-prefix-argument) 4)) "C-u ")
+                            ((and (consp helm-M-x-prefix-argument)
+                                  (integerp (car helm-M-x-prefix-argument)))
+                            (format "%d " (car helm-M-x-prefix-argument)))
+                            ((integerp helm-M-x-prefix-argument)
+                            (format "%d " helm-M-x-prefix-argument)))
+                          helm-M-x-prompt-string))) ; this is the line I modified
+      (setq helm-M-x--timer (run-at-time 1 0.1 'helm-M-x--notify-prefix-arg))
+      ;; Fix Bug#2250, add `helm-move-selection-after-hook' which
+      ;; reset prefix arg to nil only for this helm session.
+      (add-hook 'helm-move-selection-after-hook
+                'helm-M-x--move-selection-after-hook)
+      (add-hook 'helm-before-action-hook
+                'helm-M-x--before-action-hook)
+      (when (and sources helm-M-x-reverse-history)
+        (setq sources (nreverse sources)))
+      (unwind-protect
+          (progn
+            (setq current-prefix-arg nil)
+            (helm :sources sources
+                  :prompt prompt
+                  :buffer "*helm M-x*"
+                  :history 'helm-M-x-input-history))
+        (helm-M-x--unwind-forms)))))
+
 (defun rbon-switch-to-scratch ()
   (interactive)
   (display-buffer-pop-up-frame (goet-buffer-create "scratch")))

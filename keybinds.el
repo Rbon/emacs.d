@@ -1,3 +1,6 @@
+;; escape key stuff
+;; make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 (rbon-define-key 'global '(normal visual motion emacs)
   '("<escape>" rbon-escape))
 
@@ -13,17 +16,16 @@
   '("M" evil-mc-make-all-cursors))
 
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC SPC"        ("run a command" . smex))
+  '("SPC SPC"        ("run a command" . helm-M-x))
   '("SPC DEL"        ("go to last location" . pop-global-mark))
   '("SPC a"          ("applications"))
   '("SPC a d"        dired)
   '("SPC a m"        magit)
   '("SPC f"          ("files"))
-  '("SPC f f"        ("find a file" . find-file))
+  '("SPC f f"        ("find a file" . helm-find-files))
   '("SPC f s"        ("save this file" . save-buffer))
-  '("SPC f r"        ("recent files" . recentf-open-files))
+  '("SPC f r"        ("recent files" . helm-recentf))
   '("SPC f b"        ("open file browser" . magit-dired-jump))
-  '("SPC f r"        ("recent files" . recentf-open-files))
   '("SPC f c"        ("open a user config file" . find-config-file))
   '("SPC F"          ("frame"))
   '("SPC F c"        ("center this frame" . rbon-center-frame))
@@ -33,7 +35,7 @@
   '("SPC b s"        ("save this buffer" . save-buffer))
   '("SPC b c"        ("close this buffer" . kill-this-buffer))
   '("SPC b k"        ("kill this buffer" . kill-this-buffer))
-  '("SPC b b"        ("open the buffer list" . buffer-menu))
+  '("SPC b b"        ("open the buffer list" . helm-buffers-list))
   '("SPC b TAB"      ("open last buffer" . my-switch-to-buffer))
   '("SPC b e"        ("eval this buffer" . eval-buffer))
   '("SPC n"          ("narrow"))
@@ -132,8 +134,7 @@
 
 (rbon-define-key 'org-mode 'normal
   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-  '("SPC s b" ("make bold" . make-bold))
-  '("SPC s b" ("make bold" . make-bold))
+  '("SPC s c" ("make bold" . make-bold))
   '("SPC o s" ("scedule a task" . org-schedule))
   '("SPC o d" ("set a deadline" . org-deadline))
   '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))

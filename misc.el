@@ -1,3 +1,5 @@
+(setq helm-M-x-prompt-string "Command: ")
+(load "~/.emacs.d/evil-textobj-line")
 (setq smex-prompt-string "Run command: ")
 (evil-mode 1) ; enable evil
 (global-evil-surround-mode 1)

@@ -5,7 +5,7 @@
   which-key
   ; general
   ;smooth-scrolling-mode
-  ;; helm
+  helm
   markdown-mode
   haskell-mode
   hasklig-mode
