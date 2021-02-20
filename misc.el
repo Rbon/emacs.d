@@ -1,3 +1,7 @@
+(semantic-mode 1) ; helm thing I think
+(helm-descbinds-mode) ; helm search keybinds
+(require 'helm-config) ; I don't know what this does
+(helm-mode 1)
 (setq helm-M-x-prompt-string "Command: ")
 (load "~/.emacs.d/evil-textobj-line")
 (setq smex-prompt-string "Run command: ")

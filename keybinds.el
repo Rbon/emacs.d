@@ -1,3 +1,13 @@
+;; helm stuff
+(if (eq system-type 'darwin) ; macOS
+    (progn
+      (define-key helm-map (kbd "s-j") 'helm-next-line)
+      (define-key helm-map (kbd "s-k") 'helm-previous-line))
+  (progn
+    (define-key helm-map (kbd "C-j") 'helm-next-line)
+    (define-key helm-map (kbd "C-k") 'helm-previous-line)))
+
+
 ;; escape key stuff
 ;; make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -50,22 +60,18 @@
   '("SPC c u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
   '("SPC c n"        ("add next match" . evil-mc-make-and-goto-next-match))
   '("SPC c I"        ("do thing" . "I"))
-  '("SPC h f"        ("describe a function" . describe-function))
-  '("SPC h k"        ("describe a key" . describe-key))
-  '("SPC h v"        ("describe a variable" . describe-variable))
-  '("SPC h m"        ("describe this mode" . describe-mode))
-  '("SPC h b"        ("list current key bindings" . describe-bindings))
-  '("SPC q"          ("quit"))
-  '("SPC q q"        ("quit emacs" . save-buffers-kill-terminal))
-  '("SPC h S"        ("search everything" . apropos))
-  '("SPC h C"        ("search commands" . apropos-command))
-  '("SPC h D"        ("search documentation" . apropos-documentation))
-  '("SPC h V"        ("search variable" . apropos-variable))
+  '("SPC h"          ("help"))
+  '("SPC h h"        ("describe something" . helm-apropos))
+  '("SPC h l"        ("list definitions" . helm-imenu))
+  '("SPC h k"        ("describe a keybind" . describe-key))
+  '("SPC h K"        ("search keybinds" . helm-descbinds))
   '("SPC w"          ("window"))
   '("SPC w c"        ("close this window" . delete-window))
   '("SPC w f"        ("fullscreen this window" . delete-other-windows))
   '("SPC w H"        ("split this window horizontally" .
                       split-h-and-change-focus))
+  '("SPC q"          ("quit"))
+  '("SPC q q"        ("quit emacs" . save-buffers-kill-terminal))
   '("SPC w V"        ("split this window vertically" . split-window-vertically))
   '("SPC w h"        ("move window focus left" . windmove-left))
   '("SPC w l"        ("move window focus right" . windmove-right))
@@ -130,7 +136,7 @@
                                         ; tab completion in insert mode
 
 (evil-set-initial-state 'help-mode 'normal)
-(rbon-define-key 'help-mode 'normal '("q" quit-window))
+(rbon-define-key 'help-mode 'normal '("<escape>" quit-window))
 
 (rbon-define-key 'org-mode 'normal
   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
@@ -152,8 +158,7 @@
 (rbon-define-key 'lsp-mode 'normal
   '("SPC b f" ("format this buffer" . lsp-format-buffer))
   '("SPC s f" ("format selection" . lsp-format-region))
-  '("SPC h s" ("describe this session" . lsp-describe-session))
-  '("SPC h t" ("describe thing at point" . lsp-describe-thing-at-point))
+  '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
   '("SPC j d" ("jump to definition" . lsp-find-definition)))
 
 ; FIX LATER

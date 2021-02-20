@@ -6,6 +6,7 @@
   ; general
   ;smooth-scrolling-mode
   helm
+  helm-descbinds
   markdown-mode
   haskell-mode
   hasklig-mode
