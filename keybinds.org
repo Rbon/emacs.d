@@ -19,6 +19,7 @@
   - [[#jump][Jump]]
   - [[#org-mode][Org Mode]]
   - [[#workspace][Workspace]]
+  - [[#configuration][Configuration]]
 - [[#help-1][Help]]
 - [[#org][Org]]
 - [[#lsp][LSP]]
@@ -209,6 +210,13 @@
   '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
   '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config)))
                                         #+end_src
+** Configuration
+   #+begin_src emacs-lisp
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC C"   ("configuration"))
+  '("SPC C a" ("load all configs" . rbon-load-config))
+  '("SPC C b" ("bootstrap" . bootstrap)))
+   #+end_src
 * Help
 (evil-set-initial-state 'help-mode 'normal)
 (rbon-define-key 'help-mode 'normal '("<escape>" quit-window))

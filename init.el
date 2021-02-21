@@ -12,7 +12,7 @@
   (sync-all-packages)
   (load-user-file "functions.el")
   (load-user-file "misc.el")
-  (org-babel-load-file "~/.emacs.d/keybinds.org"))
+  (org-babel-tangle-file "~/.emacs.d/keybinds.org"))
 
 (defun rbon-load-config ()
   (interactive)
