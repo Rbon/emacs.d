@@ -1,5 +1,16 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./misc-test.el
 
+* Table of Contents :toc:
+- [[#miscellaneous][Miscellaneous]]
+  - [[#variables][Variables]]
+  - [[#helm][Helm]]
+  - [[#modes][Modes]]
+  - [[#mini-modeline-mode][Mini-modeline-mode]]
+- [[#hooks][Hooks]]
+- [[#sane-text-wrapping][Sane text wrapping]]
+- [[#appearance][Appearance]]
+- [[#final-stuff][Final stuff]]
+
 * Miscellaneous
 ** Variables
   #+begin_src emacs-lisp

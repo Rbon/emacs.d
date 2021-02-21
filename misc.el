@@ -77,6 +77,7 @@
 
 ;; HOOKS
 ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
+(add-hook 'org-mode-hook 'toc-org-mode)
 (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
 (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
 (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell

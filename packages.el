@@ -1,5 +1,6 @@
 (setq my-packages '(
   evil
+  toc-org
   undo-tree
   flycheck
   which-key
