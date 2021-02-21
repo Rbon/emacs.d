@@ -17,7 +17,8 @@
 (require 'helm-config) ; I don't know what this does
 (helm-mode 1)
 (setq helm-M-x-prompt-string "Command: ")
-(load "~/.emacs.d/evil-textobj-line")
+(require 'evil-textobj-line)
+; (load "~/.emacs.d/evil-textobj-line")
 (setq smex-prompt-string "Run command: ")
 (evil-mode 1) ; enable evil
 (global-evil-surround-mode 1)

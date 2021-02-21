@@ -1,5 +1,6 @@
 (setq my-packages '(
   evil
+  evil-textobj-line
   toc-org
   undo-tree
   flycheck
