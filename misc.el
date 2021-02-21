@@ -1,3 +1,17 @@
+;; Since we don't want to disable org-confirm-babel-evaluate all
+;; of the time, do it around the after-save-hook
+(defun dw/org-babel-tangle-dont-ask ()
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+    (org-babel-tangle)))
+
+(add-hook
+ 'org-mode-hook
+ (lambda () (add-hook
+             'after-save-hook #'dw/org-babel-tangle-dont-ask
+             'run-at-e d 'only-in-org-mode)))
+
+
 (semantic-mode 1) ; helm thing I think
 (helm-descbinds-mode) ; helm search keybinds
 (require 'helm-config) ; I don't know what this does

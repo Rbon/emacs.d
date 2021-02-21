@@ -12,15 +12,19 @@
   (sync-all-packages)
   (load-user-file "functions.el")
   (load-user-file "misc.el")
+  (org-babel-load-file "~/.emacs.d/keybinds.org"))
+
+(defun rbon-load-config ()
+  (interactive)
+  (load-user-file "packages.el")
+  (load-user-file "functions.el")
+  (load-user-file "misc.el")
   (load-user-file "keybinds.el"))
 
 (if (file-directory-p (expand-file-name "elpa" user-emacs-directory))
-  (progn 
-    (load-user-file "packages.el")
-    (load-user-file "functions.el")
-    (load-user-file "misc.el")
-    (load-user-file "keybinds.el")))
+    (rbon-load-config))
 (put 'narrow-to-region 'disabled nil)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -34,3 +38,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
