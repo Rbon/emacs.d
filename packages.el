@@ -24,6 +24,7 @@
   ; multiple-cursors
   evil-mc ; multiple cursors
   evil-surround
+  autothemer
  ))
 
 (require 'package)

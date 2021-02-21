@@ -1,16 +1,32 @@
+#+PROPERTY: header-args:emacs-lisp :tangle ./misc-test.el
+
+* Miscellaneous
+** Variables
+  #+begin_src emacs-lisp
 (semantic-mode 1) ; helm thing I think
 (helm-descbinds-mode) ; helm search keybinds
-(require 'helm-config) ; I don't know what this does
-(helm-mode 1)
-(setq helm-M-x-prompt-string "Command: ")
 (load "~/.emacs.d/evil-textobj-line")
 (setq smex-prompt-string "Run command: ")
+(setq confirm-kill-processes nil)
+#+end_src
+** Helm
+#+begin_src emacs-lisp
+(require 'helm-config)
+(helm-mode 1)
+(setq helm-M-x-prompt-string "Command: ")
+#+end_src
+
+** Modes
+#+begin_src emacs-lisp
 (evil-mode 1) ; enable evil
 (global-evil-surround-mode 1)
-(setq confirm-kill-processes nil)
 (global-evil-mc-mode  1) ; multiple cursors
-(setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
 (eyebrowse-mode t)
+#+end_src
+
+** Mini-modeline-mode
+   
+   #+begin_src emacs-lisp
 (mini-modeline-mode t)
 (setq-default mode-line-format nil)
 (setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
@@ -19,6 +35,14 @@
 (setq-default window-divider-default-bottom-width 1) ; must be defined before the mode is turned on 
 (setq-default window-divider-default-right-width 1) ; same
 (window-divider-mode t)
+   #+end_src
+
+This does the opposite of what I would think.
+#+begin_src emacs-lisp
+(setq-default mini-modeline-enhance-visual nil) 
+#+end_src
+
+#+begin_src emacs-lisp
 
 (setq-default mini-modeline-r-format
       (list
@@ -26,6 +50,11 @@
         mode-line-buffer-identification
         mode-line-modified) " "
        '(:eval (eyebrowse-mode-line-indicator))))
+#+end_src
+
+#+begin_src emacs-lisp
+
+
 
 ; (powerline-default-theme)
 
@@ -74,8 +103,9 @@
 (setq lua-indent-level 2) ; why
 (setq-default evil-shift-width 2) ; whyy
 (blink-cursor-mode 0) ; stop the cursor from blinking
-
-;; HOOKS
+#+end_src
+* Hooks
+#+begin_src emacs-lisp
 ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
 (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
 (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
@@ -92,7 +122,10 @@
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
 
-;; sane text wrapping
+#+end_src
+
+* Sane text wrapping
+#+begin_src emacs-lisp
 (global-visual-line-mode 1)
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
@@ -106,10 +139,10 @@
 ;; enable spell check for text-mode
 (dolist (hook '(text-mode-hook))
       (add-hook hook (lambda () (flyspell-mode 1))))
+#+end_src
 
-
-;; APPEARANCE
-
+* Appearance
+#+begin_src emacs-lisp
 (set-face-attribute 'default nil
                     :family "Hasklig"
                     :height 150
@@ -155,17 +188,20 @@
                     ; :box "red")
 
 (pixel-scroll-mode t)
+#+end_src
 
+* Final stuff
+#+begin_src emacs-lisp
 (defvar booted nil)
 (unless booted (progn 
-  ; (switch-to-buffer "Untitled")
-  ; (text-mode) ; needed for spell check
-  ; (dired ".")
   (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
     (recentf-open-files))
   (setq booted t))) 
+  #+end_src
 
-;; this is called last to ensure frame is properly centered
+This is called last to ensure frame is properly centered.
+  #+begin_src emacs-lisp
 (when window-system
   ; (set-frame-size (selected-frame) 80 40)
   (rbon-center-frame))
+#+end_src
