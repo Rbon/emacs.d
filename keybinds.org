@@ -1,5 +1,34 @@
 #+TITLE: Keybinds
 #+PROPERTY: header-args:emacs-lisp :tangle ./keybinds.el
+* Table of Contents :toc:
+- [[#miscellaneous][Miscellaneous]]
+- [[#helm][Helm]]
+- [[#leader-binds][Leader binds]]
+  - [[#miscellaneous-1][Miscellaneous]]
+  - [[#applications][Applications]]
+  - [[#files][Files]]
+  - [[#frame][Frame]]
+  - [[#buffers][Buffers]]
+  - [[#eval][Eval]]
+  - [[#narrow][Narrow]]
+  - [[#selection][Selection]]
+  - [[#cursors][Cursors]]
+  - [[#help][Help]]
+  - [[#window][Window]]
+  - [[#quit][Quit]]
+  - [[#jump][Jump]]
+  - [[#org-mode][Org Mode]]
+  - [[#workspace][Workspace]]
+- [[#help-1][Help]]
+- [[#org][Org]]
+- [[#lsp][LSP]]
+- [[#recentf-dialog][Recentf Dialog]]
+- [[#org-agenda][Org Agenda]]
+- [[#dired][Dired]]
+- [[#haskell][Haskell]]
+- [[#with-editor][With Editor]]
+- [[#magit][Magit]]
+
 * Miscellaneous
   #+begin_src emacs-lisp
 ;; escape key stuff
@@ -33,20 +62,20 @@
     (define-key helm-map (kbd "C-k") 'helm-previous-line)))
   #+end_src
 * Leader binds
-*** Miscellaneous
+** Miscellaneous
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC SPC" ("run a command" . helm-M-x))
   '("SPC DEL" ("go to last location" . pop-global-mark)))
   #+end_src
-*** Applications  
+** Applications  
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC a"   ("applications"))
   '("SPC a d" dired)
   '("SPC a m" magit))
   #+end_src
-*** Files
+** Files
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC f"   ("files"))
@@ -56,7 +85,7 @@
   '("SPC f b" ("open file browser" . magit-dired-jump))
   '("SPC f c" ("open a user config file" . find-config-file)))
   #+end_src
-*** Frame
+** Frame
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC F"   ("frame"))
@@ -64,7 +93,7 @@
   '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
   '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
   #+end_src
-*** Buffers
+** Buffers
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC b"     ("buffers"))
@@ -75,27 +104,27 @@
   '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
   '("SPC b e"   ("eval this buffer" . eval-buffer)))
   #+end_src
-*** Eval
+** Eval
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC e"   ("eval"))
   '("SPC e e" ("eval expression" . eval-expression))
   '("SPC e b" ("eval this buffer" . eval-buffer)))
   #+end_src
-*** Narrow
+** Narrow
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC n"   ("narrow"))
   '("SPC n s" ("narrow to selection" . narrow-to-region))
   '("SPC n w" ("widen" . widen)))
   #+end_src
-*** Selection
+** Selection
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC s"   ("selection"))
   '("SPC s a" ("select everything" . mark-whole-buffer)))
   #+end_src
-*** Cursors
+** Cursors
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC c"          ("cursors"))
@@ -105,7 +134,7 @@
   '("SPC c u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
   '("SPC c n"        ("add next match" . evil-mc-make-and-goto-next-match)))
   #+end_src
-*** Help
+** Help
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC h"   ("help"))
@@ -116,7 +145,7 @@
   '("SPC h f" ("describe face" . describe-face))
   '("SPC h F" ("describe face" . list-faces-display)))
   #+end_src
-*** Window
+** Window
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC w"   ("window"))
@@ -129,25 +158,25 @@
   '("SPC w k" ("move window focus up" . windmove-up))
   '("SPC w j" ("move window focus down" . windmove-down)))
   #+end_src
-*** Quit
+** Quit
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC q"   ("quit"))
   '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
   #+end_src
-*** Jump
+** Jump
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC j"   ("jump"))
   '("SPC j d" ("jump to definition" . find-function)))
   #+end_src
-*** Org Mode
+** Org Mode
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC o"   ("org mode"))
   '("SPC o a" ("open the agenda" . org-agenda)))
   #+end_src
-*** Workspace
+** Workspace
   #+begin_src emacs-lisp
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC `"     ("workspace"))
