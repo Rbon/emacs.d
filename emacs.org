@@ -4,8 +4,22 @@ Text goes here!
 - [[#keybinds][Keybinds]]
   - [[#miscellaneous][Miscellaneous]]
   - [[#helm][Helm]]
-  - [[#leader-binds][Leader binds]]
+  - [[#applications][Applications]]
+  - [[#files][Files]]
+  - [[#frame][Frame]]
+  - [[#buffers][Buffers]]
+  - [[#eval][Eval]]
+  - [[#narrow][Narrow]]
+  - [[#selection][Selection]]
+  - [[#cursors][Cursors]]
   - [[#help][Help]]
+  - [[#window][Window]]
+  - [[#quit][Quit]]
+  - [[#jump][Jump]]
+  - [[#org-mode][Org Mode]]
+  - [[#workspace][Workspace]]
+  - [[#configuration][Configuration]]
+  - [[#help-1][Help]]
   - [[#org][Org]]
   - [[#lsp][LSP]]
   - [[#recentf-dialog][Recentf Dialog]]
@@ -15,6 +29,11 @@ Text goes here!
   - [[#with-editor][With Editor]]
   - [[#magit][Magit]]
 - [[#functions][Functions]]
+  - [[#jump-to-various-configs][Jump to various configs]]
+  - [[#helm-m-x-read-extended-command][helm-M-x-read-extended-command]]
+  - [[#rbon-switch-to-scratch][rbon-switch-to-scratch]]
+  - [[#haskell-mode][Haskell Mode]]
+  - [[#rbon-center-frame][=rbon-center-frame=]]
 - [[#misc][Misc]]
 - [[#packages][Packages]]
 - [[#init][Init]]
@@ -41,6 +60,10 @@ Text goes here!
 
  (rbon-define-key 'global 'insert '("TAB" dabbrev-expand))
                                          ; tab completion in insert mode
+
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC SPC" ("run a command" . helm-M-x))
+  '("SPC DEL" ("go to last location" . pop-global-mark)))
    #+end_src
 ** Helm
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -52,169 +75,162 @@ Text goes here!
      (define-key helm-map (kbd "C-j") 'helm-next-line)
      (define-key helm-map (kbd "C-k") 'helm-previous-line)))
    #+end_src
-** Leader binds
-*** Miscellaneous
+** Applications  
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC a"   ("applications"))
+  '("SPC a d" dired)
+  '("SPC a m" magit))
+  #+end_src
+** Files
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC f"   ("files"))
+  '("SPC f f" ("find a file" . helm-find-files))
+  '("SPC f s" ("save this file" . save-buffer))
+  '("SPC f r" ("recent files" . helm-recentf))
+  '("SPC f b" ("open file browser" . magit-dired-jump))
+  '("SPC f c" ("open a user config file" . find-config-file)))
+  #+end_src
+** Frame
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC F"   ("frame"))
+  '("SPC F c" ("center this frame" . rbon-center-frame))
+  '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
+  '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
+  #+end_src
+** Buffers
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC b"     ("buffers"))
+  '("SPC b s"   ("save this buffer" . save-buffer))
+  '("SPC b c"   ("close this buffer" . kill-this-buffer))
+  '("SPC b k"   ("kill this buffer" . kill-this-buffer))
+  '("SPC b b"   ("open the buffer list" . helm-buffers-list))
+  '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
+  '("SPC b e"   ("eval this buffer" . eval-buffer)))
+  #+end_src
+** Eval
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC e"   ("eval"))
+  '("SPC e e" ("eval expression" . eval-expression))
+  '("SPC e b" ("eval this buffer" . eval-buffer))
+  '("SPC e s" ("eval selection" . eval-region)))
+  #+end_src
+** Narrow
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC n"   ("narrow"))
+  '("SPC n s" ("narrow to selection" . narrow-to-region))
+  '("SPC n w" ("widen" . widen)))
+  #+end_src
+** Selection
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC s"   ("selection"))
+  '("SPC s a" ("select everything" . mark-whole-buffer))
+  '("SPC s e" ("eval selection" . eval-region)))
+  #+end_src
+** Cursors
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC C"          ("cursors"))
+  '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
+  '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
+  '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
+  '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
+  '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
+  #+end_src
+** Help
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC h"   ("help"))
+  '("SPC h h" ("describe something" . helm-apropos))
+  '("SPC h l" ("list definitions" . helm-imenu))
+  '("SPC h k" ("describe a keybind" . describe-key))
+  '("SPC h K" ("search keybinds" . helm-descbinds))
+  '("SPC h f" ("describe face" . describe-face))
+  '("SPC h F" ("describe face" . list-faces-display)))
+  #+end_src
+** Window
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC w"   ("window"))
+  '("SPC w c" ("close this window" . delete-window))
+  '("SPC w f" ("fullscreen this window" . delete-other-windows))
+  '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
+  '("SPC w V" ("split this window vertically" . split-window-vertically))
+  '("SPC w h" ("move window focus left" . windmove-left))
+  '("SPC w l" ("move window focus right" . windmove-right))
+  '("SPC w k" ("move window focus up" . windmove-up))
+  '("SPC w j" ("move window focus down" . windmove-down)))
+  #+end_src
+** Quit
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC q"   ("quit"))
+  '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
+  #+end_src
+** Jump
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC j"   ("jump"))
+  '("SPC j d" ("jump to definition" . find-function)))
+  #+end_src
+** Org Mode
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC o"   ("org mode"))
+  '("SPC o a" ("open the agenda" . org-agenda)))
+  #+end_src
+** Workspace
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC `"     ("workspace"))
+  '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
+  '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
+  '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
+  '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
+  '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
+  '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
+  '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
+  '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+  '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+  '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+  '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+  '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+  '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+  '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+  '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+  '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+  '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+  '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+  '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+  '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+  '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+  '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+  '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+  '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+  '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+  '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+  '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+  '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config)))
+                                        #+end_src
+** Configuration
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC SPC" ("run a command" . helm-M-x))
-   '("SPC DEL" ("go to last location" . pop-global-mark)))
+(rbon-define-key 'global '(normal visual emacs)
+  '("SPC c"   ("configuration"))
+  '("SPC c a" ("load all configs" . rbon-load-config))
+  '("SPC c b" ("bootstrap" . bootstrap))
+  '("SPC c c" ("go to config" . rbon-goto-config))
+  '("SPC c k" ("go to keybinds" . rbon-goto-keybinds))
+  '("SPC c m" ("go to misc config" . rbon-goto-misc))
+  '("SPC c f" ("go to functions" . rbon-goto-functions))
+  '("SPC c p" ("to go packages" . rbon-goto-packages))
+  '("SPC c i" ("to go init" . rbon-goto-init)))
    #+end_src
-*** Applications  
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC a"   ("applications"))
-   '("SPC a d" dired)
-   '("SPC a m" magit))
-   #+end_src
-*** Files
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC f"   ("files"))
-   '("SPC f f" ("find a file" . helm-find-files))
-   '("SPC f s" ("save this file" . save-buffer))
-   '("SPC f r" ("recent files" . helm-recentf))
-   '("SPC f b" ("open file browser" . magit-dired-jump))
-   '("SPC f c" ("open a user config file" . find-config-file)))
-   #+end_src
-*** Frame
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC F"   ("frame"))
-   '("SPC F c" ("center this frame" . rbon-center-frame))
-   '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
-   '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
-   #+end_src
-*** Buffers
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC b"     ("buffers"))
-   '("SPC b s"   ("save this buffer" . save-buffer))
-   '("SPC b c"   ("close this buffer" . kill-this-buffer))
-   '("SPC b k"   ("kill this buffer" . kill-this-buffer))
-   '("SPC b b"   ("open the buffer list" . helm-buffers-list))
-   '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
-   '("SPC b e"   ("eval this buffer" . eval-buffer)))
-   #+end_src
-*** Eval
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC e"   ("eval"))
-   '("SPC e e" ("eval expression" . eval-expression))
-   '("SPC e b" ("eval this buffer" . eval-buffer))
-   '("SPC e s" ("eval selection" . eval-region)))
-   #+end_src
-*** Narrow
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC n"   ("narrow"))
-   '("SPC n s" ("narrow to selection" . narrow-to-region))
-   '("SPC n w" ("widen" . widen)))
-   #+end_src
-*** Selection
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC s"   ("selection"))
-   '("SPC s a" ("select everything" . mark-whole-buffer))
-   '("SPC s e" ("eval selection" . eval-region)))
-   #+end_src
-*** Cursors
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC C"          ("cursors"))
-   '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
-   '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
-   '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
-   '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
-   '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
-   #+end_src
-*** Help
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC h"   ("help"))
-   '("SPC h h" ("describe something" . helm-apropos))
-   '("SPC h l" ("list definitions" . helm-imenu))
-   '("SPC h k" ("describe a keybind" . describe-key))
-   '("SPC h K" ("search keybinds" . helm-descbinds))
-   '("SPC h f" ("describe face" . describe-face))
-   '("SPC h F" ("describe face" . list-faces-display)))
-   #+end_src
-*** Window
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC w"   ("window"))
-   '("SPC w c" ("close this window" . delete-window))
-   '("SPC w f" ("fullscreen this window" . delete-other-windows))
-   '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
-   '("SPC w V" ("split this window vertically" . split-window-vertically))
-   '("SPC w h" ("move window focus left" . windmove-left))
-   '("SPC w l" ("move window focus right" . windmove-right))
-   '("SPC w k" ("move window focus up" . windmove-up))
-   '("SPC w j" ("move window focus down" . windmove-down)))
-   #+end_src
-*** Quit
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC q"   ("quit"))
-   '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
-   #+end_src
-*** Jump
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC j"   ("jump"))
-   '("SPC j d" ("jump to definition" . find-function)))
-   #+end_src
-*** Org Mode
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC o"   ("org mode"))
-   '("SPC o a" ("open the agenda" . org-agenda)))
-   #+end_src
-*** Workspace
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC `"     ("workspace"))
-   '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
-   '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
-   '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
-   '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
-   '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
-   '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
-   '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
-   '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-   '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-   '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-   '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-   '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-   '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-   '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-   '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-   '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-   '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-   '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-   '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-   '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-   '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-   '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-   '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-   '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-   '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-   '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-   '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-   '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config)))
-                                         #+end_src
-*** Configuration
-    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'global '(normal visual emacs)
-   '("SPC c"   ("configuration"))
-   '("SPC c a" ("load all configs" . rbon-load-config))
-   '("SPC c b" ("bootstrap" . bootstrap))
-   '("SPC c c" ("go to config" . rbon-goto-config))
-   '("SPC c k" ("go to keybinds" . rbon-goto-keybinds))
-   '("SPC c m" ("go to misc config" . rbon-goto-misc))
-   '("SPC c f" ("go to functions" . rbon-goto-functions))
-   '("SPC c p" ("to go packages" . rbon-goto-packages))
-   '("SPC c i" ("to go init" . rbon-goto-init)))
-    #+end_src
 ** Help
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (evil-set-initial-state 'help-mode 'normal)
@@ -310,25 +326,38 @@ Text goes here!
    '("<escape>" transient-quit-one))
    #+end_src
 * Functions
+  Be sure to read the docstrings of the functions themselves.
+** Jump to various configs
+   These are a collection of functions that jump to various points in emacs.org, from any buffer. I can't for the life of me find a function to just jump to a heading by name, so as such these are *extremely* fragile and needlessly verbose. If you change the order of the top-level headings, these will almost certainly break. If you're reading this and know a better way to write these functions, please send help.
+*** rbon-goto-config
   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-config ()
+  "Open emacs.org."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
   (evil-goto-first-line)
   (evil-close-folds))
-
+  #+end_src
+*** rbon-goto-keybinds
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-keybinds ()
+  "Open emacs.org and narrow to keybinds."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
   (evil-goto-first-line)
   (org-next-visible-heading 1)
   (evil-close-fold)
+  (org-next-visible-heading 1)
+  (evil-close-fold)
   (org-narrow-to-subtree)
   (org-cycle))
-
+  #+end_src
+*** rbon-goto-functions
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-functions ()
+  "Open emacs.org and narrow to keybinds."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
@@ -337,10 +366,15 @@ Text goes here!
   (evil-close-fold)
   (org-next-visible-heading 1)
   (evil-close-fold)
+  (org-next-visible-heading 1)
+  (evil-close-fold)
   (org-narrow-to-subtree)
   (org-cycle))
-
+  #+end_src
+*** rbon-goto-misc
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-misc ()
+  "Open emacs.org and narrow to keybinds."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
@@ -351,10 +385,15 @@ Text goes here!
   (evil-close-fold)
   (org-next-visible-heading 1)
   (evil-close-fold)
+  (org-next-visible-heading 1)
+  (evil-close-fold)
   (org-narrow-to-subtree)
   (org-cycle))
-
+  #+end_src
+*** rbon-goto-packages
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-packages ()
+  "Open emacs.org and narrow to keybinds."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
@@ -367,10 +406,16 @@ Text goes here!
   (evil-close-fold)
   (org-next-visible-heading 1)
   (evil-close-fold)
+  (org-next-visible-heading 1)
+  (evil-close-fold)
   (org-narrow-to-subtree)
   (org-cycle))
 
+  #+end_src
+*** rbon-goto-init
+    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-init ()
+  "Open emacs.org and narrow to keybinds."
   (interactive)
   (find-file "~/.emacs.d/emacs.org")
   (widen)
@@ -385,9 +430,16 @@ Text goes here!
   (evil-close-fold)
   (org-next-visible-heading 1)
   (evil-close-fold)
+  (org-next-visible-heading 1)
+  (evil-close-fold)
   (org-narrow-to-subtree)
   (org-cycle))
+    #+end_src
+** helm-M-x-read-extended-command 
+   By default, =helm-M-x-read-extended-command= doesn't let you change the prompt. It's just hardcoded into the function. So I blatantly copy/pasted it here, with one whole line changed to allow the prompt to be a user variable. Maybe one day when I know how, I'll submit a pull request.
 
+   It probably has something to do with the way packages are ordered, but this needs to be wrapped in an =with-eval-after-load= in order to be properly loaded.
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (with-eval-after-load 'helm-command
   (defun helm-M-x-read-extended-command (collection &optional predicate history)
     "Read or execute action on command name in COLLECTION or HISTORY.
@@ -453,20 +505,33 @@ default to `extended-command-history'."
                   :buffer "*helm M-x*"
                   :history 'helm-M-x-input-history))
         (helm-M-x--unwind-forms)))))
-
+   #+end_src
+** rbon-switch-to-scratch
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-switch-to-scratch ()
+  "This probably doesn't work right now."
   (interactive)
-  (display-buffer-pop-up-frame (goet-buffer-create "scratch")))
-
+  (display-buffer-pop-up-frame (get-buffer-create "scratch")))
+   #+end_src
+** Haskell Mode
+   These are functions that I map to =i= and =^= to make them work like you'd expect them to, while using the haskell prompt.
+*** rbon-insert-haskell-prompt-start
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-insert-haskell-prompt-start ()
+  "Enter the insert state at the start of the haskell prompt."
   (interactive)
   (goto-char haskell-interactive-mode-prompt-start)
   (call-interactively 'evil-insert))
-
+   #+end_src
+*** rbon-goto-haskell-prompt-start
+    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-haskell-prompt-start ()
+  "Go to the start of the haskell prompt."
   (interactive)
   (goto-char haskell-interactive-mode-prompt-start))
-
+    #+end_src
+** =rbon-center-frame=
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-center-frame ()
   "Move the current frame to the center of the display.
 Why is this not a built-in function?"
@@ -474,6 +539,8 @@ Why is this not a built-in function?"
   (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
         (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
     (set-frame-position (selected-frame) h-offset v-offset)))
+   #+end_src
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 
 (defun my-change-buffer (change-buffer)
   "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
