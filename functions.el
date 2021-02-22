@@ -1,3 +1,13 @@
+(defun rbon-go-to-helm ()
+  (interactive)
+  (find-file "~/.emacs.d/emacs.org")
+  (evil-goto-first-line)
+  (org-next-visible-heading 4)
+  (org-narrow-to-subtree)
+  (org-show-subtree)
+  (org-cycle)
+  (org-cycle))
+
 (with-eval-after-load 'helm-command
   (defun helm-M-x-read-extended-command (collection &optional predicate history)
     "Read or execute action on command name in COLLECTION or HISTORY.
