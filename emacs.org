@@ -1,6 +1,6 @@
 #+TITLE: Rbon's Emacs Config
 Text goes here!
-* :toc:
+* Table of Contents :toc:
 - [[#keybinds][Keybinds]]
   - [[#miscellaneous][Miscellaneous]]
   - [[#helm][Helm]]
