@@ -1,5 +1,9 @@
 #+TITLE: Rbon's Emacs Config
-Text goes here!
+Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
+
+I have considered grouping items by context, i.e: all of the functions and keybinds and options relating to =org mode= all being under one category. However, I prefer to have every keybind in one place, and every function, and so on. I may change my mind in the future.
+
+One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
 * Table of Contents :toc:
 - [[#keybinds][Keybinds]]
   - [[#miscellaneous][Miscellaneous]]
@@ -749,8 +753,24 @@ Examples:
   #+end_src
 
 * Misc
+
+  This section is pretty messy. I'm slowly trying to organize it.
+
   #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-;; Since we don't want to disable org-confirm-babel-evaluate all
+; making org mode prettier
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;;Since we don't want to disable org-confirm-babel-evaluate all
 ;; of the time, do it around the after-save-hook
  (defun dw/org-babel-tangle-dont-ask ()
    ;; Dynamic scoping to the rescue
@@ -883,6 +903,7 @@ Examples:
                     :height 150
                     :weight 'normal
                     :width 'normal)
+
 
 (autothemer-deftheme
  thing "a test theme"
@@ -1046,3 +1067,4 @@ Examples:
  ;; If there is more than one, they won't work right.
  )
   #+end_src
+
