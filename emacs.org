@@ -1,5 +1,24 @@
 #+TITLE: Rbon's Emacs Config
 Text goes here!
+* :toc:
+- [[#keybinds][Keybinds]]
+  - [[#miscellaneous][Miscellaneous]]
+  - [[#helm][Helm]]
+  - [[#leader-binds][Leader binds]]
+  - [[#help][Help]]
+  - [[#org][Org]]
+  - [[#lsp][LSP]]
+  - [[#recentf-dialog][Recentf Dialog]]
+  - [[#org-agenda][Org Agenda]]
+  - [[#dired][Dired]]
+  - [[#haskell][Haskell]]
+  - [[#with-editor][With Editor]]
+  - [[#magit][Magit]]
+- [[#functions][Functions]]
+- [[#misc][Misc]]
+- [[#packages][Packages]]
+- [[#init][Init]]
+
 * Keybinds
 ** Miscellaneous
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
