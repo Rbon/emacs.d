@@ -2,9 +2,11 @@
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
 
-I have considered grouping items by context, i.e: all of the functions and keybinds and options relating to =org mode= all being under one category. However, I prefer to have every keybind in one place, and every function, and so on. I may change my mind in the future.
++I have considered grouping items by context, i.e: all of the functions and keybinds and options relating to =org mode= all being under one category. However, I prefer to have every keybind in one place, and every function, and so on. I may change my mind in the future.+ I have changed my mind on this.
 
 One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
+
+A problem I'm having currently is my code in the blocks of this file is being automatically indented weirdly. Send help.
 
 * Table of Contents :toc:
 - [[#keybinds][Keybinds]]
@@ -42,10 +44,14 @@ One of the the axioms of this config file is that no pair of parentheses should 
   - [[#rbon-center-frame][=rbon-center-frame=]]
   - [[#formatted-copy][Formatted Copy]]
 - [[#misc][Misc]]
-  - [[#org-mode-1][Org Mode]]
   - [[#other][Other]]
 - [[#packages][Packages]]
 - [[#init][Init]]
+  - [[#misc-1][Misc]]
+  - [[#center-the-frame-on-startup][Center the frame on startup]]
+- [[#appearance][Appearance]]
+  - [[#general][General]]
+  - [[#org-mode-1][Org Mode]]
 
 * Keybinds
 ** Miscellaneous
@@ -787,62 +793,9 @@ Examples:
 
    #+end_src
 
-
 * Misc
 
   This section is pretty messy. I'm slowly trying to organize it.
-** Org Mode
-
-   Enable proportional fonts in =org-mode=.
-
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-
-#+end_src
-
-Ensure that anything that should be fixed-pitch in Org files appears that way.
-I had to compile emacs from source to get =org-block='s background to actually fill the whole line, instead of stopping at the last character. I was previously using a mac port from somewhere that I have forgotten.
-Strangely enough, if I eval this expression, then the buggy behavior returns, meaning I have to restart emacs. I will post updates when I eventually roll my own theme.
-
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-
-  (custom-theme-set-faces
-      'user
-      '(org-block ((t (:inherit fixed-pitch :background "#eee8d5"))))
-      '(org-block-begin-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
-      '(org-block-end-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
-       '(org-block-background ((t (:inherit fixed-pitch))))
-       '(org-code ((t (:inherit (shadow fixed-pitch)))))
-       '(org-document-info ((t (:foreground "dark orange"))))
-       '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-       '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-       '(org-link ((t (:foreground "royal blue" :underline t))))
-       '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-       '(org-property-value ((t (:inherit fixed-pitch))) t)
-       '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-       '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-       '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-      '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-
-    ; org-block: foreground #00007f background # height 0.9
-    ; org-block-begin-line, org-block-end-line: foreground #545454 background #e0dfd1
-    ; (set-face-attribute 'org-code nil :foreground nil :background "#ff0000" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-block nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; 
-    ; (set-face-attribute 'org-block-begin-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-block-end-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    ; ; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-    ; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    ; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    ; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    ; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-  #+end_src
-
 ** Other  
 
   #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
@@ -873,7 +826,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
         (require 'evil-textobj-line)
         ; (load "~/.emacs.d/evil-textobj-line")
         (setq smex-prompt-string "Run command: ")
-        (evil-mode 1) ; enable evil
         (global-evil-surround-mode 1)
         (setq confirm-kill-processes nil)
         (global-evil-mc-mode  1) ; multiple cursors
@@ -935,7 +887,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
         (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
         ;; (add-to-list 'load-path "~/.emacs.d") ; needed for 'require' to see my other configs
         (setq help-window-select t) ; switch to help windows automatically
-        (load-theme 'solarized-light t) ; best theme fight me
         (setq initial-scratch-message "") ; make scratch empty
         (setq-default indent-tabs-mode nil) ; use spaces, not tabs
         (setq-default tab-width 2)
@@ -977,13 +928,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
               (add-hook hook (lambda () (flyspell-mode 1))))
 
 
-        ;; APPEARANCE
-
-        (set-face-attribute 'default nil
-                            :family "Hasklig"
-                            :height 150
-                            :weight 'normal
-                            :width 'normal)
 
 
         (autothemer-deftheme
@@ -1009,6 +953,8 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
                      '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
         (add-to-list 'org-structure-template-alist
                      '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
 
 
 
@@ -1045,10 +991,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
             (recentf-open-files))
           (setq booted t))) 
 
-        ;; this is called last to ensure frame is properly centered
-        (when window-system
-          ; (set-frame-size (selected-frame) 80 40)
-          (rbon-center-frame))
   #+end_src
   
 * Packages
@@ -1109,7 +1051,16 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
   #+end_src
 
 * Init
+** Misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+(defun goto-config ()
+  "Open emacs.org."
+  (interactive)
+  (find-file "~/.emacs.d/emacs.org")
+  (widen)
+  (evil-goto-first-line)
+  (evil-close-folds))
+
 (defun load-user-file (filename)
   "Load a file in current user's configuration directory"
   (interactive "f")
@@ -1117,20 +1068,31 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
     (write-region "" nil filename))
   (load-file (expand-file-name filename user-emacs-directory)))  
 
+(defun rbon-load-evil ()
+  (unless (package-installed-p 'evil)
+    (package-install 'evil))
+  (require 'evil)
+  (evil-mode 1))
+
 (defun bootstrap ()
   "Run this command on a fresh install to pull down packages and load user configs."
   (interactive)
+  (org-babel-tangle-file "~/.emacs.d/keybinds.org")
+  (rbon-load-evil)
   (load-user-file "packages.el")
   (sync-all-packages)
   (load-user-file "functions.el")
+  (load-user-file "appearance.el")
   (load-user-file "misc.el")
-  (org-babel-tangle-file "~/.emacs.d/keybinds.org")
   (load-user-file "keybinds.el"))
 
 (defun rbon-load-config ()
   (interactive)
+  (rbon-load-evil)
+  ; (org-babel-tangle-file "~/.emacs.d/keybinds.org")
   (load-user-file "packages.el")
   (load-user-file "functions.el")
+  (load-user-file "appearance.el")
   (load-user-file "misc.el")
   (load-user-file "keybinds.el"))
 
@@ -1138,18 +1100,89 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
     (rbon-load-config))
 (put 'narrow-to-region 'disabled nil)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(mini-modeline eyebrowse magit smex exec-path-from-shell solarized-theme lua-mode lsp-haskell lsp-mode hasklig-mode haskell-mode markdown-mode which-key flycheck undo-tree evil)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
   #+end_src
+
+** Center the frame on startup
+   This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
+
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+
+(eval-after-load "~/.dshdusdhsudh"
+  (when window-system (rbon-center-frame)))
+
+   #+end_src
+   
+* Appearance
+** General
+Best theme fight me.
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+
+     (load-theme 'solarized-light t) ; 
+
+   #+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+
+(set-face-attribute 'default nil
+  :family "Hasklig"
+  :height 150
+  :weight 'normal
+  :width 'normal)
+
+#+end_src
+
+** Org Mode
+
+   Enable proportional fonts in =org-mode=.
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+
+#+end_src
+
+Ensure that anything that should be fixed-pitch in Org files appears that way.
+I had to compile emacs from source to get =org-block='s background to actually fill the whole line, instead of stopping at the last character. I was previously using a mac port from somewhere that I have forgotten.
+Strangely enough, if I eval this expression, then the buggy behavior returns, meaning I have to restart emacs. I will post updates when I eventually roll my own theme.
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+
+  (custom-theme-set-faces
+      'user
+      '(org-block ((t (:inherit fixed-pitch :background "#eee8d5"))))
+      '(org-block-begin-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
+      '(org-block-end-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
+       '(org-block-background ((t (:inherit fixed-pitch))))
+       '(org-code ((t (:inherit (shadow fixed-pitch)))))
+       '(org-document-info ((t (:foreground "dark orange"))))
+       '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+       '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+       '(org-link ((t (:foreground "royal blue" :underline t))))
+       '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       '(org-property-value ((t (:inherit fixed-pitch))) t)
+       '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+       '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+      '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+
+    ; org-block: foreground #00007f background # height 0.9
+    ; org-block-begin-line, org-block-end-line: foreground #545454 background #e0dfd1
+    ; (set-face-attribute 'org-code nil :foreground nil :background "#ff0000" :inherit 'fixed-pitch)
+    ; (set-face-attribute 'org-block nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
+    ; 
+    ; (set-face-attribute 'org-block-begin-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
+    ; (set-face-attribute 'org-block-end-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
+    ; (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+    ; (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+    ; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    ; ; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+    ; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    ; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    ; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    ; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  #+end_src
+  
+  
+  
 

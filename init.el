@@ -1,3 +1,11 @@
+(defun goto-config ()
+  "Open emacs.org."
+  (interactive)
+  (find-file "~/.emacs.d/emacs.org")
+  (widen)
+  (evil-goto-first-line)
+  (evil-close-folds))
+
 (defun load-user-file (filename)
   "Load a file in current user's configuration directory"
   (interactive "f")
@@ -5,20 +13,31 @@
     (write-region "" nil filename))
   (load-file (expand-file-name filename user-emacs-directory)))  
 
+(defun rbon-load-evil ()
+  (unless (package-installed-p 'evil)
+    (package-install 'evil))
+  (require 'evil)
+  (evil-mode 1))
+
 (defun bootstrap ()
   "Run this command on a fresh install to pull down packages and load user configs."
   (interactive)
+  (org-babel-tangle-file "~/.emacs.d/keybinds.org")
+  (rbon-load-evil)
   (load-user-file "packages.el")
   (sync-all-packages)
   (load-user-file "functions.el")
+  (load-user-file "appearance.el")
   (load-user-file "misc.el")
-  (org-babel-tangle-file "~/.emacs.d/keybinds.org")
   (load-user-file "keybinds.el"))
 
 (defun rbon-load-config ()
   (interactive)
+  (rbon-load-evil)
+  ; (org-babel-tangle-file "~/.emacs.d/keybinds.org")
   (load-user-file "packages.el")
   (load-user-file "functions.el")
+  (load-user-file "appearance.el")
   (load-user-file "misc.el")
   (load-user-file "keybinds.el"))
 
@@ -26,16 +45,5 @@
     (rbon-load-config))
 (put 'narrow-to-region 'disabled nil)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(mini-modeline eyebrowse magit smex exec-path-from-shell solarized-theme lua-mode lsp-haskell lsp-mode hasklig-mode haskell-mode markdown-mode which-key flycheck undo-tree evil)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(eval-after-load "~/.dshdusdhsudh"
+  (when window-system (rbon-center-frame)))
