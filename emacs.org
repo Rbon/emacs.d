@@ -40,6 +40,7 @@ One of the the axioms of this config file is that no pair of parentheses should 
   - [[#rbon-switch-to-scratch][rbon-switch-to-scratch]]
   - [[#haskell-mode][Haskell Mode]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
+  - [[#formatted-copy][Formatted Copy]]
 - [[#misc][Misc]]
   - [[#org-mode-1][Org Mode]]
   - [[#other][Other]]
@@ -253,7 +254,7 @@ One of the the axioms of this config file is that no pair of parentheses should 
  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'org-mode 'normal
    '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-   '("SPC s c" ("make bold" . make-bold))
+   '("SPC s b" ("make bold" . make-bold))
    '("SPC o s" ("scedule a task" . org-schedule))
    '("SPC o d" ("set a deadline" . org-deadline))
    '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))
@@ -338,6 +339,7 @@ One of the the axioms of this config file is that no pair of parentheses should 
    '("H"        magit-discard)
    '("<escape>" transient-quit-one))
    #+end_src
+
 * Functions
   Be sure to read the docstrings of the functions themselves.
 ** Jump to various configs
@@ -760,6 +762,31 @@ Examples:
   (split-window-horizontally)
   (other-window 1))
   #+end_src
+** Formatted Copy
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+
+     (defun formatted-copy ()
+       "Export region to HTML, and copy it to the clipboard."
+       (interactive)
+       (save-window-excursion
+         (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
+                (html (with-current-buffer buf (buffer-string))))
+           (with-current-buffer buf
+             (shell-command-on-region
+              (point-min)
+              (point-max)
+              "textutil -stdin -format html -convert rtf -stdout | pbcopy"))
+           (kill-buffer buf))))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+
+     (rbon-define-key 'global '(normal visual emacs)
+        '("SPC s c" formatted-copy))
+
+   #+end_src
+
 
 * Misc
 
