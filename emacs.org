@@ -37,6 +37,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#rbon-switch-to-scratch][rbon-switch-to-scratch]]
   - [[#haskell-mode][Haskell Mode]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
+  - [[#rbon-define-key][rbon-define-key]]
   - [[#misc][misc]]
   - [[#formatted-copy][Formatted Copy]]
 - [[#misc-1][Misc]]
@@ -538,7 +539,66 @@ Why is this not a built-in function?"
     (set-frame-position (selected-frame) h-offset v-offset)))
    #+end_src
 
+** rbon-define-key
+This is probably the one portion of this config that I'm most proud of. In essence, it wraps =evil-define-key= and =add-hook= to create a one-size-fits-all function for defining both global binds, and mode-specific binds, making sure that the latter doesn't pollute the global map.
+
+Currently, there is a limitation that it assumes the associated hook of a mode is just the name of the mode followed by "-hook." This means that if a dev breaks that pattern, this function will silently fail. I might, in the future, add a way to manually add a hook name instead of a mode name, or perhaps I will just make it so that you always use the hook name instead. As it is, it works perfectly for me.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-define-key (mode state &rest bindings)
+    "Define one or more key bindings.
+
+  MODE should be a symbol. If it is 'global, then bind keys globally. Otherwise,
+  create buffer-local binds when that mode is activated, which means mode-specific
+  binds will never leave their designated mode.
+
+  STATE can either be a symbol or list of symbols, just as you would use with
+  'evil-define-key'.
+
+  BINDINGS should be in the form of '(KEY DEF), where KEY is a string, and DEF is
+  a function.
+
+  KEY is automatically applied to `kbd'.
+
+  Examples:
+
+    (rbon-define-key 'global 'normal '(\"q\" myfun1))
+
+    (rbon-define-key 'some-mode 'insert
+      '(\"TAB\" myfun1)
+      '(\"SPC b l\" myfun2))
+
+  If `which-key-enable-extended-define-key' is non-nil, then you can optionally
+  add a string to replace the function name when using which-key. In which case,
+  BINDINGS should take the form of '(KEY (REPLACEMENT . DEF)), where REPLACEMENT
+  is a string.
+
+  Examples:
+
+    (rbon-define-key 'another-mode '(normal visual emacs)
+      '(\"SPC a\" (\"name of function\" . myfun1)))
+
+    (rbon-define-key 'global 'normal
+      '(\"k\" (\"make stuff\" . myfun1))
+      '(\"j\" (\"do the thing\" . myfun2)))"
+    (if (eq mode 'global)
+        (mapcar (apply-partially 'rbon--global-set-key state) bindings)
+      (add-hook
+       (intern (concat (symbol-name mode) "-hook"))
+       (apply-partially 'rbon--local-set-key state bindings))))
+
+  (defun rbon--local-set-key (state bindings)
+    (dolist (b bindings)
+      (evil-define-key state 'local (kbd (nth 0 b)) (nth 1 b))))
+
+  (defun rbon--global-set-key (state binding)
+    (let ((key (kbd (nth 0 binding)))
+          (def (nth 1 binding)))
+      (evil-define-key state 'global key def)))
+#+end_src
+
 ** misc
+
+
   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 
 (defun my-change-buffer (change-buffer)
@@ -567,45 +627,6 @@ Why is this not a built-in function?"
   "Needed to unbind keys. Yes."
   (interactive))
 
-(defun rbon--local-set-key (state bindings)
-  (dolist (b bindings)
-    (evil-define-key state 'local (kbd (nth 0 b)) (nth 1 b))))
-
-(defun rbon--global-set-key (state binding)
-  (let ((key (kbd (nth 0 binding)))
-        (def (nth 1 binding)))
-    (evil-define-key state 'global key def)))
-
-(defun rbon-define-key (mode state &rest bindings)
-  "Define one or more key bindings.
-MODE should be a symbol. If it is 'global, then bind keys globally. Otherwise, create buffer-local binds when that mode is activated, which means mode-specific binds will never leave their designated mode.
-STATE can either be a symbol or list of symbols, just as you would use with 'evil-define-key'.
-BINDINGS should be in the form of '(KEY DEF), where KEY is a string, and DEF is a function.
-KEY is automatically applied to `kbd'.
-
-Examples:
-
-  (rbon-define-key 'global 'normal '(\"q\" myfun1))
-
-  (rbon-define-key 'some-mode 'insert
-    '(\"TAB\" myfun1)
-    '(\"SPC b l\" myfun2))
-
-If `which-key-enable-extended-define-key' is non-nil, then you can optionally add a string to replace the function name when using which-key. In which case, BINDINGS should take the form of '(KEY (REPLACEMENT . DEF)), where REPLACEMENT is a string.
-
-Examples:
-
-  (rbon-define-key 'another-mode '(normal visual emacs)
-    '(\"SPC a\" (\"name of function\" . myfun1)))
-
-  (rbon-define-key 'global 'normal
-    '(\"k\" (\"make stuff\" . myfun1))
-    '(\"j\" (\"do the thing\" . myfun2)))"
-  (if (eq mode 'global)
-      (mapcar (apply-partially 'rbon--global-set-key state) bindings)
-    (add-hook
-     (intern (concat (symbol-name mode) "-hook"))
-     (apply-partially 'rbon--local-set-key state bindings))))
 
 (defun rbon-haskell-interactive-mode-kill-whole-line ()
   (interactive)
@@ -1197,7 +1218,7 @@ Best theme fight me.
 #+end_src
 
 
-#  LocalWords:  Keybinds babel Org Misc Magit Dired Recentf
+#  LocalWords:  Keybinds babel Org Misc Magit Dired Recentf rbon
 
 * LSP
 ** Keybinds
