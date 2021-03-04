@@ -11,7 +11,6 @@ A problem I'm having currently is my code in the blocks of this file is being au
 * Table of Contents :toc:
 - [[#keybinds][Keybinds]]
   - [[#miscellaneous][Miscellaneous]]
-  - [[#helm][Helm]]
   - [[#applications][Applications]]
   - [[#files][Files]]
   - [[#frame][Frame]]
@@ -24,14 +23,10 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#window][Window]]
   - [[#quit][Quit]]
   - [[#jump][Jump]]
-  - [[#org-mode][Org Mode]]
   - [[#workspace][Workspace]]
   - [[#configuration][Configuration]]
   - [[#help-1][Help]]
-  - [[#org][Org]]
-  - [[#lsp][LSP]]
   - [[#recentf-dialog][Recentf Dialog]]
-  - [[#org-agenda][Org Agenda]]
   - [[#dired][Dired]]
   - [[#haskell][Haskell]]
   - [[#with-editor][With Editor]]
@@ -42,73 +37,83 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#rbon-switch-to-scratch][rbon-switch-to-scratch]]
   - [[#haskell-mode][Haskell Mode]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
+  - [[#misc][misc]]
   - [[#formatted-copy][Formatted Copy]]
-- [[#misc][Misc]]
+- [[#misc-1][Misc]]
   - [[#other][Other]]
+  - [[#force-certain-buffers-to-use-the-current-window][Force certain buffers to use the current window]]
+- [[#org-mode][Org Mode]]
+  - [[#org-babel][Org-babel]]
+  - [[#appearance][Appearance]]
+  - [[#keybinds-1][Keybinds]]
+- [[#helm][Helm]]
+  - [[#keybinds-2][Keybinds]]
 - [[#packages][Packages]]
 - [[#init][Init]]
-  - [[#misc-1][Misc]]
+  - [[#misc-2][Misc]]
   - [[#center-the-frame-on-startup][Center the frame on startup]]
-- [[#appearance][Appearance]]
+- [[#appearance-1][Appearance]]
   - [[#general][General]]
-  - [[#org-mode-1][Org Mode]]
+- [[#lsp][LSP]]
+  - [[#keybinds-3][Keybinds]]
+- [[#magit-1][Magit]]
+  - [[#keybinds-4][Keybinds]]
 
 * Keybinds
 ** Miscellaneous
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- ;; escape key stuff
- ;; make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
-
+ Escape key stuff
+ Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
  (rbon-define-key 'global '(normal visual motion emacs)
    '("<escape>" rbon-escape))
+#+end_src
 
- (rbon-define-key 'global 'visual
-   '("I" evil-mc-make-cursor-in-visual-selection-beg)
-   '("A" evil-mc-make-cursor-in-visual-selection-end))
+Cursor shortcuts
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global 'normal
+                   '("J" rbon-add-cursor-move-down)
+                   '("K" rbon-add-cursor-move-up)
+                   '("N" evil-mc-make-and-goto-next-match)
+                   '("M" evil-mc-make-all-cursors))
+#+end_src
 
- ; cursor shortcuts
- (rbon-define-key 'global 'normal
-   '("J" rbon-add-cursor-move-down)
-   '("K" rbon-add-cursor-move-up)
-   '("N" evil-mc-make-and-goto-next-match)
-   '("M" evil-mc-make-all-cursors))
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 
- (rbon-define-key 'global 'insert '("TAB" dabbrev-expand))
-                                         ; tab completion in insert mode
 
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC SPC" ("run a command" . helm-M-x))
-  '("SPC DEL" ("go to last location" . pop-global-mark)))
+  (rbon-define-key 'global 'visual
+                   '("I" evil-mc-make-cursor-in-visual-selection-beg)
+                   '("A" evil-mc-make-cursor-in-visual-selection-end))
 
-   #+end_src
-** Helm
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (if (eq system-type 'darwin) ; macOS
-     (progn
-       (define-key helm-map (kbd "s-j") 'helm-next-line)
-       (define-key helm-map (kbd "s-k") 'helm-previous-line))
-   (progn
-     (define-key helm-map (kbd "C-j") 'helm-next-line)
-     (define-key helm-map (kbd "C-k") 'helm-previous-line)))
-   #+end_src
-** Applications  
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC a"   ("applications"))
-  '("SPC a d" dired)
-  '("SPC a m" magit))
-  #+end_src
+
+  (rbon-define-key 'global 'insert '("TAB" dabbrev-expand))
+                                          ; tab completion in insert mode
+
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC SPC" ("run a command" . helm-M-x))
+                   '("SPC DEL" ("go to last location" . pop-global-mark)))
+
+#+end_src
+
+** Applications
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC a"   ("applications"))
+                   '("SPC a d" dired)
+                   '("SPC a m" magit))
+#+end_src
+
 ** Files
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC f"   ("files"))
-  '("SPC f f" ("find a file" . helm-find-files))
-  '("SPC f s" ("save this file" . save-buffer))
-  '("SPC f r" ("recent files" . helm-recentf))
-  '("SPC f b" ("open file browser" . magit-dired-jump))
-  '("SPC f c" ("open a user config file" . find-config-file)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC f"   ("files"))
+                   '("SPC f f" ("find a file" . helm-find-files))
+                   '("SPC f s" ("save this file" . save-buffer))
+                   '("SPC f r" ("recent files" . helm-recentf))
+                   '("SPC f b" ("open file browser" . magit-dired-jump))
+                   '("SPC f c" ("open a user config file" . find-config-file)))
+#+end_src
+
 ** Frame
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -117,6 +122,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
   '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
   #+end_src
+
 ** Buffers
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -128,6 +134,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
   '("SPC b e"   ("eval this buffer" . eval-buffer)))
   #+end_src
+
 ** Eval
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -136,6 +143,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC e b" ("eval this buffer" . eval-buffer))
   '("SPC e s" ("eval selection" . eval-region)))
   #+end_src
+
 ** Narrow
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -143,13 +151,16 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC n s" ("narrow to selection" . narrow-to-region))
   '("SPC n w" ("widen" . widen)))
   #+end_src
+
 ** Selection
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC s"   ("selection"))
-  '("SPC s a" ("select everything" . mark-whole-buffer))
-  '("SPC s e" ("eval selection" . eval-region)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC s"   ("selection"))
+                   '("SPC s a" ("select everything" . mark-whole-buffer))
+                   '("SPC s e" ("eval selection" . eval-region))
+                   '("SPC s i" ("indent selection" . indent-region)))
+#+end_src
+
 ** Cursors
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -160,6 +171,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
   '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
   #+end_src
+
 ** Help
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 
@@ -174,6 +186,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC h F" ("describe face" . list-faces-display)))
 
   #+end_src
+
 ** Window
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -187,24 +200,21 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC w k" ("move window focus up" . windmove-up))
   '("SPC w j" ("move window focus down" . windmove-down)))
   #+end_src
+  
 ** Quit
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC q"   ("quit"))
   '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
   #+end_src
+
 ** Jump
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
   '("SPC j"   ("jump"))
   '("SPC j d" ("jump to definition" . find-function)))
   #+end_src
-** Org Mode
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC o"   ("org mode"))
-  '("SPC o a" ("open the agenda" . org-agenda)))
-  #+end_src
+
 ** Workspace
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -238,6 +248,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
   '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config)))
                                         #+end_src
+
 ** Configuration
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -251,39 +262,13 @@ A problem I'm having currently is my code in the blocks of this file is being au
   '("SPC c p" ("to go packages" . rbon-goto-packages))
   '("SPC c i" ("to go init" . rbon-goto-init)))
    #+end_src
+
 ** Help
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (evil-set-initial-state 'help-mode 'normal)
  (rbon-define-key 'help-mode 'normal '("<escape>" quit-window))
    #+end_src
-** Org
- #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'org-mode 'normal
-   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-   '("SPC s b" ("make bold" . make-bold))
-   '("SPC o s" ("scedule a task" . org-schedule))
-   '("SPC o d" ("set a deadline" . org-deadline))
-   '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))
 
- (if (eq system-type 'darwin) ; macOS
-     (rbon-define-key 'org-mode 'normal
-       '("s-i" ("make italic" . make-italic))
-       '("s-b" ("make bold" . make-bold))
-       '("<s-return>" rbon-insert-heading-respect-content))
-     (rbon-define-key 'org-mode 'normal
-       '("C-i" ("make italic" . make-italic))
-       '("C-b" ("make bold" . make-bold))
-       '("<C-return>"  rbon-insert-heading-respect-content)))
- 
-       #+end_src
-** LSP
-       #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'lsp-mode 'normal
-   '("SPC b f" ("format this buffer" . lsp-format-buffer))
-   '("SPC s f" ("format selection" . lsp-format-region))
-   '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
-   '("SPC j d" ("jump to definition" . lsp-find-definition)))
-   #+end_src
 ** Recentf Dialog
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'recentf-dialog-mode 'normal
@@ -291,15 +276,8 @@ A problem I'm having currently is my code in the blocks of this file is being au
    '("h" nop)
    '("q" recentf-cancel-dialog))
    #+end_src
-** Org Agenda
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'org-agenda-mode 'normal
-   '("j" org-agenda-next-line)
-   '("k" org-agenda-previous-line)
-   '("l" org-agenda-later)
-   '("h" org-agenda-earlier))
-   #+end_src
-** Dired 
+
+** Dired
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'dired-mode 'normal
    '("h" dired-up-directory)
@@ -310,7 +288,8 @@ A problem I'm having currently is my code in the blocks of this file is being au
    '("t" touch-file))
 
    #+end_src
-** Haskell 
+
+** Haskell
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'haskell-mode 'normal
    '("SPC b e" ("eval this buffer" . run-code)))
@@ -329,25 +308,18 @@ A problem I'm having currently is my code in the blocks of this file is being au
 
  (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
  #+end_src
-** With Editor 
+ 
+** With Editor
  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'with-editor-mode 'normal
    '("SPC q f" with-editor-finish)
    '("SPC q c" with-editor-cancel))
 
    #+end_src
-** Magit
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'magit-mode 'emacs
-   '("J"        magit-status-jump)
-   '("j"        magit-next-line)
-   '("k"        magit-previous-line)
-   '("H"        magit-discard)
-   '("<escape>" transient-quit-one))
-   #+end_src
 
+** Magit
 * Functions
-  Be sure to read the docstrings of the functions themselves.
+Be sure to read the docstrings of the functions themselves.
 ** Jump to various configs
    These are a collection of functions that jump to various points in emacs.org, from any buffer. I can't for the life of me find a function to just jump to a heading by name, so as such these are *extremely* fragile and needlessly verbose. If you change the order of the top-level headings, these will almost certainly break. If you're reading this and know a better way to write these functions, please send help.
 *** rbon-goto-config
@@ -527,6 +499,7 @@ default to `extended-command-history'."
                   :history 'helm-M-x-input-history))
         (helm-M-x--unwind-forms)))))
    #+end_src
+
 ** rbon-switch-to-scratch
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-switch-to-scratch ()
@@ -534,6 +507,7 @@ default to `extended-command-history'."
   (interactive)
   (display-buffer-pop-up-frame (get-buffer-create "scratch")))
    #+end_src
+
 ** Haskell Mode
    These are functions that I map to =i= and =^= to make them work like you'd expect them to, while using the haskell prompt.
 *** rbon-insert-haskell-prompt-start
@@ -544,6 +518,7 @@ default to `extended-command-history'."
   (goto-char haskell-interactive-mode-prompt-start)
   (call-interactively 'evil-insert))
    #+end_src
+   
 *** rbon-goto-haskell-prompt-start
     #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-haskell-prompt-start ()
@@ -551,6 +526,7 @@ default to `extended-command-history'."
   (interactive)
   (goto-char haskell-interactive-mode-prompt-start))
     #+end_src
+
 ** =rbon-center-frame=
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-center-frame ()
@@ -561,6 +537,8 @@ Why is this not a built-in function?"
         (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
     (set-frame-position (selected-frame) h-offset v-offset)))
    #+end_src
+
+** misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 
 (defun my-change-buffer (change-buffer)
@@ -591,7 +569,7 @@ Why is this not a built-in function?"
 
 (defun rbon--local-set-key (state bindings)
   (dolist (b bindings)
-    (evil-local-set-key state (kbd (nth 0 b)) (nth 1 b))))
+    (evil-define-key state 'local (kbd (nth 0 b)) (nth 1 b))))
 
 (defun rbon--global-set-key (state binding)
   (let ((key (kbd (nth 0 binding)))
@@ -768,53 +746,37 @@ Examples:
   (split-window-horizontally)
   (other-window 1))
   #+end_src
+
 ** Formatted Copy
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun formatted-copy ()
+    "Export region to HTML, and copy it to the clipboard."
+    (interactive)
+    (save-window-excursion
+      (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
+             (html (with-current-buffer buf (buffer-string))))
+        (with-current-buffer buf
+          (shell-command-on-region
+           (point-min)
+           (point-max)
+           "textutil -stdin -format html -convert rtf -stdout | pbcopy"))
+        (kill-buffer buf))))
+#+end_src
 
-     (defun formatted-copy ()
-       "Export region to HTML, and copy it to the clipboard."
-       (interactive)
-       (save-window-excursion
-         (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
-                (html (with-current-buffer buf (buffer-string))))
-           (with-current-buffer buf
-             (shell-command-on-region
-              (point-min)
-              (point-max)
-              "textutil -stdin -format html -convert rtf -stdout | pbcopy"))
-           (kill-buffer buf))))
-
-   #+end_src
-
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-
-     (rbon-define-key 'global '(normal visual emacs)
-        '("SPC s c" formatted-copy))
-
-   #+end_src
-
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC s c" formatted-copy))
+#+end_src
+   
 * Misc
-
-  This section is pretty messy. I'm slowly trying to organize it.
 ** Other  
-
+This section is pretty messy. I'm slowly trying to organize it.
+*** Misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
 
     ;     (load-file "~/.emacs.d/leuven-theme.el")
     ;     (load-theme 'leuven t)
 
-        ;;Since we don't want to disable org-confirm-babel-evaluate all
-        ;; of the time, do it around the after-save-hook
-         (defun dw/org-babel-tangle-dont-ask ()
-           ;; Dynamic scoping to the rescue
-           (let ((org-confirm-babel-evaluate nil))
-             (org-babel-tangle)))
-
-         (add-hook
-          'org-mode-hook
-          (lambda () (add-hook
-                      'after-save-hook #'dw/org-babel-tangle-dont-ask
-                      'run-at-end 'only-in-org-mode)))
 
         (setq org-src-fontify-natively t)
 
@@ -992,7 +954,117 @@ Examples:
           (setq booted t))) 
 
   #+end_src
+
+** Force certain buffers to use the current window
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq org-src-window-setup 'current-window)
+  (add-to-list 'display-buffer-alist
+                   '("*Help*" display-buffer-same-window))
+#+end_src
+
+* Org Mode
+** Org-babel
+Since we don't want to disable org-confirm-babel-evaluate all of the time, do it around the after-save-hook
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (defun dw/org-babel-tangle-dont-ask ()
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle)))
+  (add-hook
+   'org-mode-hook
+   (lambda () (add-hook
+               'after-save-hook #'dw/org-babel-tangle-dont-ask
+               'run-at-end 'only-in-org-mode)))
+#+end_src
+
+** Appearance
+I like my org mode indented.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+  (add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
+
+Enable proportional fonts in =org-mode=.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+#+end_src
+
+Ensure that anything that should be fixed-pitch in Org files appears that way.
+I had to compile emacs from source to get =org-block='s background to actually fill the whole line, instead of stopping at the last character. I was previously using a mac port from somewhere that I have forgotten.
+Strangely enough, if I eval this expression, then the buggy behavior returns, meaning I have to restart emacs. I will post updates when I eventually roll my own theme.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+  (custom-theme-set-faces
+   'user
+   '(org-block ((t (:inherit fixed-pitch :background "#eee8d5"))))
+   '(org-block-begin-line ((t (:inherit fixed-pitch :foreground "#93a1a1" :background "#eee8d5"))))
+   '(org-block-end-line ((t (:inherit fixed-pitch :foreground "#93a1a1" :background "#eee8d5"))))
+   '(org-block-background ((t (:inherit fixed-pitch))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "royal blue" :underline t))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+  #+end_src
   
+** Keybinds
+I have found a bug in =rbon-define-key=. I cannot set the second argument to ='(normal visual)=. I suspect this has something to do with it being a local bind.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'org-mode '(normal visual emacs)
+                   '("SPC o"   ("org mode"))
+                   '("SPC o q" org-edit-special)
+                   '("SPC o a" ("open the agenda" . org-agenda))
+                   '("SPC o e" org-edit-special)
+                   '("SPC o l" org-babel-execute-src-block)
+                   '("SPC o a" ("open the agenda" . org-agenda))
+                   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
+                   '("SPC s b" ("make bold" . make-bold))
+                   '("SPC o s" ("scedule a task" . org-schedule))
+                   '("SPC o d" ("set a deadline" . org-deadline))
+                   '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))
+#+end_src
+
+Mac specific stuff.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (if (eq system-type 'darwin) ; macOS
+      (rbon-define-key 'org-mode 'normal
+                       '("s-i" ("make italic" . make-italic))
+                       '("s-b" ("make bold" . make-bold))
+                       '("<s-return>" rbon-insert-heading-respect-content))
+    (rbon-define-key 'org-mode 'normal
+                     '("C-i" ("make italic" . make-italic))
+                     '("C-b" ("make bold" . make-bold))
+                     '("<C-return>"  rbon-insert-heading-respect-content)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'org-src-mode 'normal '("SPC q f" org-edit-src-exit))
+#+end_src
+
+Org-agenda stuff.
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+ (rbon-define-key 'org-agenda-mode 'normal
+   '("j" org-agenda-next-line)
+   '("k" org-agenda-previous-line)
+   '("l" org-agenda-later)
+   '("h" org-agenda-earlier))
+   #+end_src
+
+* Helm
+** Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (if (eq system-type 'darwin) ; macOS
+      (progn
+        (define-key helm-map (kbd "s-j") 'helm-next-line)
+        (define-key helm-map (kbd "s-k") 'helm-previous-line))
+    (progn
+      (define-key helm-map (kbd "C-j") 'helm-next-line)
+      (define-key helm-map (kbd "C-k") 'helm-previous-line)))
+#+end_src
+
 * Packages
   #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
 
@@ -1103,86 +1175,55 @@ Examples:
   #+end_src
 
 ** Center the frame on startup
-   This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
-
+This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
    #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-
 (eval-after-load "~/.dshdusdhsudh"
   (when window-system (rbon-center-frame)))
-
    #+end_src
    
 * Appearance
 ** General
 Best theme fight me.
    #+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-
      (load-theme 'solarized-light t) ; 
-
    #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-
 (set-face-attribute 'default nil
   :family "Hasklig"
   :height 150
   :weight 'normal
   :width 'normal)
-
 #+end_src
 
-** Org Mode
 
-   Enable proportional fonts in =org-mode=.
+#  LocalWords:  Keybinds babel Org Misc Magit Dired Recentf
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-
+* LSP
+** Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'lsp-mode 'normal
+                   '("SPC b f" ("format this buffer" . lsp-format-buffer))
+                   '("SPC s f" ("format selection" . lsp-format-region))
+                   '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
+                   '("SPC j d" ("jump to definition" . lsp-find-definition)))
 #+end_src
 
-Ensure that anything that should be fixed-pitch in Org files appears that way.
-I had to compile emacs from source to get =org-block='s background to actually fill the whole line, instead of stopping at the last character. I was previously using a mac port from somewhere that I have forgotten.
-Strangely enough, if I eval this expression, then the buggy behavior returns, meaning I have to restart emacs. I will post updates when I eventually roll my own theme.
+* Magit
+** Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC a"   ("applications"))
+                   '("SPC a m" magit))
+#+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'magit-mode 'emacs
+                   '("J"        magit-status-jump)
+                   '("j"        magit-next-line)
+                   '("k"        magit-previous-line)
+                   '("H"        magit-discard)
+                   '("<escape>" transient-quit-one))
+#+end_src
 
-  (custom-theme-set-faces
-      'user
-      '(org-block ((t (:inherit fixed-pitch :background "#eee8d5"))))
-      '(org-block-begin-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
-      '(org-block-end-line ((t (:inherit fixed-pitch :foreground "#555555" :background "#eee8d5"))))
-       '(org-block-background ((t (:inherit fixed-pitch))))
-       '(org-code ((t (:inherit (shadow fixed-pitch)))))
-       '(org-document-info ((t (:foreground "dark orange"))))
-       '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-       '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-       '(org-link ((t (:foreground "royal blue" :underline t))))
-       '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-       '(org-property-value ((t (:inherit fixed-pitch))) t)
-       '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-       '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-       '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-      '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-
-    ; org-block: foreground #00007f background # height 0.9
-    ; org-block-begin-line, org-block-end-line: foreground #545454 background #e0dfd1
-    ; (set-face-attribute 'org-code nil :foreground nil :background "#ff0000" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-block nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; 
-    ; (set-face-attribute 'org-block-begin-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-block-end-line nil :foreground nil :background "#f8f8eb" :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-    ; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    ; ; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-    ; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    ; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    ; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    ; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-  #+end_src
-  
-  
-  
 
