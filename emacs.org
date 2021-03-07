@@ -2,8 +2,6 @@
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
 
-+I have considered grouping items by context, i.e: all of the functions and keybinds and options relating to =org mode= all being under one category. However, I prefer to have every keybind in one place, and every function, and so on. I may change my mind in the future.+ I have changed my mind on this.
-
 One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
 
 A problem I'm having currently is my code in the blocks of this file is being automatically indented weirdly. Send help.
@@ -28,16 +26,13 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#help-1][Help]]
   - [[#recentf-dialog][Recentf Dialog]]
   - [[#dired][Dired]]
-  - [[#haskell][Haskell]]
   - [[#with-editor][With Editor]]
   - [[#magit][Magit]]
 - [[#functions][Functions]]
-  - [[#jump-to-various-configs][Jump to various configs]]
-  - [[#helm-m-x-read-extended-command][helm-M-x-read-extended-command]]
-  - [[#rbon-switch-to-scratch][rbon-switch-to-scratch]]
-  - [[#haskell-mode][Haskell Mode]]
+  - [[#helm-m-x-read-extended-command][=helm-M-x-read-extended-command=]]
+  - [[#rbon-switch-to-scratch][=rbon-switch-to-scratch=]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
-  - [[#rbon-define-key][rbon-define-key]]
+  - [[#rbon-define-key][=rbon-define-key=]]
   - [[#misc][misc]]
   - [[#formatted-copy][Formatted Copy]]
 - [[#misc-1][Misc]]
@@ -47,6 +42,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#org-babel][Org-babel]]
   - [[#appearance][Appearance]]
   - [[#keybinds-1][Keybinds]]
+  - [[#start-folded][Start folded]]
 - [[#helm][Helm]]
   - [[#keybinds-2][Keybinds]]
 - [[#packages][Packages]]
@@ -59,6 +55,18 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#keybinds-3][Keybinds]]
 - [[#magit-1][Magit]]
   - [[#keybinds-4][Keybinds]]
+- [[#haskell][Haskell]]
+  - [[#rbon-haskell-interactive-mode-kill-whole-line][=rbon-haskell-interactive-mode-kill-whole-line=]]
+  - [[#rbon-haskell-interactive-mode-history-previous][=rbon-haskell-interactive-mode-history-previous=]]
+  - [[#rbon-haskell-interactive-mode-history-next][=rbon-haskell-interactive-mode-history-next=]]
+  - [[#rbon-insert-haskell-prompt-start][=rbon-insert-haskell-prompt-start=]]
+  - [[#rbon-goto-haskell-prompt-start][=rbon-goto-haskell-prompt-start=]]
+  - [[#keybinds-5][keybinds]]
+- [[#modeline][Modeline]]
+- [[#webkit][Webkit]]
+- [[#eradio][Eradio]]
+  - [[#options][Options]]
+  - [[#keybinds-6][Keybinds]]
 
 * Keybinds
 ** Miscellaneous
@@ -290,26 +298,6 @@ Cursor shortcuts
 
    #+end_src
 
-** Haskell
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'haskell-mode 'normal
-   '("SPC b e" ("eval this buffer" . run-code)))
-
- (rbon-define-key 'haskell-interactive-mode 'insert
-   '("TAB" haskell-interactive-mode-tab)
-   '("SPC" haskell-interactive-mode-space))
-
- (rbon-define-key 'haskell-interactive-mode 'normal
-   '("J" rbon-haskell-interactive-mode-history-next)
-   '("K" rbon-haskell-interactive-mode-history-previous)
-   '("I" rbon-insert-haskell-prompt-start)
-   '("^" rbon-goto-haskell-prompt-start)
-   '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
-   '("RET" haskell-interactive-mode-return))
-
- (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
- #+end_src
- 
 ** With Editor
  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
  (rbon-define-key 'with-editor-mode 'normal
@@ -321,115 +309,7 @@ Cursor shortcuts
 ** Magit
 * Functions
 Be sure to read the docstrings of the functions themselves.
-** Jump to various configs
-   These are a collection of functions that jump to various points in emacs.org, from any buffer. I can't for the life of me find a function to just jump to a heading by name, so as such these are *extremely* fragile and needlessly verbose. If you change the order of the top-level headings, these will almost certainly break. If you're reading this and know a better way to write these functions, please send help.
-*** rbon-goto-config
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-config ()
-  "Open emacs.org."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (evil-close-folds))
-  #+end_src
-*** rbon-goto-keybinds
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-keybinds ()
-  "Open emacs.org and narrow to keybinds."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-narrow-to-subtree)
-  (org-cycle))
-  #+end_src
-*** rbon-goto-functions
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-functions ()
-  "Open emacs.org and narrow to keybinds."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-narrow-to-subtree)
-  (org-cycle))
-  #+end_src
-*** rbon-goto-misc
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-misc ()
-  "Open emacs.org and narrow to keybinds."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-narrow-to-subtree)
-  (org-cycle))
-  #+end_src
-*** rbon-goto-packages
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-packages ()
-  "Open emacs.org and narrow to keybinds."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-narrow-to-subtree)
-  (org-cycle))
-
-  #+end_src
-*** rbon-goto-init
-    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-init ()
-  "Open emacs.org and narrow to keybinds."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-next-visible-heading 1)
-  (evil-close-fold)
-  (org-narrow-to-subtree)
-  (org-cycle))
-    #+end_src
-** helm-M-x-read-extended-command 
+** =helm-M-x-read-extended-command= 
    By default, =helm-M-x-read-extended-command= doesn't let you change the prompt. It's just hardcoded into the function. So I blatantly copy/pasted it here, with one whole line changed to allow the prompt to be a user variable. Maybe one day when I know how, I'll submit a pull request.
 
    It probably has something to do with the way packages are ordered, but this needs to be wrapped in an =with-eval-after-load= in order to be properly loaded.
@@ -501,32 +381,13 @@ default to `extended-command-history'."
         (helm-M-x--unwind-forms)))))
    #+end_src
 
-** rbon-switch-to-scratch
+** =rbon-switch-to-scratch=
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-switch-to-scratch ()
   "This probably doesn't work right now."
   (interactive)
   (display-buffer-pop-up-frame (get-buffer-create "scratch")))
    #+end_src
-
-** Haskell Mode
-   These are functions that I map to =i= and =^= to make them work like you'd expect them to, while using the haskell prompt.
-*** rbon-insert-haskell-prompt-start
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-insert-haskell-prompt-start ()
-  "Enter the insert state at the start of the haskell prompt."
-  (interactive)
-  (goto-char haskell-interactive-mode-prompt-start)
-  (call-interactively 'evil-insert))
-   #+end_src
-   
-*** rbon-goto-haskell-prompt-start
-    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-haskell-prompt-start ()
-  "Go to the start of the haskell prompt."
-  (interactive)
-  (goto-char haskell-interactive-mode-prompt-start))
-    #+end_src
 
 ** =rbon-center-frame=
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
@@ -539,7 +400,7 @@ Why is this not a built-in function?"
     (set-frame-position (selected-frame) h-offset v-offset)))
    #+end_src
 
-** rbon-define-key
+** =rbon-define-key=
 This is probably the one portion of this config that I'm most proud of. In essence, it wraps =evil-define-key= and =add-hook= to create a one-size-fits-all function for defining both global binds, and mode-specific binds, making sure that the latter doesn't pollute the global map.
 
 Currently, there is a limitation that it assumes the associated hook of a mode is just the name of the mode followed by "-hook." This means that if a dev breaks that pattern, this function will silently fail. I might, in the future, add a way to manually add a hook name instead of a mode name, or perhaps I will just make it so that you always use the hook name instead. As it is, it works perfectly for me.
@@ -598,7 +459,6 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
 
 ** misc
 
-
   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 
 (defun my-change-buffer (change-buffer)
@@ -627,26 +487,6 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
   "Needed to unbind keys. Yes."
   (interactive))
 
-
-(defun rbon-haskell-interactive-mode-kill-whole-line ()
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-kill-whole-line)
-  (evil-normal-state))
-
-(defun rbon-haskell-interactive-mode-history-previous ()
-  "Wraps `haskell-interactive-mode-history-previous' to work with evil."
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-history-previous)
-  (evil-normal-state))
-
-(defun rbon-haskell-interactive-mode-history-next ()
-  "Wraps `haskell-interactive-mode-history-next' to work with evil."
-  (interactive)
-  (call-interactively 'evil-append-line)
-  (call-interactively 'haskell-interactive-mode-history-next)
-  (evil-normal-state))
 
 (defun rbon-insert-heading-respect-content ()
   "Insert a heading and then change to insert state."
@@ -769,6 +609,7 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
   #+end_src
 
 ** Formatted Copy
+Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Copy-formatted-org-mode-text-from-Emacs-to-other-applications/][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun formatted-copy ()
     "Export region to HTML, and copy it to the clipboard."
@@ -814,21 +655,6 @@ This section is pretty messy. I'm slowly trying to organize it.
         (global-evil-mc-mode  1) ; multiple cursors
         (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
         (eyebrowse-mode t)
-        (mini-modeline-mode t)
-        (setq-default mode-line-format nil)
-        (setq mode-line-format nil) ; seems redundant, but isn't. remove this and if you manually eval this file, the mode-line will make a triumphant return
-        (setq-default mini-modeline-display-gui-line t)
-        (setq-default window-divider-default-places t) ; display divider on all sides
-        (setq-default window-divider-default-bottom-width 1) ; must be defined before the mode is turned on 
-        (setq-default window-divider-default-right-width 1) ; same
-        (window-divider-mode t)
-
-        (setq-default mini-modeline-r-format
-              (list
-              '("%e"
-                mode-line-buffer-identification
-                mode-line-modified) " "
-               '(:eval (eyebrowse-mode-line-indicator))))
 
         ; (powerline-default-theme)
 
@@ -1032,7 +858,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
   #+end_src
   
 ** Keybinds
-I have found a bug in =rbon-define-key=. I cannot set the second argument to ='(normal visual)=. I suspect this has something to do with it being a local bind.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'org-mode '(normal visual emacs)
                    '("SPC o"   ("org mode"))
@@ -1045,7 +870,7 @@ I have found a bug in =rbon-define-key=. I cannot set the second argument to ='(
                    '("SPC s b" ("make bold" . make-bold))
                    '("SPC o s" ("scedule a task" . org-schedule))
                    '("SPC o d" ("set a deadline" . org-deadline))
-                   '("SPC RET" ("insert a heading" . rbon-insert-heading-respect-content)))
+                   '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content)))
 #+end_src
 
 Mac specific stuff.
@@ -1074,6 +899,11 @@ Org-agenda stuff.
    '("h" org-agenda-earlier))
    #+end_src
 
+** Start folded
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(setq-default org-startup-folded t)
+#+end_src
+
 * Helm
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -1089,58 +919,59 @@ Org-agenda stuff.
 * Packages
   #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
 
-(setq my-packages '(
-  evil
-  evil-textobj-line
-  toc-org
-  undo-tree
-  flycheck
-  which-key
-  ; general
-  ;smooth-scrolling-mode
-  helm
-  helm-descbinds
-  markdown-mode
-  haskell-mode
-  hasklig-mode
-  lsp-mode
-  ; lsp-ui
-  lsp-haskell
-  lua-mode
-  solarized-theme
-  exec-path-from-shell ; fix path on macos
-  smex ; better than M-x
-  magit
-  eyebrowse ; because tab-bar-mode doesn't work on mac
-  ;powerline
-  mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
-  ; multiple-cursors
-  evil-mc ; multiple cursors
-  evil-surround
-  autothemer
-  doom-themes
-  spacegray-theme
- ))
+    (setq my-packages '(
+      evil
+      evil-textobj-line
+      toc-org
+      undo-tree
+      flycheck
+      which-key
+      ; general
+      ;smooth-scrolling-mode
+      helm
+      helm-descbinds
+      markdown-mode
+      haskell-mode
+      hasklig-mode
+      lsp-mode
+      ; lsp-ui
+      lsp-haskell
+      lua-mode
+      solarized-theme
+      exec-path-from-shell ; fix path on macos
+      smex ; better than M-x
+      magit
+      eyebrowse ; because tab-bar-mode doesn't work on mac
+      ;powerline
+      mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
+      ; multiple-cursors
+      evil-mc ; multiple cursors
+      evil-surround
+      autothemer
+      doom-themes
+      spacegray-theme
+      eradio
+     ))
 
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
+    (require 'package)
+    (add-to-list 'package-archives
+                 '("melpa" . "https://melpa.org/packages/"))
+    (package-initialize)
 
-(defun sync-package (pac)
-  (unless (package-installed-p pac)
-    (package-install pac)))
+    (defun sync-package (pac)
+      (unless (package-installed-p pac)
+        (package-install pac)))
 
-(defun sync-all-packages ()
-  (interactive)
-  (package-refresh-contents)
-  (mapcar 'sync-package my-packages))
+    (defun sync-all-packages ()
+      (interactive)
+      (package-refresh-contents)
+      (mapcar 'sync-package my-packages))
 
-(defun set-custom-file-path (path)
-  (unless (file-exists-p path)
-    (write-region "" nil path))
-  (setq custom-file path)
-  (load custom-file))
+    (defun set-custom-file-path (path)
+      (unless (file-exists-p path)
+        (write-region "" nil path))
+      (setq custom-file path)
+      (load custom-file))
   #+end_src
 
 * Init
@@ -1247,4 +1078,137 @@ Best theme fight me.
                    '("<escape>" transient-quit-one))
 #+end_src
 
+* Haskell
+By default, the haskell interactive prompt doesn't play well with evil mode. The following functions have all been sandwiched between some evil bread to make them work with the concept of the =normal= state.
+** =rbon-haskell-interactive-mode-kill-whole-line=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-haskell-interactive-mode-kill-whole-line ()
+    "Wraps `haskell-interactive-mode-kill-whole-line' to work with evil."
+    (interactive)
+    (call-interactively 'evil-append-line)
+    (call-interactively 'haskell-interactive-mode-kill-whole-line)
+    (evil-normal-state))
+#+end_src
 
+** =rbon-haskell-interactive-mode-history-previous=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-haskell-interactive-mode-history-previous ()
+    "Wraps `haskell-interactive-mode-history-previous' to work with evil."
+    (interactive)
+    (call-interactively 'evil-append-line)
+    (call-interactively 'haskell-interactive-mode-history-previous)
+    (evil-normal-state))
+#+end_src
+
+** =rbon-haskell-interactive-mode-history-next=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-haskell-interactive-mode-history-next ()
+    "Wraps `haskell-interactive-mode-history-next' to work with evil."
+    (interactive)
+    (call-interactively 'evil-append-line)
+    (call-interactively 'haskell-interactive-mode-history-next)
+    (evil-normal-state))
+#+end_src
+
+** =rbon-insert-haskell-prompt-start=
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+(defun rbon-insert-haskell-prompt-start ()
+  "Enter the insert state at the start of the haskell prompt."
+  (interactive)
+  (goto-char haskell-interactive-mode-prompt-start)
+  (call-interactively 'evil-insert))
+   #+end_src
+   
+** =rbon-goto-haskell-prompt-start=
+    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+(defun rbon-goto-haskell-prompt-start ()
+  "Go to the start of the haskell prompt."
+  (interactive)
+  (goto-char haskell-interactive-mode-prompt-start))
+    #+end_src
+
+** keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'haskell-mode 'normal
+                   '("SPC b e" ("eval this buffer" . run-code)))
+
+  (rbon-define-key 'haskell-interactive-mode 'insert
+                   '("TAB" haskell-interactive-mode-tab)
+                   '("SPC" haskell-interactive-mode-space))
+
+  (rbon-define-key 'haskell-interactive-mode 'normal
+                   '("J" rbon-haskell-interactive-mode-history-next)
+                   '("K" rbon-haskell-interactive-mode-history-previous)
+                   '("I" rbon-insert-haskell-prompt-start)
+                   '("^" rbon-goto-haskell-prompt-start)
+                   '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
+                   '("RET" haskell-interactive-mode-return))
+
+  (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
+#+end_src
+
+* Modeline
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (mini-modeline-mode t)
+  (setq-default mode-line-format nil)
+#+end_src
+
+Seems redundant, but isn't. remove this and if you manually reload the config, the mode-line will make a triumphant return
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq mode-line-format nil) 
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq-default mini-modeline-display-gui-line t)
+#+end_src
+
+Display divider on all sides
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq-default window-divider-default-places t) 
+#+end_src
+
+Must be defined before the =window-divider-mode= is turned on 
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq-default window-divider-default-bottom-width 1) 
+  (setq-default window-divider-default-right-width 1)
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (window-divider-mode t)
+
+  (setq-default mini-modeline-r-format
+                (list
+                 '("%e"
+                   mode-line-buffer-identification
+                   mode-line-modified) " "
+                 '(:eval (eyebrowse-mode-line-indicator))))
+#+end_src
+
+* Webkit
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'xwidget-webkit-mode '(normal)
+                   '("DEL"   xwidget-webkit-back))
+#+end_src
+
+* Eradio
+** Options
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq eradio-player
+        '("/Applications/mpv.app/Contents/MacOS/mpv"
+        "--no-video"
+        "--no-terminal"))
+  (setq eradio-channels '(("def con - soma fm"      . "https://somafm.com/defcon256.pls")          ;; electronica with defcon-speaker bumpers
+                          ("metal - soma fm"        . "https://somafm.com/metal130.pls")           ;; \m/
+                          ("cyberia - lainon"       . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
+                          ("cafe - lainon"          . "https://lainon.life/radio/cafe.ogg.m3u")    ;; boring ambient, but with lain
+                          ("groove salad - soma fm" . "https://somafm.com/groovesalad.pls")))
+#+end_src
+
+** Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC r"  ("radio"))
+                   '("SPC r p" ("play" . eradio-play))
+                   '("SPC r s" ("stop" . eradio-stop))
+                   '("SPC r t" ("toggle" . eradio-toggle)))
+#+end_src
