@@ -33,9 +33,29 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#rbon-switch-to-scratch][=rbon-switch-to-scratch=]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
   - [[#rbon-define-key][=rbon-define-key=]]
-  - [[#misc][misc]]
-  - [[#formatted-copy][Formatted Copy]]
-- [[#misc-1][Misc]]
+  - [[#buffer-switching][Buffer Switching]]
+  - [[#nop][=nop=]]
+  - [[#rbon-insert-heading-respect-content][=rbon-insert-heading-respect-content=]]
+  - [[#rbon-escape][=rbon-escape=]]
+  - [[#rbon-add-cursor-move-down][=rbon-add-cursor-move-down=]]
+  - [[#rbon-add-cursor-move-up][=rbon-add-cursor-move-up=]]
+  - [[#rbon-evil-mc-make-cursor-in-visual-selection-beg][=rbon-evil-mc-make-cursor-in-visual-selection-beg=]]
+  - [[#narrow-and-unfold][=narrow-and-unfold=]]
+  - [[#widen-and-fold][=widen-and-fold=]]
+  - [[#make-bold][=make-bold=]]
+  - [[#make-italic][=make-italic=]]
+  - [[#run-code][=run-code=]]
+  - [[#my-switch-to-buffer][=my-switch-to-buffer=]]
+  - [[#touch-file][=touch-file=]]
+  - [[#evil-recentf][=evil-recentf=]]
+  - [[#display-startup-echo-area-message][=display-startup-echo-area-message=]]
+  - [[#find-init][=find-init=]]
+  - [[#find-config-file][=find-config-file=]]
+  - [[#load-init][=load-init=]]
+  - [[#split-h-and-change-focus][=split-h-and-change-focus=]]
+  - [[#rbon-insert-heading-respect-content-1][=rbon-insert-heading-respect-content=]]
+  - [[#formatted-copy][=formatted-copy=]]
+- [[#misc][Misc]]
   - [[#other][Other]]
   - [[#force-certain-buffers-to-use-the-current-window][Force certain buffers to use the current window]]
 - [[#org-mode][Org Mode]]
@@ -47,7 +67,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#keybinds-2][Keybinds]]
 - [[#packages][Packages]]
 - [[#init][Init]]
-  - [[#misc-2][Misc]]
+  - [[#misc-1][Misc]]
   - [[#center-the-frame-on-startup][Center the frame on startup]]
 - [[#appearance-1][Appearance]]
   - [[#general][General]]
@@ -457,10 +477,10 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
       (evil-define-key state 'global key def)))
 #+end_src
 
-** misc
-
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-
+** Buffer Switching
+I'm not sure these even work.
+*** =my-change-buffer=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun my-change-buffer (change-buffer)
   "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
   (let ((initial (current-buffer)))
@@ -472,34 +492,51 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
           (when (eq (current-buffer) first-change)
             (switch-to-buffer initial)
             (throw 'loop t)))))))
+#+end_src
 
+*** =my-next-buffer=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun my-next-buffer ()
   "Variant of `next-buffer' that skips `my-skippable-buffers'."
   (interactive)
   (my-change-buffer 'next-buffer))
+#+end_src
 
+*** =my-previous-buffer= 
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun my-previous-buffer ()
   "Variant of `previous-buffer' that skips `my-skippable-buffers'."
   (interactive)
   (my-change-buffer 'previous-buffer))
+#+end_src
 
+** =nop=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun nop ()
-  "Needed to unbind keys. Yes."
+  "Needed to unbind keys. Yes really."
   (interactive))
+#+end_src
 
-
+** =rbon-insert-heading-respect-content=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-insert-heading-respect-content ()
   "Insert a heading and then change to insert state."
   (interactive)
   (org-insert-heading-respect-content)
   (evil-append 0))
+#+end_src
 
+** =rbon-escape=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-escape ()
   "Get rid of extra cursors while also normally escaping."
   (interactive)
   (evil-mc-undo-all-cursors)
   (evil-force-normal-state))
+#+end_src
 
+** =rbon-add-cursor-move-down=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-add-cursor-move-down ()
   "Add a cursor, and then move down one line."
   (interactive)
@@ -507,7 +544,10 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
   (evil-mc-pause-cursors) 
   (next-line)
   (evil-mc-resume-cursors))
+#+end_src
 
+** =rbon-add-cursor-move-up=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-add-cursor-move-up ()
   "Add a cursor, and then move up one line."
   (interactive)
@@ -515,7 +555,10 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
   (evil-mc-pause-cursors) 
   (previous-line)
   (evil-mc-resume-cursors))
+#+end_src
 
+** =rbon-evil-mc-make-cursor-in-visual-selection-beg=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
   (interactive)
   (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
@@ -523,92 +566,139 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
   (call-interactively 'evil-next-visual-line)
   ;(call-interactively 'evil-insert-line))
   )
+#+end_src
 
+** =narrow-and-unfold=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun narrow-and-unfold ()
   (interactive)
   (evil-open-fold)
   (evil-end-of-line)
   (narrow-to-defun)
   (evil-digit-argument-or-evil-beginning-of-line))
+#+end_src
 
+** =widen-and-fold=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun widen-and-fold ()
   (interactive)
   (evil-close-folds)
   (widen))
+#+end_src
 
-
+** =make-bold=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun make-bold ()
   (interactive)
   (org-emphasize ?*))
+#+end_src
 
+** =make-italic=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun make-italic ()
   (interactive)
   (org-emphasize ?/))
+#+end_src
 
+** =run-code=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun run-code ()
   (interactive)
   (haskell-process-load-file)
   (other-window 1)
   (evil-append-line 1))
+#+end_src
 
+** =my-switch-to-buffer=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun my-switch-to-buffer ()
   "Switch buffers, excluding special buffers."
   (interactive)
   (let ((completion-regexp-list '("\\`[^*]"
                                   "\\`\\([^T]\\|T\\($\\|[^A]\\|A\\($\\|[^G]\\|G\\($\\|[^S]\\|S.\\)\\)\\)\\).*")))
     (switch-to-buffer nil)))
+#+end_src
 
-(defun touch-file (file)
-  "Create a file called FILE.
-  If FILE already exists, signal an error."
-  (interactive
-  (list (read-file-name "Create file: " (dired-current-directory))))
-  (let* ((expanded (expand-file-name file))
-  (try expanded)
-  (dir (directory-file-name (file-name-directory expanded)))
-  new)
-  (if (file-exists-p expanded)
-  (error "Cannot create file %s: file exists" expanded))
-  ;; Find the topmost nonexistent parent dir (variable `new')
-  (while (and try (not (file-exists-p try)) (not (equal new try)))
-  (setq new try
-    try (directory-file-name (file-name-directory try))))
-  (when (not (file-exists-p dir))
-  (make-directory dir t))
-  (write-region "" nil expanded t)
-  (when new
-  (dired-add-file new)
-  (dired-move-to-filename))))
+** =touch-file=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun touch-file (file)
+    "Create a file called FILE.
+    If FILE already exists, signal an error."
+    (interactive
+     (list (read-file-name "Create file: " (dired-current-directory))))
+    (let* ((expanded (expand-file-name file))
+           (try expanded)
+           (dir (directory-file-name (file-name-directory expanded)))
+           new)
+      (if (file-exists-p expanded)
+          (error "Cannot create file %s: file exists" expanded))
+      ;; Find the topmost nonexistent parent dir (variable `new')
+      (while (and try (not (file-exists-p try)) (not (equal new try)))
+        (setq new try
+              try (directory-file-name (file-name-directory try))))
+      (when (not (file-exists-p dir))
+        (make-directory dir t))
+      (write-region "" nil expanded t)
+      (when new
+        (dired-add-file new)
+        (dired-move-to-filename))))
+  #+end_src
 
+** =evil-recentf=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun evil-recentf ()
   (interactive)
   (recentf-open-files)
   (evil-normal-state))
+#+end_src
 
+** =display-startup-echo-area-message=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun display-startup-echo-area-message ()
   "This function replaces the startup minibuffer message with nil."
   (message nil))
+#+end_src
 
+** =find-init=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun find-init ()
   (interactive)
   (find-file init-path))
+#+end_src
 
+** =find-config-file=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun find-config-file ()
   (interactive)
   (cd user-emacs-directory)
   (call-interactively 'find-file))
+#+end_src
 
+** =load-init=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun load-init ()
   (interactive)
   (load-user-file "init.el"))
+#+end_src
 
+** =split-h-and-change-focus=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun split-h-and-change-focus ()
   (interactive)
   (split-window-horizontally)
   (other-window 1))
-  #+end_src
+#+end_src
 
-** Formatted Copy
+** =rbon-insert-heading-respect-content=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+(defun rbon-insert-heading-respect-content ()
+  "Insert a heading and then change to insert state."
+  (interactive)
+  (org-insert-heading-respect-content)
+  (evil-append 0))
+#+end_src
+
+** =formatted-copy=
 Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Copy-formatted-org-mode-text-from-Emacs-to-other-applications/][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun formatted-copy ()
@@ -870,7 +960,9 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
                    '("SPC s b" ("make bold" . make-bold))
                    '("SPC o s" ("scedule a task" . org-schedule))
                    '("SPC o d" ("set a deadline" . org-deadline))
-                   '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content)))
+                   '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content))
+                   '("H" org-promote-subtree)
+                   '("L" org-demote-subtree))
 #+end_src
 
 Mac specific stuff.
