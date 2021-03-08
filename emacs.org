@@ -2,11 +2,23 @@
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
 
-One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
 
 A problem I'm having currently is my code in the blocks of this file is being automatically indented weirdly. Send help.
 
 * Table of Contents :toc:
+- [[#the-ideas-behind-this-config][The Ideas Behind This Config]]
+  - [[#emacs-should-be-fun][Emacs should be fun]]
+  - [[#emacs-should-be-beautiful][Emacs should be beautiful]]
+  - [[#a-code-block-should-never-split-a-pair-of-parentheses][A code block should never split a pair of parentheses]]
+  - [[#if-something-goes-horribly-wrong-emacs-should-still-be-usable][If something goes horribly wrong, emacs should still be usable]]
+  - [[#escape-should-always-mean-go-up-a-level][Escape should always mean "go up a level"]]
+  - [[#it-should-only-take-one-command-to-go-from-a-fresh-install-to-a-full-install][It should only take one command to go from a fresh install to a full install]]
+  - [[#the-fewer-packages-the-better][The fewer packages the better]]
+  - [[#keybinds-should-be-intuitive][Keybinds should be intuitive]]
+  - [[#every-command-should-quack-like-a-duck][Every command should quack like a duck]]
+  - [[#shift-should-be-the-only-modifier-key][Shift should be the only modifier key]]
+  - [[#keystrokes-are-the-enemy][Keystrokes are the enemy]]
+  - [[#if-it-doesnt-fit-on-a-60-keyboard-it-doesnt-belong-in-the-keymap][If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap]]
 - [[#keybinds][Keybinds]]
   - [[#miscellaneous][Miscellaneous]]
   - [[#applications][Applications]]
@@ -87,6 +99,45 @@ A problem I'm having currently is my code in the blocks of this file is being au
 - [[#eradio][Eradio]]
   - [[#options][Options]]
   - [[#keybinds-6][Keybinds]]
+
+* The Ideas Behind This Config
+** Emacs should be fun
+Every keypress should be intuitive and powerful. Using even the most mundane feature of Emacs should enjoyable.
+
+** Emacs should be beautiful
+The way Emacs looks out of the box is shameful. Part of the enjoyment of any software is the aesthetic beauty of it.
+
+** A code block should never split a pair of parentheses
+One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
+
+** If something goes horribly wrong, emacs should still be usable
+** Escape should always mean "go up a level"
+** It should only take one command to go from a fresh install to a full install
+** The fewer packages the better
+** Keybinds should be intuitive
+Like it or not, in the decades since Emacs first came around, a standard set of keyboard shortcuts have emerged and are now ubiquitous across almost every operating system. These are:
+- =C-c= to copy
+- =C-x= to cut
+- =C-v= to paste
+
+
+
+Ctrl + V (or Shift + Insert)
+
+Paste the selected item.
+
+Ctrl + Z
+
+Undo an action.
+
+** Every command should quack like a duck
+the 
+** Shift should be the only modifier key
+Aside from keys that are part of the modern paradigm, there are *two* total keybinds in this config that use a modifier besides shift. These are =s-j= and =s-k= mapped to =helm-next-line= and =helm-previous-line= respectively. I've heard whispers of being able to work around this using =hydra=, but that is a beast I don't have the courage to grapple with right now. Someday.
+
+
+** Keystrokes are the enemy
+** If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap
 
 * Keybinds
 ** Miscellaneous
@@ -960,9 +1011,13 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
                    '("SPC s b" ("make bold" . make-bold))
                    '("SPC o s" ("scedule a task" . org-schedule))
                    '("SPC o d" ("set a deadline" . org-deadline))
-                   '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content))
                    '("H" org-promote-subtree)
                    '("L" org-demote-subtree))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+(rbon-define-key 'org-mode '(normal visual emacs insert)
+  '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content)))
 #+end_src
 
 Mac specific stuff.
