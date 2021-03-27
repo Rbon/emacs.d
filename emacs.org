@@ -37,7 +37,6 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#configuration][Configuration]]
   - [[#help-1][Help]]
   - [[#recentf-dialog][Recentf Dialog]]
-  - [[#dired][Dired]]
   - [[#with-editor][With Editor]]
   - [[#magit][Magit]]
 - [[#functions][Functions]]
@@ -74,7 +73,9 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#org-babel][Org-babel]]
   - [[#appearance][Appearance]]
   - [[#keybinds-1][Keybinds]]
+  - [[#promoting-and-demoting-subtrees][Promoting and demoting subtrees]]
   - [[#start-folded][Start folded]]
+- [[#indent-buffer][Indent Buffer]]
 - [[#helm][Helm]]
   - [[#keybinds-2][Keybinds]]
 - [[#packages][Packages]]
@@ -99,6 +100,21 @@ A problem I'm having currently is my code in the blocks of this file is being au
 - [[#eradio][Eradio]]
   - [[#options][Options]]
   - [[#keybinds-6][Keybinds]]
+- [[#youtube-dl][youtube-dl]]
+- [[#japanese-input][Japanese Input]]
+- [[#elfeed][elfeed]]
+- [[#youtube-links][youtube links]]
+- [[#enqueue-youtube-videos][Enqueue youtube videos]]
+  - [[#forward][Forward]]
+  - [[#mpvarchive][=mpvarchive=]]
+  - [[#mpv-enqueue-maybe-archive][=mpv-enqueue-maybe-archive=]]
+  - [[#elfeed-mpv][=elfeed-mpv=]]
+  - [[#mpv-search-archive][=mpv-search-archive=]]
+  - [[#mpv-build-playlist][=mpv-build-playlist=]]
+  - [[#save_playlistlua][=save_playlist.lua=]]
+  - [[#mpv-enqueue-play-playlist][=mpv-enqueue-play-playlist=]]
+  - [[#mpv-enqueue-play-archive][=mpv-enqueue-play-archive=]]
+  - [[#ivy-youtube-dl][=ivy-youtube-dl=]]
 
 * The Ideas Behind This Config
 ** Emacs should be fun
@@ -352,18 +368,6 @@ Cursor shortcuts
    '("l" widget-button-press)
    '("h" nop)
    '("q" recentf-cancel-dialog))
-   #+end_src
-
-** Dired
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'dired-mode 'normal
-   '("h" dired-up-directory)
-   '("j" dired-next-line)
-   '("k" dired-previous-line)
-   '("l" dired-find-file)
-   '("/" evil-search-forward)
-   '("t" touch-file))
-
    #+end_src
 
 ** With Editor
@@ -943,8 +947,8 @@ This section is pretty messy. I'm slowly trying to organize it.
 ** Force certain buffers to use the current window
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (setq org-src-window-setup 'current-window)
-  (add-to-list 'display-buffer-alist
-                   '("*Help*" display-buffer-same-window))
+  ;; (add-to-list 'display-buffer-alist
+  ;;                  '("*Help*" display-buffer-same-window))
 #+end_src
 
 * Org Mode
@@ -1006,10 +1010,7 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
                    '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
                    '("SPC s b" ("make bold" . make-bold))
                    '("SPC o s" ("scedule a task" . org-schedule))
-                   '("SPC o d" ("set a deadline" . org-deadline))
-                   '("SPC o h" ("promote subtree" . org-move-hydra/body))
-                   '("SPC o l"
-                     ("demote subtree" . org-move-hydra/org-demote-subtree)))
+                   '("SPC o d" ("set a deadline" . org-deadline)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -1023,18 +1024,9 @@ This leaves =evil-ret= unbound, which is fine.
                    '("<escape>" org-edit-src-exit))
 #+end_src
 
-Hydra for promoting and demoting subtrees.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (defhydra org-move-hydra (:color red)
-    ("h" org-promote-subtree "promote subtree")
-    ("l" org-demote-subtree  "demote subtree"))
-#+end_src
-
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'org-mode 'normal
-                     '("<return>" org-edit-special)
-                     '("H" org-promote-subtree)
-                     '("L" org-demote-subtree))
+                     '("<return>" org-edit-special))
 #+end_src
 
 Org-agenda stuff.
@@ -1046,9 +1038,36 @@ Org-agenda stuff.
    '("h" org-agenda-earlier))
    #+end_src
 
+** Promoting and demoting subtrees
+Hydra for promoting and demoting subtrees.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (defhydra org-move-hydra (:color red)
+  g ("h" org-promote-subtree "promote subtree")
+    ("l" org-demote-subtree  "demote subtree"))
+
+  (rbon-define-key 'org-mode 'normal
+                   '("SPC o h"
+                     ("promote subtree" . org-move-hydra/org-promote-subtree))
+                   '("SPC o l"
+                     ("demote subtree" . org-move-hydra/org-demote-subtree)))
+#+end_src
+
 ** Start folded
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
 (setq-default org-startup-folded t)
+#+end_src
+
+* Indent Buffer
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-indent-buffer ()
+    (interactive)
+    (call-interactively 'mark-whole-buffer)
+    (call-interactively 'indent-region))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'emacs-lisp-mode 'normal
+                   '("SPC b i" '("indent buffer" rbon-indent-buffer)))
 #+end_src
 
 * Helm
@@ -1134,6 +1153,7 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
       spacegray-theme
       eradio
       hydra
+      elfeed
      ))
 
     (require 'package)
@@ -1395,3 +1415,399 @@ Must be defined before the =window-divider-mode= is turned on
                    '("SPC r s" ("stop" . eradio-stop))
                    '("SPC r t" ("toggle" . eradio-toggle)))
 #+end_src
+
+* youtube-dl
+   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+          ;;  (rbon-define-key 'dired-mode 'normal
+          ;;    '("h" dired-up-directory)
+          ;;    '("j" dired-next-line)
+          ;;    '("k" dired-previous-line)
+          ;;    '("l" dired-find-file)
+          ;;    '("/" evil-search-forward)
+          ;;    '("t" touch-file))
+
+          ;; (add-hook 'dired-mode-hook 'dired-hydra/body)
+
+     (setq youtube-dl-command "youtube-dl --simulate")
+
+     (defun youtube-dl-test ()
+       (interactive)
+       (insert (shell-command-to-string "uptime"))
+       )
+
+
+
+
+     ;; (defvar youtube-dl-mode-map nil "Keymap for `youtube-dl-mode'")
+     ;; ;; make sure that the var name is your mode name followed by -map. That way, define-derived-mode will automatically set it as local map
+     ;; 
+     ;; ;; also, by convention, variable names for keymap should end in -map
+     ;; 
+     ;; (progn
+     ;;   (setq youtube-dl-mode (make-sparse-keymap))
+     ;; 
+     ;;   (define-key youtube-dl-mode-map (kbd "d") 'youtube-dl-test)
+     ;; 
+     ;; 
+     ;;   ;; by convention, major mode's keys should begin with the form C-c C-‹key›
+     ;;   ;; by convention, keys of the form C-c ‹letter› are reserved for user. don't define such keys in your major mode
+     ;;   )
+     ;; 
+     ;; ;; ----------------------------------------
+     ;; ;; define the mode
+     ;; 
+     ;; (define-derived-mode my-mode prog-mode "my"
+     ;;   "my-mode is a major mode for editing language my.
+     ;; 
+     ;; \\{my-mode-map}"
+     ;; 
+     ;;   ;; actually no need
+     ;;   (use-local-map my-mode-map) ; if your keymap name is modename follow by -map, then this line is not necessary, because define-derived-mode will find it and set it for you
+     ;; 
+     ;;   )
+     ;; 
+     ;;      (define-derived-mode youtube-dl-mode fundamental-mode "youtube-dl"
+     ;;        "work in progress"
+     ;; 
+     ;;        )
+
+   #+end_src
+   
+* Japanese Input
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC i"  ("input method"))
+                   '("SPC i t" ("toggle input method" . toggle-input-method)))
+#+end_src
+
+* elfeed
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC a"  ("applications"))
+                   '("SPC a e" elfeed))
+
+  (evil-set-initial-state 'elfeed-search-mode 'normal)
+  (rbon-define-key 'elfeed-search-mode '(normal)
+                   '("g" elfeed-search-update--force)
+                   '("G" elfeed-search-fetch)
+                   '("s" elfeed-search-live-filter)
+                   '("c" elfeed-search-clear-filter)
+                   '("<return>" elfeed-search-show-entry)
+                   '("b" elfeed-search-browse-url)
+                   '("y" elfeed-search-yank)
+                   '("r" elfeed-search-untag-all-unread)
+                   '("u" elfeed-search-tag-all-unread)
+                   '("+" elfeed-search-tag-all)
+                   '("-" elfeed-search-untag-all)
+                   '("m" elfeed-mpv)
+                   '("j" evil-next-line)
+                   '("k" evil-previous-line)
+                   '("<escape>" kill-this-buffer))
+
+  (rbon-define-key 'elfeed-show-mode '(normal)
+                   '("m" elfeed-mpv)
+                   '("<escape>" kill-this-buffer))
+#+end_src
+
+* youtube links
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (defun mpv-play-url (url &rest args)
+    ""
+    (interactive)
+    ; (start-process "mpv" "*mpv*" "mpv" url))
+    (shell-command (concat "open -a mpv \"" url "\"")))
+
+;   (setq browse-url-browser-function
+;     (quote
+;       (("youtu\\.?be" . mpv-play-url)
+;       ("." . eww-browse-url))))
+#+end_src
+
+* Enqueue youtube videos
+The following is taken from [[https://www.reddit.com/r/emacs/comments/efsg0t/how_i_enqueue_online_videos_in_mpv_with_emacs/][here]], formatted to better fit this config.
+
+** Forward
+*How I enqueue online videos in mpv with Emacs*
+I was a bit hesitant about sharing this setup which I have created for mpv, but I don't know of any other solution that fulfils all my needs so I thought maybe someone else will find it useful too. You basically just need gnu+linux, emacs, mpv, youtube-dl and optionally qutebrowser to use them. You can download youtube-dl with pip (pip3 install --user youtube-dl) and qutebrowser's instructions are here: http://qutebrowser.org/doc/install.html
+
+When playing local videos files with mpv through emacs I simply use the package "openwith" which is great for opening files from dired, ivy, find-find, directly with external applications based on file extensions. https://github.com/emacsmirror/openwith
+
+But that package is not suitable for streaming online videos. Also I usually find myself wanting to play a number of videos from my browser one after the other without opening a new instance of mpv for every video. I wrote these functions because it's much better to play videos in mpv instead of any browser. The qutebrowser integration needs emacsclient but I guess it should be easy to simply change emacsclient to emacs in those settings and they'll work without the client.
+
+These functions will enqueue your online videos in mpv and also keep an archive in plaintext with all the titles and links. The archive is useful for searching old videos you have seen and then directly playing them with mpv, or opening them with your browser. And there's an option of turning off the archive when you don't need it.
+
+These functions will also allow you to create and play plaintext m3u playlists of videos.
+
+I use these functions everyday and have integrated them with my browser (qutebrowser) and rss reader (elfeed). So here we go!
+
+** =mpvarchive=
+First define a variable for where you like to keep your archive file. You can change this location here if you want:
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(defvar mpvarchive "~/.cache/mpvarchive"
+  "file to use as archive for \\[mpv-enqueue-maybe-archive]")
+#+end_src
+
+** =mpv-enqueue-maybe-archive=
+Now, here's the main function. It creates with mkfifo a named pipe in the /tmp/ folder (if the pipe doesn't already exist) and sends to it new videos as links if mpv is already playing, otherwise if it's the first video then it runs mpv directly. By default it also triggers the archive function which saves your link, its title and its duration, which you can later search from a handy function.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (defun mpv-enqueue-maybe-archive (&optional link noarchive)
+    (interactive)
+    (unless link (setq link (current-kill 0)))
+    (let ((mpvfifo "/tmp/mpvfifo"))
+      (unless (and (file-exists-p mpvfifo)(not (file-regular-p mpvfifo)))
+        (call-process "mkfifo" nil nil nil mpvfifo))
+      (if (eq (process-status "mpv-enqueue") 'run)
+          (let ((inhibit-message t))
+            (write-region (concat "loadfile \"" link "\" append-play" "\n") nil mpvfifo))
+        (make-process :name "mpv-enqueue"
+                      :connection-type 'pty
+                      :command (list
+                                "mpv"
+                                (concat "--input-file=" mpvfifo)
+                                "--player-operation-mode=pseudo-gui" link)
+                      :sentinel (lambda (p e)(message "Process %s %s" p (replace-regexp-in-string "\n\\'" "" e))))))
+    (unless noarchive
+      (let ((buffer (generate-new-buffer "*mpv-archive*")))
+        (make-process :name "mpv-archive"
+                      :connection-type 'pipe
+                      :buffer buffer
+                      :command (list "youtube-dl" "--ignore-config" "--get-title" "--get-duration" link)
+                      :sentinel `(lambda (p e)
+                                   (message "Process %s %s" p (replace-regexp-in-string "\n\\'" "" e))
+                                   (set-buffer ',buffer)
+                                   (goto-char (point-min))
+                                   (unless (save-excursion (let ((case-fold-search nil))(search-forward "ERROR: " nil t)))
+                                     (insert ',link "\n")
+                                     (write-region nil nil mpvarchive t))
+                                   (kill-buffer))))))
+#+end_src
+
+Here is how I integrate the above function with qutebrowser such that I simply use the keybinding ",n" and hint all the links I want enqueued in mpv, or ",m" for a single link, or ",M" for the link of the webpage itself. Simply add these lines to config.py of qutebrowser:
+
+#+begin_src python
+config.bind(',M', 'spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{url}\\")"')
+config.bind(',m', 'hint links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
+config.bind(',n', 'hint --rapid links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
+#+end_src
+
+** =elfeed-mpv=
+The following function and keybindings integrate the enqueuer with elfeed so that you can simply hit "m" to play the video from the list view (or hit "n" to skip the listing).
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (defun elfeed-mpv ()
+    (interactive)
+    (mpv-play-url (elfeed-entry-link (elfeed-search-selected :single)))
+    ; (mpv-enqueue-maybe-archive (elfeed-entry-link (elfeed-search-selected :single)))
+    (elfeed-search-untag-all-unread))
+
+  ; (define-key elfeed-search-mode-map "m" 'elfeed-mpv)
+  ; (define-key elfeed-search-mode-map "n" 'elfeed-search-untag-all-unread)
+#+end_src
+
+If you are not an elfeed user I suggest that you give it a try as it's the best feed reader I've found. Here are some video feeds to get you started:
+#+begin_src elisp
+(setq elfeed-feeds
+      '(("https://www.reddit.com/r/lectures/new/.rss") ; new videos from r/lectures
+        ("https://www.reddit.com/r/documentaries/top/.rss?sort=top&t=day") ; daily top videos from r/documentaries
+        ("https://www.reddit.com/search.rss?q=url%3A%28youtu.be+OR+youtube.com%29&sort=top&t=week&include_over_18=1&type=link") ; weekly top youtube videos
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCn-HUzO0Xfn1Jx4bRZ7kPew") ; Ben Franklin's World
+        ("https://www.youtube.com/feeds/videos.xml?playlist_id=PLp12xt0S4J0UYXerKrIPCLTk15ZUzFdKz") ; Popular on Youtube Canada
+        ("https://www.youtube.com/feeds/videos.xml?user=academyofideas") ; Academy of Ideas
+        ))
+#+end_src
+
+** =mpv-search-archive=
+Now, for searching the archive that you would have created by using the above functions:
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(defun mpv-search-archive (query)
+  (interactive (list (read-from-minibuffer "Search mpv archive: " nil nil nil 'mpv-history)))
+  (let ((link)(title)(time)(lines))
+    (with-temp-buffer (insert-file-contents mpvarchive)
+                      (goto-char (point-min))
+                      (while (search-forward query nil t)
+                        (re-search-backward "^https?://")
+                        (setq link (thing-at-point 'url))
+                        (forward-line 1)
+                        (setq title (buffer-substring (line-beginning-position)(line-end-position)))
+                        (forward-line 1)
+                        (setq time (buffer-substring (line-beginning-position)(line-end-position)))
+                        (setq lines (cons (cons (concat title " [" time "]") link) lines))))
+    (delq nil (delete-dups lines))
+    (ivy-read "mpv archive result(s): " (mapcar 'car lines)
+              :sort nil
+              :re-builder #'regexp-quote
+              :action '(1
+                        ("o" (lambda (x)
+                               (mpv-enqueue-maybe-archive (cdr (assoc x lines)) t))
+                         "play")
+                        ("b" (lambda (x)
+                               (browse-url-browser-function (cdr (assoc x lines))))
+                         "browse")
+                        ("w" (lambda (x)
+                               (kill-new (cdr (assoc x lines))))
+                         "copy url")
+                        ("d" (lambda (x)
+                               (ivy-youtube-dl (cdr (assoc x lines))))
+                         "download")))))
+#+end_src
+
+The above function which searches the mpv archive can also directly download the video with youtube-dl using the "ivy-youtube-dl" function which I've included at the end of this post.
+
+** =mpv-build-playlist=
+Sometimes, you may want to save the links for later viewing without enqueueing them right then. In that case you can use the following function which will build a plaintext .m3u playlist which you can later feed to mpv with a handy function that comes next after this.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(defun mpv-build-playlist (&optional link)
+  (interactive)
+  (unless link (setq link (current-kill 0)))
+  (write-region (concat link "\n") nil "~/.cache/mpv-built-playlist.m3u" t))
+#+end_src
+
+You can integrate it with qutebrowser by putting the following lines in your config.py:
+#+begin_src python
+config.bind(',P', 'spawn emacsclient -n -e "(mpv-build-playlist \\"{url}\\")"')
+config.bind(',p', 'hint links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
+config.bind(',l', 'hint --rapid links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
+#+end_src
+
+** =save_playlist.lua=
+Sometimes you may have enqueued a bunch of videos in mpv, and midway you want to stop watching videos and save them for later viewing. The easiet way to do that is to have the following script saved at the location "~/.config/mpv/scripts/save_playlist.lua". Then you can simply hit "y" to save the currently playing list of videos and quit mpv with "Shift-q" so that when you later replay the playlist it will start from where you had left off. I had found this online somewhere but sorry I can't find its direct link now.
+#+begin_src lua :tangle ~/.config/mpv/scripts/save_playlist.lua
+local playlist_savepath = (os.getenv('HOME')..'/.cache')
+local utils = require("mp.utils")
+local msg = require("mp.msg")
+local filename = nil
+
+function save_playlist()
+    local length = mp.get_property_number('playlist-count', 0)
+        if length == 0 then return end
+    local savepath = utils.join_path(playlist_savepath, os.time().."-size_"..length.."-playlist.m3u")
+    local file, err = io.open(savepath, "w")
+    if not file then
+        msg.error("Error in creating playlist file, check permissions and paths: "..(err or ""))
+    else
+        local i=0
+        while i < length do
+            local pwd = mp.get_property("working-directory")
+            local filename = mp.get_property('playlist/'..i..'/filename')
+            local fullpath = filename
+            if not filename:match("^%a%a+:%/%/") then
+                fullpath = utils.join_path(pwd, filename)
+            end
+            file:write(fullpath, "\n")
+            i=i+1
+        end
+        msg.info("Playlist written to: "..savepath)
+        mp.osd_message("Playlist written to: "..savepath)
+        file:close()
+    end
+end
+
+mp.add_key_binding("y", save_playlist)
+#+end_src
+
+** =mpv-enqueue-play-playlist=
+Now after you've saved or built your playlists you can later select them for playing with this handy function which will search for all the m3u files in the cache directory. Once you select a file it will be sent to mpv and deleted from your cache folder so that it won't be littered with unneeded files.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(defun mpv-enqueue-play-playlist ()
+  (interactive)
+  (ivy-read "Files: "
+            (directory-files "~/.cache/" t "\\.m3u")
+            :action (lambda (x)
+                      (mpv-enqueue-archive x t)
+                      (sleep-for 2)
+                      (delete-file x))
+            :require-match t
+            :sort nil))
+#+end_src
+
+** =mpv-enqueue-play-archive=
+But in case you did not save your playlist and you simply want to replay the last n number of videos you had enqueued you can use the following function and send it the number with a prefix argument like "C-u 10" otherwise it will play only one last video. This function creates a temporary playlist files and sends it to mpv and then deletes the file.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+(defun mpv-enqueue-play-archive (number)
+  (interactive "p")
+  (let ((url)(list)(playlist))
+    (with-temp-buffer (insert-file-contents mpvarchive)
+                      (goto-char (point-max))
+                      (dotimes (i number list)
+                        (re-search-backward "^https?://" nil t)
+                        (setq url (thing-at-point 'url))
+                        (setq list (cons url list))))
+    (setq list (nreverse list))
+    (setq playlist (make-temp-file "archive-playlist" nil ".m3u" (mapconcat 'identity list "\n")))
+    (mpv-enqueue-archive playlist t)
+    (sleep-for 2)
+    (delete-file playlist)))
+#+end_src
+
+** =ivy-youtube-dl=
+And here's the youtube-dl function which you can integrate with the archive search and your browser (or simply run it when you have a link in your clipboard). At the ivy prompt you can simply hit return to download the video with the "best" format, or you can choose any other format from the list by selecting it and hitting return, otherwise if you want a combination of different formats then you'll need to enter their codes yourself like "136+bestaudio" or something:
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (defun ivy-youtube-dl (&optional link)
+    (interactive)
+    (let ((link (or link (current-kill 0)))
+          (buffer (generate-new-buffer "*ytd-formats*")))
+      (make-process :name "ytd-formats"
+                    :buffer buffer
+                    :command (list "youtube-dl" "--list-formats" link)
+                    :connection-type 'pipe
+                    :sentinel `(lambda (p e)
+                                 (set-buffer ',buffer)
+                                 (goto-char (point-min))
+                                 (unless (search-forward "format code" nil t)
+                                   (kill-buffer)
+                                   (error "url not supported"))
+                                 (forward-line 1)
+                                 (let (list)
+                                   (while (not (eobp))
+                                     (setq list (cons
+                                                 (split-string
+                                                  (buffer-substring-no-properties
+                                                   (point)
+                                                   (point-at-eol)) "\n" t nil)
+                                                 list))
+                                     (forward-line 1))
+                                   (setq list (nreverse list))
+                                   (kill-buffer "*ytd-formats*")
+                                   (ivy-read "youtube-dl formats (vid+aud): " list
+                                             :action (lambda (x)
+                                                       (youtube-dl
+                                                        (substring-no-properties
+                                                         (format "%s" x)
+                                                         (if (string-match "(" (format "%s" x))
+                                                             (match-end 0)
+                                                           nil)
+                                                         (string-match "[[:space:]]" (format "%s" x))) ',link))
+                                             :sort nil
+                                             :history 'youtube-dl
+                                             :re-builder #'regexp-quote
+                                             :preselect "best"))))))
+  (defun youtube-dl (fmt link)
+    (let ((buffer (generate-new-buffer "*youtube-dl*")))
+      (with-current-buffer buffer
+        (ansi-color-for-comint-mode-on)
+        (comint-mode))
+      (make-process :name "youtube-dl"
+                    :buffer buffer
+                    :command (list
+                              "youtube-dl"
+                              "--flat-playlist"
+                              "--format" fmt link)
+                    :connection-type 'pty
+                    :filter 'comint-output-filter
+                    :sentinel (lambda (p e)
+                                (make-process :name "notify"
+                                              :connection-type 'pipe
+                                              :command (list
+                                                        "notify-send"
+                                                        (format "%s %s" p e)
+                                                        "download complete"))
+                                (message
+                                 "Process %s %s" p (replace-regexp-in-string "\n\\'" "" e))))))
+#+end_src
+
+And you can integrate it with qutebrowser by adding the following lines to your config.py:
+#+begin_src python
+config.bind(',y', 'hint links spawn emacsclient -n -e "(ivy-youtube-dl \\"{hint-url}\\")"')
+config.bind(',Y', 'spawn emacsclient -n -e "(ivy-youtube-dl \\"{url}\\")"')
+#+end_src
+
+Sorry, no screenshots as it's basically the standard ivy and mpv interface that you will see when using these functions. Give them a try, they work really well for me and are very basic.
