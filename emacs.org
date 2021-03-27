@@ -80,6 +80,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#keybinds-2][Keybinds]]
 - [[#packages][Packages]]
 - [[#init][Init]]
+  - [[#straightel][straight.el]]
   - [[#misc-1][Misc]]
   - [[#center-the-frame-on-startup][Center the frame on startup]]
 - [[#appearance-1][Appearance]]
@@ -1119,7 +1120,6 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 
 * Packages
   #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
-
     (setq my-packages '(
       evil
       evil-textobj-line
@@ -1156,84 +1156,87 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
       elfeed
      ))
 
-    (require 'package)
-    (add-to-list 'package-archives
-                 '("melpa" . "https://melpa.org/packages/"))
-    (package-initialize)
-
-    (defun sync-package (pac)
-      (unless (package-installed-p pac)
-        (package-install pac)))
-
-    (defun sync-all-packages ()
-      (interactive)
-      (package-refresh-contents)
-      (mapcar 'sync-package my-packages))
+     (defun sync-all-packages ()
+       (interactive)
+       (mapcar 'straight-use-package my-packages))
 
     (defun set-custom-file-path (path)
-      (unless (file-exists-p path)
-        (write-region "" nil path))
-      (setq custom-file path)
-      (load custom-file))
+       (unless (file-exists-p path)
+         (write-region "" nil path))
+       (setq custom-file path)
+       (load custom-file))
   #+end_src
 
 * Init
+** straight.el
+This makes each use-package form also invoke straight.el to install the package, unless otherwise specified.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (setq straight-use-package-by-default t)
+#+end_src
+
+I won't pretend to understand what everything here does.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
 ** Misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(defun goto-config ()
-  "Open emacs.org."
-  (interactive)
-  (find-file "~/.emacs.d/emacs.org")
-  (widen)
-  (evil-goto-first-line)
-  (evil-close-folds))
 
-(defun load-user-file (filename)
-  "Load a file in current user's configuration directory"
-  (interactive "f")
-  (unless (file-exists-p (expand-file-name filename user-emacs-directory))
-    (write-region "" nil filename))
-  (load-file (expand-file-name filename user-emacs-directory)))  
+    (defun load-user-file (filename)
+      "Load a file in current user's configuration directory"
+      (interactive "f")
+      (unless (file-exists-p
+               (expand-file-name filename user-emacs-directory))
+        (write-region "" nil filename))
+      (load-file (expand-file-name filename user-emacs-directory)))  
 
-(defun rbon-load-evil ()
-  (unless (package-installed-p 'evil)
-    (package-install 'evil))
-  (require 'evil)
-  (evil-mode 1))
+    (defun bootstrap ()
+      "Sync and load user configs."
+      (interactive)
+      (load-user-file "packages.el")
+      (sync-all-packages)
+      (load-user-file "functions.el")
+      (load-user-file "appearance.el")
+      (load-user-file "misc.el")
+      (load-user-file "keybinds.el"))
 
-(defun bootstrap ()
-  "Run this command on a fresh install to pull down packages and load user configs."
-  (interactive)
-  (org-babel-tangle-file "~/.emacs.d/keybinds.org")
-  (rbon-load-evil)
-  (load-user-file "packages.el")
-  (sync-all-packages)
-  (load-user-file "functions.el")
-  (load-user-file "appearance.el")
-  (load-user-file "misc.el")
-  (load-user-file "keybinds.el"))
+    (bootstrap)
+    (straight-use-package 'evil)
+    (evil-mode 1)
+    (put 'narrow-to-region 'disabled nil)
 
-(defun rbon-load-config ()
-  (interactive)
-  (rbon-load-evil)
-  ; (org-babel-tangle-file "~/.emacs.d/keybinds.org")
-  (load-user-file "packages.el")
-  (load-user-file "functions.el")
-  (load-user-file "appearance.el")
-  (load-user-file "misc.el")
-  (load-user-file "keybinds.el"))
-
-(if (file-directory-p (expand-file-name "elpa" user-emacs-directory))
-    (rbon-load-config))
-(put 'narrow-to-region 'disabled nil)
-
+    ;; (defun goto-config ()
+    ;; "Open emacs.org."
+    ;; (interactive)
+    ;; (find-file "~/.emacs.d/emacs.org")
+    ;; (widen)
+    ;; (evil-goto-first-line)
+    ;; (evil-close-folds))
   #+end_src
 
 ** Center the frame on startup
 This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
    #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(eval-after-load "~/.dshdusdhsudh"
-  (when window-system (rbon-center-frame)))
+(defun rbon-center-frame ()
+  "Move the current frame to the center of the display.
+Why is this not a built-in function?"
+  (interactive)
+  (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
+        (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
+    (set-frame-position (selected-frame) h-offset v-offset)))
+     (eval-after-load "~/.dshdusdhsudh"
+       (when window-system (rbon-center-frame)))
    #+end_src
    
 * Appearance
