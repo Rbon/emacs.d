@@ -33,13 +33,13 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#window][Window]]
   - [[#quit][Quit]]
   - [[#jump][Jump]]
-  - [[#workspace][Workspace]]
   - [[#configuration][Configuration]]
   - [[#help-1][Help]]
   - [[#recentf-dialog][Recentf Dialog]]
   - [[#with-editor][With Editor]]
   - [[#magit][Magit]]
 - [[#functions][Functions]]
+  - [[#efsdisplay-startup-time][=efs/display-startup-time=]]
   - [[#helm-m-x-read-extended-command][=helm-M-x-read-extended-command=]]
   - [[#rbon-switch-to-scratch][=rbon-switch-to-scratch=]]
   - [[#rbon-center-frame][=rbon-center-frame=]]
@@ -70,6 +70,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#other][Other]]
   - [[#force-certain-buffers-to-use-the-current-window][Force certain buffers to use the current window]]
 - [[#org-mode][Org Mode]]
+  - [[#toc-org][=toc-org=]]
   - [[#org-babel][Org-babel]]
   - [[#appearance][Appearance]]
   - [[#keybinds-1][Keybinds]]
@@ -78,10 +79,12 @@ A problem I'm having currently is my code in the blocks of this file is being au
 - [[#indent-buffer][Indent Buffer]]
 - [[#helm][Helm]]
   - [[#keybinds-2][Keybinds]]
+- [[#evil][Evil]]
 - [[#packages][Packages]]
-- [[#init][Init]]
   - [[#straightel][straight.el]]
-  - [[#misc-1][Misc]]
+  - [[#misc-1][misc]]
+- [[#init][Init]]
+  - [[#misc-2][Misc]]
   - [[#center-the-frame-on-startup][Center the frame on startup]]
 - [[#appearance-1][Appearance]]
   - [[#general][General]]
@@ -90,6 +93,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
 - [[#magit-1][Magit]]
   - [[#keybinds-4][Keybinds]]
 - [[#haskell][Haskell]]
+  - [[#packages-1][packages]]
   - [[#rbon-haskell-interactive-mode-kill-whole-line][=rbon-haskell-interactive-mode-kill-whole-line=]]
   - [[#rbon-haskell-interactive-mode-history-previous][=rbon-haskell-interactive-mode-history-previous=]]
   - [[#rbon-haskell-interactive-mode-history-next][=rbon-haskell-interactive-mode-history-next=]]
@@ -116,6 +120,7 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#mpv-enqueue-play-playlist][=mpv-enqueue-play-playlist=]]
   - [[#mpv-enqueue-play-archive][=mpv-enqueue-play-archive=]]
   - [[#ivy-youtube-dl][=ivy-youtube-dl=]]
+- [[#workspaces][Workspaces]]
 
 * The Ideas Behind This Config
 ** Emacs should be fun
@@ -309,40 +314,6 @@ Cursor shortcuts
   '("SPC j d" ("jump to definition" . find-function)))
   #+end_src
 
-** Workspace
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC `"     ("workspace"))
-  '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
-  '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
-  '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
-  '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
-  '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
-  '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
-  '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
-  '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-  '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-  '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-  '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-  '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-  '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-  '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-  '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-  '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-  '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-  '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-  '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-  '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-  '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-  '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-  '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-  '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-  '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-  '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-  '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-  '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config)))
-                                        #+end_src
-
 ** Configuration
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
@@ -382,6 +353,20 @@ Cursor shortcuts
 ** Magit
 * Functions
 Be sure to read the docstrings of the functions themselves.
+** =efs/display-startup-time=
+Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org#lets-find-out-how-long-its-taking][here]].
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+    (defun efs/display-startup-time ()
+      (interactive)
+      (message "Emacs loaded in %s with %d garbage collections."
+               (format "%.2f seconds"
+                       (float-time
+                       (time-subtract after-init-time before-init-time)))
+               gcs-done))
+
+  (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+#+end_src
+
 ** =helm-M-x-read-extended-command= 
    By default, =helm-M-x-read-extended-command= doesn't let you change the prompt. It's just hardcoded into the function. So I blatantly copy/pasted it here, with one whole line changed to allow the prompt to be a user variable. Maybe one day when I know how, I'll submit a pull request.
 
@@ -953,6 +938,12 @@ This section is pretty messy. I'm slowly trying to organize it.
 #+end_src
 
 * Org Mode
+** =toc-org=
+I can't add =:hook org-mode= to this, or else I get the error: "failed to define function toc-org."
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package toc-org :defer t)
+#+end_src
+
 ** Org-babel
 Since we don't want to disable org-confirm-babel-evaluate all of the time, do it around the after-save-hook
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
@@ -1072,6 +1063,10 @@ Hydra for promoting and demoting subtrees.
 #+end_src
 
 * Helm
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package helm :defer t)
+  (use-package helm-descbinds :after helm)
+#+end_src
 ** Keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -1118,56 +1113,17 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
   (define-key helm-map (kbd "C-o") 'helm-like-unite/body)
 #+end_src
 
+* Evil
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package evil
+    :config (evil-mode 1))
+
+  (use-package evil-textobj-line :after evil)
+  (use-package evil-mc :defer t) ; multiple cursors
+  (use-package evil-surround :defer t)
+#+end_src
+
 * Packages
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
-    (setq my-packages '(
-      evil
-      evil-textobj-line
-      toc-org
-      undo-tree
-      flycheck
-      which-key
-      ; general
-      ;smooth-scrolling-mode
-      helm
-      helm-descbinds
-      markdown-mode
-      haskell-mode
-      hasklig-mode
-      lsp-mode
-      ; lsp-ui
-      lsp-haskell
-      lua-mode
-      solarized-theme
-      exec-path-from-shell ; fix path on macos
-      smex ; better than M-x
-      magit
-      eyebrowse ; because tab-bar-mode doesn't work on mac
-      ;powerline
-      mini-modeline ; put the modeline in the minibuffer added benefit of only having one modeline
-      ; multiple-cursors
-      evil-mc ; multiple cursors
-      evil-surround
-      autothemer
-      doom-themes
-      spacegray-theme
-      eradio
-      hydra
-      elfeed
-     ))
-
-     (defun sync-all-packages ()
-       (interactive)
-       (mapcar 'straight-use-package my-packages))
-
-    (defun set-custom-file-path (path)
-       (unless (file-exists-p path)
-         (write-region "" nil path))
-       (setq custom-file path)
-       (load custom-file))
-  #+end_src
-
-* Init
 ** straight.el
 This makes each use-package form also invoke straight.el to install the package, unless otherwise specified.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -1190,9 +1146,48 @@ I won't pretend to understand what everything here does.
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
+** misc
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+    (straight-use-package 'use-package)
+
+    (use-package undo-tree :defer t)
+    (use-package flycheck :defer t)
+    (use-package which-key :defer t)
+      ;; general
+      ;; smooth-scrolling-mode
+
+    (use-package markdown-mode
+      :mode "\\.md\\'"
+      :interpreter "markdown")
+
+    (use-package lua-mode
+      :mode "\\.lua\\'"
+      :interpreter "lua")
+
+    (use-package solarized-theme)
+    (use-package exec-path-from-shell) ; fix path on macos
+    ; (use-package smex) ; better than M-x
+    (use-package magit
+      :commands magit)
+
+    (use-package mini-modeline) ; put the modeline in the minibuffer added benefit of only having one modeline
+    ; (use-package autothemer)
+    ; (use-package doom-themes)
+    ; (use-package spacegray-theme)
+    (use-package eradio :commands eradio)
+    (use-package hydra :defer t)
+    (use-package elfeed :commands elfeed)
+
+    (defun set-custom-file-path (path)
+       (unless (file-exists-p path)
+         (write-region "" nil path))
+       (setq custom-file path)
+       (load custom-file))
+  #+end_src
+
+* Init
 ** Misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-
     (defun load-user-file (filename)
       "Load a file in current user's configuration directory"
       (interactive "f")
@@ -1205,15 +1200,13 @@ I won't pretend to understand what everything here does.
       "Sync and load user configs."
       (interactive)
       (load-user-file "packages.el")
-      (sync-all-packages)
+      ;; (sync-all-packages)
       (load-user-file "functions.el")
       (load-user-file "appearance.el")
       (load-user-file "misc.el")
       (load-user-file "keybinds.el"))
 
     (bootstrap)
-    (straight-use-package 'evil)
-    (evil-mode 1)
     (put 'narrow-to-region 'disabled nil)
 
     ;; (defun goto-config ()
@@ -1286,6 +1279,18 @@ Best theme fight me.
 
 * Haskell
 By default, the haskell interactive prompt doesn't play well with evil mode. The following functions have all been sandwiched between some evil bread to make them work with the concept of the =normal= state.
+** packages
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package haskell-mode
+    :mode "\\.hs\\'"
+    :interpreter "haskell")
+
+  (use-package hasklig-mode :after haskell-mode)
+
+  (use-package lsp-mode :after haskell-mode)
+  (use-package lsp-haskell :after haskell-mode)
+#+end_src
+
 ** =rbon-haskell-interactive-mode-kill-whole-line=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-haskell-interactive-mode-kill-whole-line ()
@@ -1814,3 +1819,41 @@ config.bind(',Y', 'spawn emacsclient -n -e "(ivy-youtube-dl \\"{url}\\")"')
 #+end_src
 
 Sorry, no screenshots as it's basically the standard ivy and mpv interface that you will see when using these functions. Give them a try, they work really well for me and are very basic.
+
+* Workspaces
+Boy this sure is verbose. I hope future me dries this up.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package eyebrowse ; because tab-bar-mode doesn't work on mac
+    :defer t
+    :init
+    (rbon-define-key 'global '(normal visual emacs)
+                     '("SPC `"     ("workspace"))
+                     '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
+                     '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
+                     '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
+                     '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
+                     '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
+                     '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
+                     '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
+                     '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+                     '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+                     '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+                     '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+                     '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+                     '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+                     '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+                     '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+                     '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+                     '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+                     '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+                     '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+                     '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+                     '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+                     '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+                     '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+                     '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+                     '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+                     '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+                     '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+                     '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config))))
+#+end_src

@@ -25,15 +25,13 @@
   "Sync and load user configs."
   (interactive)
   (load-user-file "packages.el")
-  (sync-all-packages)
+  ;; (sync-all-packages)
   (load-user-file "functions.el")
   (load-user-file "appearance.el")
   (load-user-file "misc.el")
   (load-user-file "keybinds.el"))
 
 (bootstrap)
-(straight-use-package 'evil)
-(evil-mode 1)
 (put 'narrow-to-region 'disabled nil)
 
 ;; (defun goto-config ()
