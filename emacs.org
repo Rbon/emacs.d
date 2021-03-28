@@ -2,9 +2,6 @@
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
 
-
-A problem I'm having currently is my code in the blocks of this file is being automatically indented weirdly. Send help.
-
 * Table of Contents :toc:
 - [[#the-ideas-behind-this-config][The Ideas Behind This Config]]
   - [[#emacs-should-be-fun][Emacs should be fun]]
@@ -37,7 +34,6 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#help-1][Help]]
   - [[#recentf-dialog][Recentf Dialog]]
   - [[#with-editor][With Editor]]
-  - [[#magit][Magit]]
 - [[#functions][Functions]]
   - [[#efsdisplay-startup-time][=efs/display-startup-time=]]
   - [[#helm-m-x-read-extended-command][=helm-M-x-read-extended-command=]]
@@ -78,7 +74,6 @@ A problem I'm having currently is my code in the blocks of this file is being au
   - [[#start-folded][Start folded]]
 - [[#indent-buffer][Indent Buffer]]
 - [[#helm][Helm]]
-  - [[#keybinds-2][Keybinds]]
 - [[#evil][Evil]]
 - [[#packages][Packages]]
   - [[#straightel][straight.el]]
@@ -89,22 +84,16 @@ A problem I'm having currently is my code in the blocks of this file is being au
 - [[#appearance-1][Appearance]]
   - [[#general][General]]
 - [[#lsp][LSP]]
-  - [[#keybinds-3][Keybinds]]
-- [[#magit-1][Magit]]
-  - [[#keybinds-4][Keybinds]]
+- [[#magit][Magit]]
 - [[#haskell][Haskell]]
-  - [[#packages-1][packages]]
-  - [[#rbon-haskell-interactive-mode-kill-whole-line][=rbon-haskell-interactive-mode-kill-whole-line=]]
-  - [[#rbon-haskell-interactive-mode-history-previous][=rbon-haskell-interactive-mode-history-previous=]]
-  - [[#rbon-haskell-interactive-mode-history-next][=rbon-haskell-interactive-mode-history-next=]]
-  - [[#rbon-insert-haskell-prompt-start][=rbon-insert-haskell-prompt-start=]]
-  - [[#rbon-goto-haskell-prompt-start][=rbon-goto-haskell-prompt-start=]]
-  - [[#keybinds-5][keybinds]]
+  - [[#config][config]]
+  - [[#functions-1][functions]]
+  - [[#keybinds-2][keybinds]]
 - [[#modeline][Modeline]]
 - [[#webkit][Webkit]]
 - [[#eradio][Eradio]]
   - [[#options][Options]]
-  - [[#keybinds-6][Keybinds]]
+  - [[#keybinds-3][Keybinds]]
 - [[#youtube-dl][youtube-dl]]
 - [[#japanese-input][Japanese Input]]
 - [[#elfeed][elfeed]]
@@ -350,7 +339,6 @@ Cursor shortcuts
 
    #+end_src
 
-** Magit
 * Functions
 Be sure to read the docstrings of the functions themselves.
 ** =efs/display-startup-time=
@@ -770,23 +758,13 @@ This section is pretty messy. I'm slowly trying to organize it.
 
         (setq org-src-fontify-natively t)
 
-        (semantic-mode 1) ; helm thing I think
-        (helm-descbinds-mode) ; helm search keybinds
-        (require 'helm-config) ; I don't know what this does
-        (helm-mode 1)
-        (setq helm-M-x-prompt-string "Command: ")
-        (require 'evil-textobj-line)
+        ;; (require 'evil-textobj-line)
         ; (load "~/.emacs.d/evil-textobj-line")
         (setq smex-prompt-string "Run command: ")
-        (global-evil-surround-mode 1)
         (setq confirm-kill-processes nil)
-        (global-evil-mc-mode  1) ; multiple cursors
-        (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
-        (eyebrowse-mode t)
 
         ; (powerline-default-theme)
 
-        (setq which-key-enable-extended-define-key t)
 
         (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
           "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
@@ -807,8 +785,6 @@ This section is pretty messy. I'm slowly trying to organize it.
         (require 'ls-lisp)
 
         (setq haskell-process-show-debug-tips nil)
-        (global-undo-tree-mode 1)
-        (setq evil-undo-system 'undo-tree)
         (setq backup-directory-alist '(("." . "~/.emacs_saves")))
         (ido-mode 1) ; better find-file
         (exec-path-from-shell-initialize) ; fix PATH on macos
@@ -818,7 +794,6 @@ This section is pretty messy. I'm slowly trying to organize it.
         (scroll-bar-mode -1) ; disable scroll bar
         ; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
         (setq inhibit-splash-screen t) ; disable splash screen
-        (which-key-mode) ; enable which-key
         ;; (which-key-setup-side-window-bottom)
         (setq which-key-idle-secondary-delay 0)
         (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
@@ -833,15 +808,14 @@ This section is pretty messy. I'm slowly trying to organize it.
 
         ;; HOOKS
         ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
-        (add-hook 'org-mode-hook 'toc-org-mode)
-        (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
-        (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
-        (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-        (add-hook 'haskell-mode-hook #'lsp)
-        (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-        (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-        (add-hook 'haskell-literate-mode-hook #'lsp)
-        (add-hook 'error-mode-hook 'evil-emacs-state)
+;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
+;;         (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
+;;         (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+;;         (add-hook 'haskell-mode-hook #'lsp)
+;;         (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+;;         (add-hook 'haskell-literate-mode-hook #'lsp)
+;;         (add-hook 'error-mode-hook 'evil-emacs-state)
 
         (setq org-agenda-files (list "~/Documents/School/agenda.org"))
         ;; recent file stuff
@@ -851,13 +825,12 @@ This section is pretty messy. I'm slowly trying to organize it.
 
         ;; sane text wrapping
         (global-visual-line-mode 1)
-        (define-key evil-normal-state-map "j" 'evil-next-visual-line)
-        (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+        ;; (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+        ;; (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
         (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
         (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
         (setq-default fill-column 80)
 
-        ;; (setq-default mode-line-format "") ; get rid of status line
         (setq ispell-program-name "/opt/local/bin/ispell") ; teach emacs how to spell
 
         ;; enable spell check for text-mode
@@ -941,7 +914,11 @@ This section is pretty messy. I'm slowly trying to organize it.
 ** =toc-org=
 I can't add =:hook org-mode= to this, or else I get the error: "failed to define function toc-org."
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (use-package toc-org :defer t)
+  (use-package toc-org
+    :after org-mode
+    :config
+    (rbon-package-loaded "toc-org")
+    (toc-org-mode))
 #+end_src
 
 ** Org-babel
@@ -993,16 +970,22 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
   
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (rbon-define-key 'org-mode '(normal visual emacs)
-                   '("SPC o"   ("org mode"))
-                   '("SPC o q" org-edit-special)
-                   '("SPC o a" ("open the agenda" . org-agenda))
-                   ;; '("SPC o l" org-babel-execute-src-block)
-                   '("SPC o a" ("open the agenda" . org-agenda))
-                   '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-                   '("SPC s b" ("make bold" . make-bold))
-                   '("SPC o s" ("scedule a task" . org-schedule))
-                   '("SPC o d" ("set a deadline" . org-deadline)))
+  (use-package org-mode
+    :mode "\\.org\\'"
+    :config
+    (rbon-package-loaded "org")
+    (rbon-define-key 'org-mode '(normal visual emacs)
+                     '("SPC o"   ("org mode"))
+                     '("SPC o q" org-edit-special)
+                     '("SPC o a" ("open the agenda" . org-agenda))
+                     ;; '("SPC o l" org-babel-execute-src-block)
+                     '("SPC o a" ("open the agenda" . org-agenda))
+                     '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
+                     '("SPC s b" ("make bold" . make-bold))
+                     '("SPC o s" ("scedule a task" . org-schedule))
+                     '("SPC o d" ("set a deadline" . org-deadline)))
+
+    )
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -1063,64 +1046,106 @@ Hydra for promoting and demoting subtrees.
 #+end_src
 
 * Helm
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (use-package helm :defer t)
-  (use-package helm-descbinds :after helm)
-#+end_src
-** Keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (defhydra helm-like-unite (:hint nil
-                             :color pink)
-    "
-  Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
-  ^^^^^^^^^^------------^^----------------^^----------------------
-  _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
-  ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
-  _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
-  ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
-  "
-    ;; arrows
-    ("h" helm-beginning-of-buffer)
-    ("j" helm-next-line)
-    ("k" helm-previous-line)
-    ("l" helm-end-of-buffer)
-    ;; beginning/end
-    ("g" helm-beginning-of-buffer)
-    ("G" helm-end-of-buffer)
-    ;; scroll
-    ("K" helm-scroll-other-window-down)
-    ("J" helm-scroll-other-window)
-    ;; mark
-    ("m" helm-toggle-visible-mark)
-    ("t" helm-toggle-all-marks)
-    ("U" helm-unmark-all)
-    ;; exit
-    ("<escape>" keyboard-escape-quit "" :exit t)
-    ("o" keyboard-escape-quit :exit t)
-    ("i" nil)
-    ;; sources
-    ("}" helm-next-source)
-    ("{" helm-previous-source)
-    ;; rest
-    ("H" helm-help)
-    ("v" helm-execute-persistent-action)
-    ("d" helm-persistent-delete-marked)
-    ("f" helm-follow-mode))
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package helm :defer t
+    :config
+    (rbon-package-loaded "helm")
+    (semantic-mode 1) ; helm thing I think
+    (helm-descbinds-mode) ; helm search keybinds
+    (require 'helm-config) ; I don't know what this does
+    (helm-mode 1)
+    (setq helm-M-x-prompt-string "Command: ")
 
-  (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
-  (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
-  (define-key helm-map (kbd "C-o") 'helm-like-unite/body)
+
+    (defhydra helm-like-unite (:hint nil
+                               :color pink)
+      "
+    Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
+    ^^^^^^^^^^------------^^----------------^^----------------------
+    _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
+    ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
+    _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
+    ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
+    "
+      ;; arrows
+      ("h" helm-beginning-of-buffer)
+      ("j" helm-next-line)
+      ("k" helm-previous-line)
+      ("l" helm-end-of-buffer)
+      ;; beginning/end
+      ("g" helm-beginning-of-buffer)
+      ("G" helm-end-of-buffer)
+      ;; scroll
+      ("K" helm-scroll-other-window-down)
+      ("J" helm-scroll-other-window)
+      ;; mark
+      ("m" helm-toggle-visible-mark)
+      ("t" helm-toggle-all-marks)
+      ("U" helm-unmark-all)
+      ;; exit
+      ("<escape>" keyboard-escape-quit "" :exit t)
+      ("o" keyboard-escape-quit :exit t)
+      ("i" nil)
+      ;; sources
+      ("}" helm-next-source)
+      ("{" helm-previous-source)
+      ;; rest
+      ("H" helm-help)
+      ("v" helm-execute-persistent-action)
+      ("d" helm-persistent-delete-marked)
+      ("f" helm-follow-mode))
+
+    (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
+    (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
+    (define-key helm-map (kbd "C-o") 'helm-like-unite/body)
+    )
+  (use-package helm-descbinds :after helm
+    :config (rbon-package-loaded "helm-descbinds"))
 #+end_src
 
 * Evil
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package evil
-    :config (evil-mode 1))
+    :config
+    (evil-mode 1)
+    (rbon-package-loaded "evil"))
 
-  (use-package evil-textobj-line :after evil)
-  (use-package evil-mc :defer t) ; multiple cursors
-  (use-package evil-surround :defer t)
+  (use-package evil-textobj-line
+    :after evil
+    :config
+    (rbon-package-loaded "evil-textobj-line"))
+
+  (use-package evil-mc ; multiple cursors
+    :after evil
+    :config
+    (rbon-package-loaded "evil-mc")
+    (global-evil-mc-mode 1))
+
+  (use-package evil-surround
+    :after evil
+    :config
+    (rbon-package-loaded "evil-surround")
+    (global-evil-surround-mode 1))
+
+  (use-package undo-tree
+    :after evil
+    :config
+    (global-undo-tree-mode 1)
+    (setq evil-undo-system 'undo-tree)
+    (rbon-package-loaded "undo-tree"))
+
+  (use-package flycheck
+    :defer t
+    :config (rbon-package-loaded "flycheck"))
+
+  (use-package which-key
+    :defer 0
+    :config
+    (rbon-package-loaded "which-key")
+    (setq which-key-enable-extended-define-key t)
+    (which-key-mode) ; enable which-key
+    )
 #+end_src
 
 * Packages
@@ -1150,39 +1175,51 @@ I won't pretend to understand what everything here does.
   #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
     (straight-use-package 'use-package)
 
-    (use-package undo-tree :defer t)
-    (use-package flycheck :defer t)
-    (use-package which-key :defer t)
-      ;; general
-      ;; smooth-scrolling-mode
+    (defun rbon-package-loaded (name)
+      (interactive)
+      (message (concat "Package '" name "' loaded")))
+
+    ;; smooth-scrolling-mode
 
     (use-package markdown-mode
       :mode "\\.md\\'"
-      :interpreter "markdown")
+      :interpreter "markdown"
+      :config (rbon-package-loaded "markdown-mode"))
 
     (use-package lua-mode
       :mode "\\.lua\\'"
-      :interpreter "lua")
+      :interpreter "lua"
+      :config (rbon-package-loaded "lua-mode"))
 
-    (use-package solarized-theme)
-    (use-package exec-path-from-shell) ; fix path on macos
-    ; (use-package smex) ; better than M-x
-    (use-package magit
-      :commands magit)
+    (use-package solarized-theme
+      :defer t
+      :config (rbon-package-loaded "solarized-theme"))
 
-    (use-package mini-modeline) ; put the modeline in the minibuffer added benefit of only having one modeline
-    ; (use-package autothemer)
-    ; (use-package doom-themes)
-    ; (use-package spacegray-theme)
-    (use-package eradio :commands eradio)
-    (use-package hydra :defer t)
-    (use-package elfeed :commands elfeed)
+    (use-package exec-path-from-shell ; fix path on macos
+      :config (rbon-package-loaded "exec-path-from-shell"))
+                                            ; (use-package smex) ; better than M-x
+
+
+                                            ; (use-package autothemer)
+                                            ; (use-package doom-themes)
+                                            ; (use-package spacegray-theme)
+    (use-package eradio
+      :commands eradio
+      :config (rbon-package-loaded "elradio"))
+
+    (use-package hydra
+      :defer t
+      :config (rbon-package-loaded "hydra"))
+
+    (use-package elfeed
+      :commands elfeed
+      :config (rbon-package-loaded "elfeed"))
 
     (defun set-custom-file-path (path)
-       (unless (file-exists-p path)
-         (write-region "" nil path))
-       (setq custom-file path)
-       (load custom-file))
+      (unless (file-exists-p path)
+        (write-region "" nil path))
+      (setq custom-file path)
+      (load custom-file))
   #+end_src
 
 * Init
@@ -1221,15 +1258,15 @@ I won't pretend to understand what everything here does.
 ** Center the frame on startup
 This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
    #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(defun rbon-center-frame ()
-  "Move the current frame to the center of the display.
-Why is this not a built-in function?"
-  (interactive)
-  (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
-        (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
-    (set-frame-position (selected-frame) h-offset v-offset)))
-     (eval-after-load "~/.dshdusdhsudh"
-       (when window-system (rbon-center-frame)))
+     (defun rbon-center-frame ()
+       "Move the current frame to the center of the display.
+     Why is this not a built-in function?"
+       (interactive)
+       (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
+             (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
+         (set-frame-position (selected-frame) h-offset v-offset)))
+          (eval-after-load "~/.dshdusdhsudh"
+            (when window-system (rbon-center-frame)))
    #+end_src
    
 * Appearance
@@ -1251,47 +1288,57 @@ Best theme fight me.
 #  LocalWords:  Keybinds babel Org Misc Magit Dired Recentf rbon
 
 * LSP
-** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (rbon-define-key 'lsp-mode 'normal
-                   '("SPC b f" ("format this buffer" . lsp-format-buffer))
-                   '("SPC s f" ("format selection" . lsp-format-region))
-                   '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
-                   '("SPC j d" ("jump to definition" . lsp-find-definition)))
+  (use-package lsp-mode
+    :after haskell-mode
+    :config
+    (rbon-package-loaded "lsp-mode")
+    (rbon-define-key 'lsp-mode 'normal
+                     '("SPC b f" ("format this buffer" . lsp-format-buffer))
+                     '("SPC s f" ("format selection" . lsp-format-region))
+                     '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
+                     '("SPC j d" ("jump to definition" . lsp-find-definition)))
+    )
+  (use-package lsp-haskell
+    :after haskell-mode
+    :config (rbon-package-loaded "lsp-haskell"))
 #+end_src
 
 * Magit
-** Keybinds
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (use-package magit
+    :commands magit
+    :config
+    (rbon-package-loaded "magit")
+    (rbon-define-key 'magit-mode 'emacs
+                     '("J"        magit-status-jump)
+                     '("j"        magit-next-line)
+                     '("k"        magit-previous-line)
+                     '("H"        magit-discard)
+                     '("<escape>" transient-quit-one)))
+
   (rbon-define-key 'global '(normal visual emacs)
                    '("SPC a"   ("applications"))
                    '("SPC a m" magit))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (rbon-define-key 'magit-mode 'emacs
-                   '("J"        magit-status-jump)
-                   '("j"        magit-next-line)
-                   '("k"        magit-previous-line)
-                   '("H"        magit-discard)
-                   '("<escape>" transient-quit-one))
-#+end_src
-
 * Haskell
 By default, the haskell interactive prompt doesn't play well with evil mode. The following functions have all been sandwiched between some evil bread to make them work with the concept of the =normal= state.
-** packages
+** config
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package haskell-mode
     :mode "\\.hs\\'"
-    :interpreter "haskell")
+    :interpreter "haskell"
+    :config (rbon-package-loaded "haasklig-mode"))
 
-  (use-package hasklig-mode :after haskell-mode)
+  (use-package hasklig-mode
+    :after haskell-mode
+    :config (rbon-package-loaded "haasklig-mode"))
 
-  (use-package lsp-mode :after haskell-mode)
-  (use-package lsp-haskell :after haskell-mode)
 #+end_src
 
-** =rbon-haskell-interactive-mode-kill-whole-line=
+** functions
+*** =rbon-haskell-interactive-mode-kill-whole-line=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-haskell-interactive-mode-kill-whole-line ()
     "Wraps `haskell-interactive-mode-kill-whole-line' to work with evil."
@@ -1301,7 +1348,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
     (evil-normal-state))
 #+end_src
 
-** =rbon-haskell-interactive-mode-history-previous=
+*** =rbon-haskell-interactive-mode-history-previous=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-haskell-interactive-mode-history-previous ()
     "Wraps `haskell-interactive-mode-history-previous' to work with evil."
@@ -1311,7 +1358,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
     (evil-normal-state))
 #+end_src
 
-** =rbon-haskell-interactive-mode-history-next=
+*** =rbon-haskell-interactive-mode-history-next=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-haskell-interactive-mode-history-next ()
     "Wraps `haskell-interactive-mode-history-next' to work with evil."
@@ -1321,7 +1368,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
     (evil-normal-state))
 #+end_src
 
-** =rbon-insert-haskell-prompt-start=
+*** =rbon-insert-haskell-prompt-start=
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-insert-haskell-prompt-start ()
   "Enter the insert state at the start of the haskell prompt."
@@ -1330,7 +1377,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
   (call-interactively 'evil-insert))
    #+end_src
    
-** =rbon-goto-haskell-prompt-start=
+*** =rbon-goto-haskell-prompt-start=
     #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
 (defun rbon-goto-haskell-prompt-start ()
   "Go to the start of the haskell prompt."
@@ -1360,39 +1407,31 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 * Modeline
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (mini-modeline-mode t)
-  (setq-default mode-line-format nil)
-#+end_src
+  ;; put the modeline in the minibuffer added benefit of only having one modeline
+  (use-package mini-modeline
+    :defer 0
+    :config
+    ;; (setq-default mode-line-format "") ; get rid of status line
+  ;;   (setq-default mode-line-format nil) 
+  ;;   (setq mode-line-format nil) 
+     (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+     (setq-default mini-modeline-display-gui-line t)
+       (setq-default window-divider-default-places t) 
+       (setq-default window-divider-default-bottom-width 1) 
+       (setq-default window-divider-default-right-width 1)
+    (rbon-package-loaded "mini-modeline")
+    ;; (setq-default mode-line-format nil) 
+    (mini-modeline-mode t)
+    (window-divider-mode t)
+    (setq mode-line-format nil) 
 
-Seems redundant, but isn't. remove this and if you manually reload the config, the mode-line will make a triumphant return
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (setq mode-line-format nil) 
-#+end_src
-
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (setq-default mini-modeline-display-gui-line t)
-#+end_src
-
-Display divider on all sides
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (setq-default window-divider-default-places t) 
-#+end_src
-
-Must be defined before the =window-divider-mode= is turned on 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (setq-default window-divider-default-bottom-width 1) 
-  (setq-default window-divider-default-right-width 1)
-#+end_src
-
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (window-divider-mode t)
-
-  (setq-default mini-modeline-r-format
-                (list
-                 '("%e"
-                   mode-line-buffer-identification
-                   mode-line-modified) " "
-                 '(:eval (eyebrowse-mode-line-indicator))))
+    (setq-default mini-modeline-r-format
+                  (list
+                   '("%e"
+                     mode-line-buffer-identification
+                     mode-line-modified) " "
+                   '(:eval (eyebrowse-mode-line-indicator))))
+    )
 #+end_src
 
 * Webkit
@@ -1824,7 +1863,9 @@ Sorry, no screenshots as it's basically the standard ivy and mpv interface that 
 Boy this sure is verbose. I hope future me dries this up.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package eyebrowse ; because tab-bar-mode doesn't work on mac
-    :defer t
+    :config
+    (rbon-package-loaded "eyebrowse")
+    (eyebrowse-mode t)
     :init
     (rbon-define-key 'global '(normal visual emacs)
                      '("SPC `"     ("workspace"))
