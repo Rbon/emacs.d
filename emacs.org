@@ -851,20 +851,6 @@ This section is pretty messy. I'm slowly trying to organize it.
 
         (provide-theme 'thing)
 
-        (require 'org-tempo)
-        (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-        (add-to-list 'org-structure-template-alist
-                     '("ke" . "src emacs-lisp :tangle ~/.emacs.d/keybinds.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("fu" . "src emacs-lisp :tangle ~/.emacs.d/functions.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
 
 
 
@@ -970,10 +956,25 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
   
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-  (use-package org-mode
-    :mode "\\.org\\'"
+  (use-package org
+    ;; :mode "\\.org\\'"
+    :defer
     :config
     (rbon-package-loaded "org")
+    (require 'org-tempo)
+        (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+        (add-to-list 'org-structure-template-alist
+                     '("ke" . "src emacs-lisp :tangle ~/.emacs.d/keybinds.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("fu" . "src emacs-lisp :tangle ~/.emacs.d/functions.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
     (rbon-define-key 'org-mode '(normal visual emacs)
                      '("SPC o"   ("org mode"))
                      '("SPC o q" org-edit-special)
@@ -1409,7 +1410,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   ;; put the modeline in the minibuffer added benefit of only having one modeline
   (use-package mini-modeline
-    ;; :defer 0
+    ;; :defer t
     :init 
     (setq-default mode-line-format nil) 
     (setq mode-line-format nil) 
