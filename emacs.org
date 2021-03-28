@@ -903,7 +903,6 @@ I can't add =:hook org-mode= to this, or else I get the error: "failed to define
   (use-package toc-org
     :after org-mode
     :config
-    (rbon-package-loaded "toc-org")
     (toc-org-mode))
 #+end_src
 
@@ -960,7 +959,6 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
     ;; :mode "\\.org\\'"
     :defer
     :config
-    (rbon-package-loaded "org")
     (require 'org-tempo)
         (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
         (add-to-list 'org-structure-template-alist
@@ -1051,7 +1049,6 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package helm :defer t
     :config
-    (rbon-package-loaded "helm")
     (semantic-mode 1) ; helm thing I think
     (helm-descbinds-mode) ; helm search keybinds
     (require 'helm-config) ; I don't know what this does
@@ -1101,49 +1098,40 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
     (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
     (define-key helm-map (kbd "C-o") 'helm-like-unite/body)
     )
-  (use-package helm-descbinds :after helm
-    :config (rbon-package-loaded "helm-descbinds"))
+  (use-package helm-descbinds :after helm)
 #+end_src
 
 * Evil
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package evil
     :config
-    (evil-mode 1)
-    (rbon-package-loaded "evil"))
+    (evil-mode 1))
 
   (use-package evil-textobj-line
-    :after evil
-    :config
-    (rbon-package-loaded "evil-textobj-line"))
+    :after evil)
 
   (use-package evil-mc ; multiple cursors
     :after evil
     :config
-    (rbon-package-loaded "evil-mc")
     (global-evil-mc-mode 1))
 
   (use-package evil-surround
     :after evil
     :config
-    (rbon-package-loaded "evil-surround")
     (global-evil-surround-mode 1))
 
   (use-package undo-tree
     :after evil
     :config
     (global-undo-tree-mode 1)
-    (setq evil-undo-system 'undo-tree)
-    (rbon-package-loaded "undo-tree"))
+    (setq evil-undo-system 'undo-tree))
 
   (use-package flycheck
-    :defer t
-    :config (rbon-package-loaded "flycheck"))
+    :defer t)
 
   (use-package which-key
     :defer 0
     :config
-    (rbon-package-loaded "which-key")
     (setq which-key-enable-extended-define-key t)
     (which-key-mode) ; enable which-key
     )
@@ -1175,29 +1163,23 @@ I won't pretend to understand what everything here does.
 ** misc
   #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
     (straight-use-package 'use-package)
+    (setq use-package-verbose t)
 
-    (defun rbon-package-loaded (name)
-      (interactive)
-      (message (concat "Package '" name "' loaded")))
 
     ;; smooth-scrolling-mode
 
     (use-package markdown-mode
       :mode "\\.md\\'"
-      :interpreter "markdown"
-      :config (rbon-package-loaded "markdown-mode"))
+      :interpreter "markdown")
 
     (use-package lua-mode
       :mode "\\.lua\\'"
-      :interpreter "lua"
-      :config (rbon-package-loaded "lua-mode"))
+      :interpreter "lua")
 
     (use-package solarized-theme
-      :defer t
-      :config (rbon-package-loaded "solarized-theme"))
+      :defer t)
 
-    (use-package exec-path-from-shell ; fix path on macos
-      :config (rbon-package-loaded "exec-path-from-shell"))
+    (use-package exec-path-from-shell) ; fix path on macos
                                             ; (use-package smex) ; better than M-x
 
 
@@ -1205,16 +1187,13 @@ I won't pretend to understand what everything here does.
                                             ; (use-package doom-themes)
                                             ; (use-package spacegray-theme)
     (use-package eradio
-      :commands eradio
-      :config (rbon-package-loaded "elradio"))
+      :commands eradio)
 
     (use-package hydra
-      :defer t
-      :config (rbon-package-loaded "hydra"))
+      :defer t)
 
     (use-package elfeed
-      :commands elfeed
-      :config (rbon-package-loaded "elfeed"))
+      :commands elfeed)
 
     (defun set-custom-file-path (path)
       (unless (file-exists-p path)
@@ -1293,7 +1272,6 @@ Best theme fight me.
   (use-package lsp-mode
     :after haskell-mode
     :config
-    (rbon-package-loaded "lsp-mode")
     (rbon-define-key 'lsp-mode 'normal
                      '("SPC b f" ("format this buffer" . lsp-format-buffer))
                      '("SPC s f" ("format selection" . lsp-format-region))
@@ -1301,8 +1279,7 @@ Best theme fight me.
                      '("SPC j d" ("jump to definition" . lsp-find-definition)))
     )
   (use-package lsp-haskell
-    :after haskell-mode
-    :config (rbon-package-loaded "lsp-haskell"))
+    :after haskell-mode)
 #+end_src
 
 * Magit
@@ -1310,7 +1287,6 @@ Best theme fight me.
   (use-package magit
     :commands magit
     :config
-    (rbon-package-loaded "magit")
     (rbon-define-key 'magit-mode 'emacs
                      '("J"        magit-status-jump)
                      '("j"        magit-next-line)
@@ -1329,12 +1305,10 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package haskell-mode
     :mode "\\.hs\\'"
-    :interpreter "haskell"
-    :config (rbon-package-loaded "haasklig-mode"))
+    :interpreter "haskell")
 
   (use-package hasklig-mode
-    :after haskell-mode
-    :config (rbon-package-loaded "haasklig-mode"))
+    :after haskell-mode)
 
 #+end_src
 
@@ -1410,12 +1384,12 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   ;; put the modeline in the minibuffer added benefit of only having one modeline
   (use-package mini-modeline
+    :after eyebrowse
     ;; :defer t
     :init 
     (setq-default mode-line-format nil) 
     (setq mode-line-format nil) 
     :config
-    (rbon-package-loaded "mini-modeline")
     ;; (setq-default mode-line-format "") ; get rid of status line
     ;;   (setq mode-line-format nil) 
     (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
@@ -1869,7 +1843,6 @@ Boy this sure is verbose. I hope future me dries this up.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package eyebrowse ; because tab-bar-mode doesn't work on mac
     :config
-    (rbon-package-loaded "eyebrowse")
     (eyebrowse-mode t)
     :init
     (rbon-define-key 'global '(normal visual emacs)
