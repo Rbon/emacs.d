@@ -111,15 +111,85 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
   - [[#ivy-youtube-dl][=ivy-youtube-dl=]]
 - [[#workspaces][Workspaces]]
 
-* The Ideas Behind This Config
+* The Axioms of This Config
 ** Emacs should be fun
 Every keypress should be intuitive and powerful. Using even the most mundane feature of Emacs should enjoyable.
 
 ** Emacs should be beautiful
 The way Emacs looks out of the box is shameful. Part of the enjoyment of any software is the aesthetic beauty of it.
 
-** A code block should never split a pair of parentheses
-One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break. This leads to slightly more lines of code than normal, but I feel like the benefits are worth it.
+** Code Block Philosophy
+*** A code block should never split a pair of parentheses
+One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break.
+
+*** Snippets should be small and distinct.
+Instead of one block which does multiple things and requires a lengthy explanation up-front, I will always prefer having multiple smaller blocks, each with their own, more granular description.
+
+*** It's worth it to get wet
+The interaction between the previous two axioms sometimes results in the unpleasant side-effect of my code not being as [[https://en.wikipedia.org/wiki/Don%27t_repeat_yourself][dry]] as I would normally like it to be.
+
+Let's look at an example. Say I have a package, and its related configuration.
+
+#+begin_src emacs-lisp
+  (use-package some-package
+    :config
+    (setq important-var t)
+    (setq another-thing nil)
+    (setq dont-download "apples"))
+#+end_src
+
+Now I want to document why I use those variables, and instead of just putting one description for everything above the snippet, I split it into smaller snippets and individually document everything, like so:
+
+/I choose =some-package= because it's great./
+#+begin_src emacs-lisp
+  (use-package some-package
+    :defer t
+    :config
+#+end_src
+
+/This variable is needed or else =some-package= will not run./
+#+begin_src emacs-lisp
+  (setq important-var t)
+#+end_src
+
+/I'm not sure what this is, but disabling it stopped a crash I was having./
+#+begin_src emacs-lisp
+  (setq another-thing nil)
+#+end_src
+
+/By default, =some-package= downloads a lot of great things, but I have too many apples as it is./
+#+begin_src emacs-lisp
+  (setq dont-download "apples"))
+#+end_src
+
+The previous four snippets will tangle out to a file just fine, but what if someone didn't want the last part about apples, and only copied the first three snippets? They would end up with an =End of file during parsing= error. Now, this is an incredibly small example, and even a novice would likely be able to figure out what went wrong and add a closing parenthesis, but if each code snippet were longer, or more complex, or if the depth of nested parens was high, then suddenly the error becomes much more of a headache to debug. And this doesn't just apply to some hypothetical stranger finding these snippets on github. If I myself want to remove or reorder one or more snippets, then I would get errors as well.
+
+The solution I have gone for, in this case, is to forgo using a =:config= section entirely, and wrap each snippet in a =with-eval-after-load= expression, which has the same effect of only loading the configuration after the related package is loaded. The final snippets would look like this:
+
+/I choose =some-package= because it's great./
+#+begin_src emacs-lisp
+  (use-package some-package :defer t)
+#+end_src
+
+/This variable is needed or else =some-package= will not run./
+#+begin_src emacs-lisp
+(with-eval-afer-load 'some-package
+  (setq important-var t))
+#+end_src
+
+/I'm not sure what this is, but disabling it stopped a crash I was having./
+#+begin_src emacs-lisp
+(with-eval-afer-load 'some-package
+  (setq another-thing nil))
+#+end_src
+
+/By default, =some-package= downloads a lot of great things, but I have too many apples as it is./
+#+begin_src emacs-lisp
+(with-eval-afer-load 'some-package
+  (setq dont-download "apples"))
+#+end_src
+
+Now each snippet is self-contained and portable. I'm free to move one to an entirely unrelated section of the greater configuration if I want to, and Emacs will happily boot without error. In the end, this results in more lines of code, and that was an especially contrived example, but in the end, I believe the benefits of stability and flexibility outweigh the small cost of writing a few more lines of code.
 
 ** If something goes horribly wrong, emacs should still be usable
 ** Escape should always mean "go up a level"
