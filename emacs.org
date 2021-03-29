@@ -825,8 +825,6 @@ This section is pretty messy. I'm slowly trying to organize it.
 
         ;; sane text wrapping
         (global-visual-line-mode 1)
-        ;; (define-key evil-normal-state-map "j" 'evil-next-visual-line)
-        ;; (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
         (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
         (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
         (setq-default fill-column 80)
@@ -1104,18 +1102,24 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 * Evil
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package evil
+    :demand
     :config
-    (evil-mode 1))
+    (evil-mode 1)
+    (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+    (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
 
   (use-package evil-textobj-line
+    :demand
     :after evil)
 
   (use-package evil-mc ; multiple cursors
+    :demand
     :after evil
     :config
     (global-evil-mc-mode 1))
 
   (use-package evil-surround
+    :demand
     :after evil
     :config
     (global-evil-surround-mode 1))
@@ -1126,19 +1130,16 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
     (global-undo-tree-mode 1)
     (setq evil-undo-system 'undo-tree))
 
-  (use-package flycheck
-    :defer t)
+  (use-package flycheck :defer t)
 
   (use-package which-key
-    :defer 0
     :config
     (setq which-key-enable-extended-define-key t)
-    (which-key-mode) ; enable which-key
-    )
+    (which-key-mode)) ; enable which-key)
 #+end_src
 
 * Packages
-** straight.el
+** =straight.el=
 This makes each use-package form also invoke straight.el to install the package, unless otherwise specified.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (setq straight-use-package-by-default t)
@@ -1160,17 +1161,21 @@ I won't pretend to understand what everything here does.
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
-** misc
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+** =use-package=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
     (straight-use-package 'use-package)
     (setq use-package-verbose t)
+    (setq use-package-always-defer t)
+#+end_src
+
+** misc
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+
 
 
     ;; smooth-scrolling-mode
 
-    (use-package markdown-mode
-      :mode "\\.md\\'"
-      :interpreter "markdown")
+    (use-package markdown-mode)
 
     (use-package lua-mode
       :mode "\\.lua\\'"
@@ -1192,8 +1197,6 @@ I won't pretend to understand what everything here does.
     (use-package hydra
       :defer t)
 
-    (use-package elfeed
-      :commands elfeed)
 
     (defun set-custom-file-path (path)
       (unless (file-exists-p path)
@@ -1204,6 +1207,11 @@ I won't pretend to understand what everything here does.
 
 * Init
 ** Misc
+The default is 800 kilobytes.  Measured in bytes.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+(setq gc-cons-threshold (* 100 1000 1000))
+#+end_src
+
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
     (defun load-user-file (filename)
       "Load a file in current user's configuration directory"
@@ -1248,6 +1256,13 @@ This is called last to ensure frame is properly centered. If I could figure out 
           (eval-after-load "~/.dshdusdhsudh"
             (when window-system (rbon-center-frame)))
    #+end_src
+
+** garbage collection again
+Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
+#+end_src
    
 * Appearance
 ** General
@@ -1382,35 +1397,42 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 * Modeline
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  ;; put the modeline in the minibuffer added benefit of only having one modeline
-  (use-package mini-modeline
-    :after eyebrowse
-    ;; :defer t
-    :init 
-    (setq-default mode-line-format nil) 
-    (setq mode-line-format nil) 
-    :config
-    ;; (setq-default mode-line-format "") ; get rid of status line
-    ;;   (setq mode-line-format nil) 
-    (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
-    (setq-default mini-modeline-display-gui-line t)
-    (setq-default window-divider-default-places t) 
-    (setq-default window-divider-default-bottom-width 1) 
-    (setq-default window-divider-default-right-width 1)
-    (setq mode-line-format nil) 
-    (mini-modeline-mode t)
-    (window-divider-mode t)
-    (setq mode-line-format nil) 
+    ;; put the modeline in the minibuffer added benefit of only having one modeline
+    (use-package mini-modeline
+      :demand
+      ;; :after eyebrowse
+      ;; :defer t
+      :init 
+      (setq-default mode-line-format nil) 
+      (setq mode-line-format nil) 
+      :config
+      ;; (setq-default mode-line-format "") ; get rid of status line
+      ;;   (setq mode-line-format nil) 
+      (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+      (setq-default mini-modeline-display-gui-line t)
+      (setq-default window-divider-default-places t) 
+      (setq-default window-divider-default-bottom-width 1) 
+      (setq-default window-divider-default-right-width 1)
+      (setq mode-line-format nil) 
+      (mini-modeline-mode t)
+      (window-divider-mode t)
+      (setq mode-line-format nil) 
 
-    (setq-default mini-modeline-r-format
-                  (list
-                   '("%e"
-                     mode-line-buffer-identification
-                     mode-line-modified) " "
-                   '(:eval (eyebrowse-mode-line-indicator))))
+      (setq-default mini-modeline-r-format
+                    (list
+                     '("%e"
+                       mode-line-buffer-identification
+                       mode-line-modified)))
 
-    (setq-default mode-line-format nil) 
-    )
+  ;;     (setq-default mini-modeline-r-format
+  ;;                   (list
+  ;;                    '("%e"
+  ;;                      mode-line-buffer-identification
+  ;;                      mode-line-modified) " "
+  ;;                    '(:eval (eyebrowse-mode-line-indicator))))
+
+      (setq-default mode-line-format nil) 
+      )
 #+end_src
 
 * Webkit
@@ -1506,33 +1528,49 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
                    '("SPC i t" ("toggle input method" . toggle-input-method)))
 #+end_src
 
-* elfeed
+* RSS Feed Reader
+** Package
+I use =elfeed= as my RSS feed reader.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package elfeed)
+#+end_src
+
+** Global binds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
                    '("SPC a"  ("applications"))
                    '("SPC a e" elfeed))
+#+end_src
 
-  (evil-set-initial-state 'elfeed-search-mode 'normal)
-  (rbon-define-key 'elfeed-search-mode '(normal)
-                   '("g" elfeed-search-update--force)
-                   '("G" elfeed-search-fetch)
-                   '("s" elfeed-search-live-filter)
-                   '("c" elfeed-search-clear-filter)
-                   '("<return>" elfeed-search-show-entry)
-                   '("b" elfeed-search-browse-url)
-                   '("y" elfeed-search-yank)
-                   '("r" elfeed-search-untag-all-unread)
-                   '("u" elfeed-search-tag-all-unread)
-                   '("+" elfeed-search-tag-all)
-                   '("-" elfeed-search-untag-all)
-                   '("m" elfeed-mpv)
-                   '("j" evil-next-line)
-                   '("k" evil-previous-line)
-                   '("<escape>" kill-this-buffer))
+** Local binds
+Binds for the main feed list buffer.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (with-eval-after-load 'elfeed
+    (rbon-define-key 'elfeed-search-mode '(normal)
+                     '("g" elfeed-search-update--force)
+                     '("G" elfeed-search-fetch)
+                     '("s" elfeed-search-live-filter)
+                     '("c" elfeed-search-clear-filter)
+                     '("<return>" elfeed-search-show-entry)
+                     '("b" elfeed-search-browse-url)
+                     '("y" elfeed-search-yank)
+                     '("r" elfeed-search-untag-all-unread)
+                     '("u" elfeed-search-tag-all-unread)
+                     '("+" elfeed-search-tag-all)
+                     '("-" elfeed-search-untag-all)
+                     '("m" elfeed-mpv)
+                     '("j" evil-next-line)
+                     '("k" evil-previous-line)
+                     '("<escape>" kill-this-buffer)))
+#+end_src
 
-  (rbon-define-key 'elfeed-show-mode '(normal)
-                   '("m" elfeed-mpv)
-                   '("<escape>" kill-this-buffer))
+Binds specifically for the buffer that shows the full info for specific entries.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (with-eval-after-load 'elfeed
+    (message "loaded some keybinds")
+    (rbon-define-key 'elfeed-show-mode '(normal)
+                     '("m" elfeed-mpv)
+                     '("<escape>" kill-this-buffer)))
 #+end_src
 
 * youtube links
@@ -1876,3 +1914,4 @@ Boy this sure is verbose. I hope future me dries this up.
                      '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
                      '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config))))
 #+end_src
+

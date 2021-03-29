@@ -13,6 +13,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(straight-use-package 'use-package)
+(setq use-package-verbose t)
+(setq use-package-always-defer t)
+
+(setq gc-cons-threshold (* 100 1000 1000))
+
 (defun load-user-file (filename)
   "Load a file in current user's configuration directory"
   (interactive "f")
@@ -51,3 +57,6 @@ Why is this not a built-in function?"
     (set-frame-position (selected-frame) h-offset v-offset)))
      (eval-after-load "~/.dshdusdhsudh"
        (when window-system (rbon-center-frame)))
+
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
