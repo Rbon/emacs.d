@@ -1307,7 +1307,7 @@ Best theme fight me.
                      '("j"        magit-next-line)
                      '("k"        magit-previous-line)
                      '("H"        magit-discard)
-                     '("<escape>" transient-quit-one)))
+                     '("<escape>" magit-mode-bury-buffer)))
 
   (rbon-define-key 'global '(normal visual emacs)
                    '("SPC a"   ("applications"))
