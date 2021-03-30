@@ -1169,43 +1169,59 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
   (use-package helm-descbinds :after helm)
 #+end_src
 
-* Evil
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (use-package evil
-    :demand
-    :config
-    (evil-mode 1)
-    (define-key evil-normal-state-map "j" 'evil-next-visual-line)
-    (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
+* Text editing
+** packages
+Emacs is a pretty good operating system, but it's just missing a good text editor.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package evil :demand
+    :config (evil-mode 1))
+#+end_src
 
-  (use-package evil-textobj-line
-    :demand
-    :after evil)
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package evil-textobj-line :demand :after evil)
+#+end_src
 
-  (use-package evil-mc ; multiple cursors
-    :demand
-    :after evil
-    :config
-    (global-evil-mc-mode 1))
+Multiple cursors.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package evil-mc :demand :after evil
+    :config (global-evil-mc-mode 1))
+#+end_src
 
-  (use-package evil-surround
-    :demand
-    :after evil
-    :config
-    (global-evil-surround-mode 1))
+Surround text with stuff.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package evil-surround :demand :after evil
+    :config (global-evil-surround-mode 1))
+#+end_src
 
-  (use-package undo-tree
-    :after evil
+I don't like this package, but I'm too lazy to change it.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package undo-tree :after evil
     :config
     (global-undo-tree-mode 1)
     (setq evil-undo-system 'undo-tree))
+#+end_src
 
-  (use-package flycheck :defer t)
+Spellchecking.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package flycheck)
+#+end_src
 
-  (use-package which-key
-    :config
-    (setq which-key-enable-extended-define-key t)
-    (which-key-mode)) ; enable which-key)
+** [[https://github.com/justbur/emacs-which-key][which-key]]
+Set this to =t= to enable keybinds with custom names, using this syntax: ='("foo" . long-command-name-foo)=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (setq which-key-enable-extended-define-key t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+  (use-package which-key :config (which-key-mode))
+
+#+end_src
+
+** keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+    (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
 #+end_src
 
 * Packages
