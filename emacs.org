@@ -5,7 +5,7 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
 - [[#the-axioms-of-this-config][The Axioms of This Config]]
   - [[#emacs-should-be-fun][Emacs should be fun]]
   - [[#emacs-should-be-beautiful][Emacs should be beautiful]]
-  - [[#code-block-philosophy][Code Block Philosophy]]
+  - [[#its-worth-it-to-get-wet][It's worth it to get wet]]
   - [[#if-something-goes-horribly-wrong-emacs-should-still-be-usable][If something goes horribly wrong, emacs should still be usable]]
   - [[#escape-should-always-mean-go-up-a-level][Escape should always mean "go up a level"]]
   - [[#it-should-only-take-one-command-to-go-from-a-fresh-install-to-a-full-install][It should only take one command to go from a fresh install to a full install]]
@@ -125,14 +125,7 @@ Every keypress should be intuitive and powerful. Using even the most mundane fea
 ** Emacs should be beautiful
 The way Emacs looks out of the box is shameful. Part of the enjoyment of any software is the aesthetic beauty of it.
 
-** Code Block Philosophy
-*** A code block should never split a pair of parentheses
-One of the the axioms of this config file is that no pair of parentheses should ever be split among more than one block of code. If you see a snippet, then you can rest assured that you can copy/paste it into your own config without worry of mismatched parens. In addition, it means I can freely reorganize this file as I please, and nothing will break.
-
-*** Snippets should be small and distinct.
-Instead of one block which does multiple things and requires a lengthy explanation up-front, I will always prefer having multiple smaller blocks, each with their own, more granular description.
-
-*** It's worth it to get wet
+** It's worth it to get wet
 The interaction between the previous two axioms sometimes results in the unpleasant side-effect of my code not being as as I would normally like it to be.
 
 Throughout this config, you may occasionally find code that seems, at first glance, needlessly [[https://en.wikipedia.org/wiki/Don%27t_repeat_yourself][wet]]. In reality, repetitious code in this config is, most of the time at least, intentional. Let's use an example to walk you through my thought process. Say I have a package, and its related configuration.
@@ -147,24 +140,24 @@ Throughout this config, you may occasionally find code that seems, at first glan
 
 Now, say I want to document why I use those variables, and instead of just putting one description for everything above the snippet, I split it into smaller snippets and individually document everything, like so:
 
-/I choose =some-package= because it's great./
+"I choose =some-package= because it's great."
 #+begin_src emacs-lisp
   (use-package some-package
     :defer t
     :config
 #+end_src
 
-/This variable is needed or else =some-package= will not run./
+"This variable is needed or else =some-package= will not run."
 #+begin_src emacs-lisp
   (setq important-var t)
 #+end_src
 
-/I'm not sure what this is, but disabling it stopped a crash I was having./
+"I'm not sure what this is, but disabling it stopped a crash I was having."
 #+begin_src emacs-lisp
   (setq another-thing nil)
 #+end_src
 
-/By default, =some-package= downloads a lot of great things, but I have too many apples as it is./
+"By default, =some-package= downloads a lot of great things, but I have too many apples as it is."
 #+begin_src emacs-lisp
   (setq dont-download "apples"))
 #+end_src
@@ -173,24 +166,25 @@ The previous four snippets will [[https://orgmode.org/manual/Extracting-Source-C
 
 The solution I have gone for, in this case, is to forgo using a =:config= section entirely, and wrap each snippet in a =with-eval-after-load= expression, which has the same effect of only loading the configuration after the related package is loaded. The final snippets would look like this:
 
-/I choose =some-package= because it's great./
+"I choose =some-package= because it's great."
 #+begin_src emacs-lisp
   (use-package some-package :defer t)
 #+end_src
 
-/This variable is needed or else =some-package= will not run./
+"This variable is needed or else =some-package= will not run."
+#+begin_src emacs-lisp
 #+begin_src emacs-lisp
 (with-eval-afer-load 'some-package
   (setq important-var t))
 #+end_src
 
-/I'm not sure what this is, but disabling it stopped a crash I was having./
+"I'm not sure what this is, but disabling it stopped a crash I was having."
 #+begin_src emacs-lisp
 (with-eval-afer-load 'some-package
   (setq another-thing nil))
 #+end_src
 
-/By default, =some-package= downloads a lot of great things, but I have too many apples as it is./
+"By default, =some-package= downloads a lot of great things, but I have too many apples as it is."
 #+begin_src emacs-lisp
 (with-eval-afer-load 'some-package
   (setq dont-download "apples"))
