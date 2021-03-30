@@ -126,9 +126,9 @@ One of the the axioms of this config file is that no pair of parentheses should 
 Instead of one block which does multiple things and requires a lengthy explanation up-front, I will always prefer having multiple smaller blocks, each with their own, more granular description.
 
 *** It's worth it to get wet
-The interaction between the previous two axioms sometimes results in the unpleasant side-effect of my code not being as [[https://en.wikipedia.org/wiki/Don%27t_repeat_yourself][dry]] as I would normally like it to be.
+The interaction between the previous two axioms sometimes results in the unpleasant side-effect of my code not being as as I would normally like it to be.
 
-Let's look at an example. Say I have a package, and its related configuration.
+Throughout this config, you may occasionally find code that seems, at first glance, needlessly [[https://en.wikipedia.org/wiki/Don%27t_repeat_yourself][wet]]. In reality, repetitious code in this config is, most of the time at least, intentional. Let's use an example to walk you through my thought process. Say I have a package, and its related configuration.
 
 #+begin_src emacs-lisp
   (use-package some-package
@@ -138,7 +138,7 @@ Let's look at an example. Say I have a package, and its related configuration.
     (setq dont-download "apples"))
 #+end_src
 
-Now I want to document why I use those variables, and instead of just putting one description for everything above the snippet, I split it into smaller snippets and individually document everything, like so:
+Now, say I want to document why I use those variables, and instead of just putting one description for everything above the snippet, I split it into smaller snippets and individually document everything, like so:
 
 /I choose =some-package= because it's great./
 #+begin_src emacs-lisp
@@ -162,7 +162,7 @@ Now I want to document why I use those variables, and instead of just putting on
   (setq dont-download "apples"))
 #+end_src
 
-The previous four snippets will tangle out to a file just fine, but what if someone didn't want the last part about apples, and only copied the first three snippets? They would end up with an =End of file during parsing= error. Now, this is an incredibly small example, and even a novice would likely be able to figure out what went wrong and add a closing parenthesis, but if each code snippet were longer, or more complex, or if the depth of nested parens was high, then suddenly the error becomes much more of a headache to debug. And this doesn't just apply to some hypothetical stranger finding these snippets on github. If I myself want to remove or reorder one or more snippets, then I would get errors as well.
+The previous four snippets will [[https://orgmode.org/manual/Extracting-Source-Code.html][tangle]] out to a file just fine, but what if someone found this config on the internet, but didn't want the last part about apples, and only copied the first three snippets? They would end up with an =End of file during parsing= error. Now, this is an incredibly small example, and even a novice would likely be able to figure out what went wrong and add a closing parenthesis, but if each code snippet were longer, or more complex, or if the depth of nested parens was high, then suddenly the error becomes much more of a headache to debug. And this doesn't just apply to some hypothetical stranger finding these snippets on github. If I myself want to remove or reorder one or more snippets, then I would get errors as well, after tangling them to files.
 
 The solution I have gone for, in this case, is to forgo using a =:config= section entirely, and wrap each snippet in a =with-eval-after-load= expression, which has the same effect of only loading the configuration after the related package is loaded. The final snippets would look like this:
 
@@ -189,7 +189,7 @@ The solution I have gone for, in this case, is to forgo using a =:config= sectio
   (setq dont-download "apples"))
 #+end_src
 
-Now each snippet is self-contained and portable. I'm free to move one to an entirely unrelated section of the greater configuration if I want to, and Emacs will happily boot without error. In the end, this results in more lines of code, and that was an especially contrived example, but in the end, I believe the benefits of stability and flexibility outweigh the small cost of writing a few more lines of code.
+Now each snippet is self-contained and portable. I'm free to move one to an entirely unrelated section of the greater configuration if I want to, and Emacs will happily boot without error. In the end, this results in more lines of code, and that was an especially contrived example, but in the end, I believe the benefits of stability and flexibility outweigh the small cost of writing a few more lines of code. As such, I will employ a similar pattern of "re-wrapping" snippets whenever I can, not just in the case of =use-package=.
 
 ** If something goes horribly wrong, emacs should still be usable
 ** Escape should always mean "go up a level"
