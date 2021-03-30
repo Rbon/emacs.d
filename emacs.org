@@ -1,12 +1,11 @@
 #+TITLE: Rbon's Emacs Config
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
-
-* Table of Contents :toc:
-- [[#the-ideas-behind-this-config][The Ideas Behind This Config]]
+* Table of Contents                                                     :toc:
+- [[#the-axioms-of-this-config][The Axioms of This Config]]
   - [[#emacs-should-be-fun][Emacs should be fun]]
   - [[#emacs-should-be-beautiful][Emacs should be beautiful]]
-  - [[#a-code-block-should-never-split-a-pair-of-parentheses][A code block should never split a pair of parentheses]]
+  - [[#code-block-philosophy][Code Block Philosophy]]
   - [[#if-something-goes-horribly-wrong-emacs-should-still-be-usable][If something goes horribly wrong, emacs should still be usable]]
   - [[#escape-should-always-mean-go-up-a-level][Escape should always mean "go up a level"]]
   - [[#it-should-only-take-one-command-to-go-from-a-fresh-install-to-a-full-install][It should only take one command to go from a fresh install to a full install]]
@@ -74,13 +73,18 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
   - [[#start-folded][Start folded]]
 - [[#indent-buffer][Indent Buffer]]
 - [[#helm][Helm]]
-- [[#evil][Evil]]
-- [[#packages][Packages]]
-  - [[#straightel][straight.el]]
+- [[#text-editing][Text editing]]
+  - [[#packages][packages]]
+  - [[#which-key][which-key]]
+  - [[#keybinds-2][keybinds]]
+- [[#packages-1][Packages]]
+  - [[#straightel][=straight.el=]]
+  - [[#use-package][=use-package=]]
   - [[#misc-1][misc]]
 - [[#init][Init]]
   - [[#misc-2][Misc]]
   - [[#center-the-frame-on-startup][Center the frame on startup]]
+  - [[#garbage-collection-again][garbage collection again]]
 - [[#appearance-1][Appearance]]
   - [[#general][General]]
 - [[#lsp][LSP]]
@@ -88,15 +92,18 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
 - [[#haskell][Haskell]]
   - [[#config][config]]
   - [[#functions-1][functions]]
-  - [[#keybinds-2][keybinds]]
+  - [[#keybinds-3][keybinds]]
 - [[#modeline][Modeline]]
 - [[#webkit][Webkit]]
 - [[#eradio][Eradio]]
   - [[#options][Options]]
-  - [[#keybinds-3][Keybinds]]
+  - [[#keybinds-4][Keybinds]]
 - [[#youtube-dl][youtube-dl]]
 - [[#japanese-input][Japanese Input]]
-- [[#elfeed][elfeed]]
+- [[#rss-feed-reader][RSS Feed Reader]]
+  - [[#package][Package]]
+  - [[#global-binds][Global binds]]
+  - [[#local-binds][Local binds]]
 - [[#youtube-links][youtube links]]
 - [[#enqueue-youtube-videos][Enqueue youtube videos]]
   - [[#forward][Forward]]
@@ -969,7 +976,7 @@ This section is pretty messy. I'm slowly trying to organize it.
 I can't add =:hook org-mode= to this, or else I get the error: "failed to define function toc-org."
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
   (use-package toc-org
-    :after org-mode
+    :after org
     :config
     (toc-org-mode))
 #+end_src
