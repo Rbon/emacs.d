@@ -75,8 +75,7 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
 - [[#helm][Helm]]
 - [[#text-editing][Text editing]]
   - [[#packages][packages]]
-  - [[#which-key][which-key]]
-  - [[#keybinds-2][keybinds]]
+  - [[#line-wrapping][Line wrapping]]
 - [[#packages-1][Packages]]
   - [[#straightel][=straight.el=]]
   - [[#use-package][=use-package=]]
@@ -92,12 +91,12 @@ Hello! You have somehow found my emacs configuration. This file is written in [[
 - [[#haskell][Haskell]]
   - [[#config][config]]
   - [[#functions-1][functions]]
-  - [[#keybinds-3][keybinds]]
+  - [[#keybinds-2][keybinds]]
 - [[#modeline][Modeline]]
 - [[#webkit][Webkit]]
 - [[#eradio][Eradio]]
   - [[#options][Options]]
-  - [[#keybinds-4][Keybinds]]
+  - [[#keybinds-3][Keybinds]]
 - [[#youtube-dl][youtube-dl]]
 - [[#japanese-input][Japanese Input]]
 - [[#rss-feed-reader][RSS Feed Reader]]
@@ -894,8 +893,6 @@ This section is pretty messy. I'm slowly trying to organize it.
         (setq recentf-max-menu-items 25)
         (setq recentf-max-saved-items 25)
 
-        ;; sane text wrapping
-        (global-visual-line-mode 1)
         (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
         (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
         (setq-default fill-column 80)
@@ -1171,29 +1168,34 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 #+end_src
 
 * Text editing
-** packages
+** Packages
+*** [[https://github.com/emacs-evil/evil][evil]]
 Emacs is a pretty good operating system, but it's just missing a good text editor.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package evil :demand
     :config (evil-mode 1))
 #+end_src
 
+*** [[https://github.com/emacsorphanage/evil-textobj-line][evil-textobj-line]]
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package evil-textobj-line :demand :after evil)
 #+end_src
 
+*** [[https://github.com/gabesoft/evil-mc][evil-mc]]
 Multiple cursors.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package evil-mc :demand :after evil
     :config (global-evil-mc-mode 1))
 #+end_src
 
+*** [[https://github.com/emacs-evil/evil-surround][evil-surround]]
 Surround text with stuff.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package evil-surround :demand :after evil
     :config (global-evil-surround-mode 1))
 #+end_src
 
+*** [[https://elpa.gnu.org/packages/undo-tree.html][undo-tree]]
 I don't like this package, but I'm too lazy to change it.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package undo-tree :after evil
@@ -1202,23 +1204,32 @@ I don't like this package, but I'm too lazy to change it.
     (setq evil-undo-system 'undo-tree))
 #+end_src
 
+*** [[https://github.com/flycheck/flycheck][flycheck]]
 Spellchecking.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package flycheck)
 #+end_src
 
-** [[https://github.com/justbur/emacs-which-key][which-key]]
-Set this to =t= to enable keybinds with custom names, using this syntax: ='("foo" . long-command-name-foo)=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+*** [[https://github.com/justbur/emacs-which-key][which-key]]
+=which-key= is possibly my favorite package.
+
+Set this to =t= to enable keybinds with custom names, using this syntax: ='("foo" . long-command-name-foo)=. The instructions say to set this before loading the package.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (setq which-key-enable-extended-define-key t)
 #+end_src
 
+Enable the package itself.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
-  (use-package which-key :config (which-key-mode))
-
+  (use-package which-key :demand :config (which-key-mode))
 #+end_src
 
-** keybinds
+** Line wrapping
+Wrap text in all buffers by default.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+  (global-visual-line-mode 1)
+#+end_src
+
+Making moving up and down lines behave like a modern text editor.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (with-eval-after-load 'evil
     (define-key evil-normal-state-map "j" 'evil-next-visual-line)
