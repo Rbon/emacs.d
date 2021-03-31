@@ -173,19 +173,19 @@ The solution I have gone for, in this case, is to forgo using a =:config= sectio
 "This variable is needed or else =some-package= will not run."
 #+begin_src emacs-lisp
 #+begin_src emacs-lisp
-(with-eval-afer-load 'some-package
+(with-eval-after-load 'some-package
   (setq important-var t))
 #+end_src
 
 "I'm not sure what this is, but disabling it stopped a crash I was having."
 #+begin_src emacs-lisp
-(with-eval-afer-load 'some-package
+(with-eval-after-load 'some-package
   (setq another-thing nil))
 #+end_src
 
 "By default, =some-package= downloads a lot of great things, but I have too many apples as it is."
 #+begin_src emacs-lisp
-(with-eval-afer-load 'some-package
+(with-eval-after-load 'some-package
   (setq dont-download "apples"))
 #+end_src
 
@@ -218,6 +218,26 @@ the
 ** If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap
 
 * Keybinds
+** skeleton
+Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+                   '("SPC"   ("the final frontier"))
+                   '("SPC f" ("files"))
+                   '("SPC F" ("frame"))
+                   '("SPC b" ("buffers"))
+                   '("SPC e" ("eval"))
+                   '("SPC n" ("narrow"))
+                   '("SPC s" ("selection"))
+                   '("SPC C" ("cursors"))
+                   '("SPC h" ("help"))
+                   '("SPC w" ("window"))
+                   '("SPC j" ("jump"))
+                   '("SPC q" ("quit"))
+                   '("SPC c" ("configuration"))
+                   '("SPC a" ("applications")))
+#+end_src
+
 ** Miscellaneous
  Escape key stuff
  Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
@@ -256,7 +276,6 @@ Cursor shortcuts
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a"   ("applications"))
                    '("SPC a d" dired)
                    '("SPC a m" magit))
 #+end_src
@@ -264,7 +283,6 @@ Cursor shortcuts
 ** Files
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC f"   ("files"))
                    '("SPC f f" ("find a file" . helm-find-files))
                    '("SPC f s" ("save this file" . save-buffer))
                    '("SPC f r" ("recent files" . helm-recentf))
@@ -275,7 +293,6 @@ Cursor shortcuts
 ** Frame
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC F"   ("frame"))
   '("SPC F c" ("center this frame" . rbon-center-frame))
   '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
   '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
@@ -284,7 +301,6 @@ Cursor shortcuts
 ** Buffers
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC b"     ("buffers"))
   '("SPC b s"   ("save this buffer" . save-buffer))
   '("SPC b c"   ("close this buffer" . kill-this-buffer))
   '("SPC b k"   ("kill this buffer" . kill-this-buffer))
@@ -296,7 +312,6 @@ Cursor shortcuts
 ** Eval
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC e"   ("eval"))
   '("SPC e e" ("eval expression" . eval-expression))
   '("SPC e b" ("eval this buffer" . eval-buffer))
   '("SPC e s" ("eval selection" . eval-region)))
@@ -305,7 +320,6 @@ Cursor shortcuts
 ** Narrow
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC n"   ("narrow"))
   '("SPC n s" ("narrow to selection" . narrow-to-region))
   '("SPC n w" ("widen" . widen)))
   #+end_src
@@ -313,7 +327,6 @@ Cursor shortcuts
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC s"   ("selection"))
                    '("SPC s a" ("select everything" . mark-whole-buffer))
                    '("SPC s e" ("eval selection" . eval-region))
                    '("SPC s i" ("indent selection" . indent-region)))
@@ -322,7 +335,6 @@ Cursor shortcuts
 ** Cursors
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC C"          ("cursors"))
   '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
   '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
   '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
@@ -334,7 +346,6 @@ Cursor shortcuts
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC h"   ("help"))
   '("SPC h h" ("describe something" . helm-apropos))
   '("SPC h l" ("list definitions" . helm-imenu))
   '("SPC h k" ("describe a keybind" . describe-key))
@@ -348,7 +359,6 @@ Cursor shortcuts
 ** Window
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC w"   ("window"))
   '("SPC w c" ("close this window" . delete-window))
   '("SPC w f" ("fullscreen this window" . delete-other-windows))
   '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
@@ -362,21 +372,18 @@ Cursor shortcuts
 ** Quit
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC q"   ("quit"))
   '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
   #+end_src
 
 ** Jump
   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC j"   ("jump"))
   '("SPC j d" ("jump to definition" . find-function)))
   #+end_src
 
 ** Configuration
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 (rbon-define-key 'global '(normal visual emacs)
-  '("SPC c"   ("configuration"))
   '("SPC c a" ("load all configs" . rbon-load-config))
   '("SPC c b" ("bootstrap" . bootstrap))
   '("SPC c c" ("go to config" . rbon-goto-config))
@@ -1315,8 +1322,6 @@ I won't pretend to understand what everything here does.
                                             ; (use-package autothemer)
                                             ; (use-package doom-themes)
                                             ; (use-package spacegray-theme)
-    (use-package eradio
-      :commands eradio)
 
     (use-package hydra
       :defer t)
@@ -1428,21 +1433,26 @@ Best theme fight me.
     :after haskell-mode)
 #+end_src
 
-* Magit
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (use-package magit
-    :commands magit
-    :config
-    (rbon-define-key 'magit-mode 'emacs
-                     '("J"        magit-status-jump)
-                     '("j"        magit-next-line)
-                     '("k"        magit-previous-line)
-                     '("H"        magit-discard)
-                     '("<escape>" magit-mode-bury-buffer)))
+* Version control
+** package
+*** [[https://magit.vc/][magit]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
+  (use-package magit :commands magit)
+#+end_src
 
+** keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a"   ("applications"))
                    '("SPC a m" magit))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
+  (rbon-define-key 'magit-mode 'emacs
+                   '("J"        magit-status-jump)
+                   '("j"        magit-next-line)
+                   '("k"        magit-previous-line)
+                   '("H"        magit-discard)
+                   '("<escape>" magit-mode-bury-buffer))
 #+end_src
 
 * Haskell
@@ -1572,22 +1582,46 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
                    '("DEL"   xwidget-webkit-back))
 #+end_src
 
-* Eradio
+* Internet radio
+** Package
+*** [[https://github.com/fossegrim/eradio][eradio]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
+  (use-package eradio :commands eradio)
+#+end_src
+
 ** Options
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-  (setq eradio-player
-        '("/Applications/mpv.app/Contents/MacOS/mpv"
-        "--no-video"
-        "--no-terminal"))
-  (setq eradio-channels '(("def con - soma fm"      . "https://somafm.com/defcon256.pls")          ;; electronica with defcon-speaker bumpers
-                          ("metal - soma fm"        . "https://somafm.com/metal130.pls")           ;; \m/
-                          ("cyberia - lainon"       . "https://lainon.life/radio/cyberia.ogg.m3u") ;; cyberpunk-esque electronica
-                          ("cafe - lainon"          . "https://lainon.life/radio/cafe.ogg.m3u")    ;; boring ambient, but with lain
-                          ("groove salad - soma fm" . "https://somafm.com/groovesalad.pls")))
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
+  (with-eval-after-load 'eradio
+                       (setq eradio-player
+                             '("/Applications/mpv.app/Contents/MacOS/mpv"
+                               "--no-video"
+                               "--no-terminal")))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
+  (setq eradio-channels '(
+                          ;; electronica with defcon-speaker bumpers
+                          ("def con - soma fm"
+                           . "https://somafm.com/defcon256.pls")
+
+                          ;; \m/
+                          ("metal - soma fm"
+                           . "https://somafm.com/metal130.pls")
+
+                          ;; cyberpunk-esque electronica
+                          ("cyberia - lainon"
+                           . "https://lainon.life/radio/cyberia.ogg.m3u")
+
+                          ;; boring ambient, but with lain
+                          ("cafe - lainon"
+                           . "https://lainon.life/radio/cafe.ogg.m3u")    
+
+                          ("groove salad - soma fm"
+                           . "https://somafm.com/groovesalad.pls")))
 #+end_src
 
 ** Keybinds
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
   (rbon-define-key 'global '(normal visual emacs)
                    '("SPC r"  ("radio"))
                    '("SPC r p" ("play" . eradio-play))
@@ -1661,7 +1695,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 * RSS Feed Reader
 ** Package
-I use =elfeed= as my RSS feed reader.
+*** [[https://github.com/skeeto/elfeed][elfeed]]
 #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
   (use-package elfeed)
 #+end_src
@@ -1669,7 +1703,6 @@ I use =elfeed= as my RSS feed reader.
 ** Global binds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a"  ("applications"))
                    '("SPC a e" elfeed))
 #+end_src
 
