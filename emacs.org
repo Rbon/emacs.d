@@ -967,6 +967,8 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
                      '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
         (add-to-list 'org-structure-template-alist
                      '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
+        (add-to-list 'org-structure-template-alist
+                     '("co" . "src emacs-lisp :tangle ~/.emacs.d/config/name.el"))
     (rbon-define-key 'org-mode '(normal visual emacs)
                      '("SPC o"   ("org mode"))
                      '("SPC o q" org-edit-special)
@@ -1038,28 +1040,53 @@ Hydra for promoting and demoting subtrees.
                    '("SPC b i" '("indent buffer" rbon-indent-buffer)))
 #+end_src
 
-* Helm
+* Completion
+** packages
+*** [[https://github.com/emacs-helm/helm][helm]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (use-package helm :config (helm-mode 1))
+#+end_src
+
+*** [[https://github.com/emacs-helm/helm-descbinds][helm-descbinds]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (use-package helm-descbinds
+    :after helm
+    :config (helm-descbinds-mode))
+#+end_src
+
+** options
+Enable this to do stuff like =helm-imenu=.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (with-eval-after-load 'helm
+    (semantic-mode 1))
+#+end_src
+
+I don't know what this does.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (with-eval-after-load 'helm
+    (require 'helm-config))
+#+end_src
+
+Set a custom =M-x= prompt. Be default, =helm= doesn't let you do this, so I had to modify =helm-M-x-read-extended-command=.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (with-eval-after-load 'helm
+    (setq helm-M-x-prompt-string "Command: "))
+#+end_src
+
+** keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
-  (use-package helm :defer t
-    :config
-    (semantic-mode 1) ; helm thing I think
-    (helm-descbinds-mode) ; helm search keybinds
-    (require 'helm-config) ; I don't know what this does
-    (helm-mode 1)
-    (setq helm-M-x-prompt-string "Command: ")
-
-
+  (with-eval-after-load 'helm
     (defhydra helm-like-unite (:hint nil
-                               :color pink)
+                                     :color pink)
       "
-    Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
-    ^^^^^^^^^^------------^^----------------^^----------------------
-    _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
-    ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
-    _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
-    ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
-    "
+  Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
+  ^^^^^^^^^^------------^^----------------^^----------------------
+  _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
+  ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
+  _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
+  ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
+  "
       ;; arrows
       ("h" helm-beginning-of-buffer)
       ("j" helm-next-line)
@@ -1090,9 +1117,7 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 
     (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
     (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
-    (define-key helm-map (kbd "C-o") 'helm-like-unite/body)
-    )
-  (use-package helm-descbinds :after helm)
+    (define-key helm-map (kbd "C-o") 'helm-like-unite/body))
 #+end_src
 
 ** functions
@@ -1101,71 +1126,71 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 
    It probably has something to do with the way packages are ordered, but this needs to be wrapped in an =with-eval-after-load= in order to be properly loaded.
    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(with-eval-after-load 'helm-command
-  (defun helm-M-x-read-extended-command (collection &optional predicate history)
-    "Read or execute action on command name in COLLECTION or HISTORY.
+     (with-eval-after-load 'helm-command
+       (defun helm-M-x-read-extended-command (collection &optional predicate history)
+         "Read or execute action on command name in COLLECTION or HISTORY.
 
-This function has been copied verbatim from its original location and now lives
-in `~/.emacs.d/functions.el', with one line changed to allow user to change the
-prompt from \"M-x\" to something else.
-Customize `helm-M-x-prompt-string' to change the prompt.
+     This function has been copied verbatim from its original location and now lives
+     in `~/.emacs.d/functions.el', with one line changed to allow user to change the
+     prompt from \"M-x\" to something else.
+     Customize `helm-M-x-prompt-string' to change the prompt.
 
-When `helm-M-x-use-completion-styles' is used, several actions as
-of `helm-type-command' are used and executed from here, otherwise
-this function returns the command as a symbol.
+     When `helm-M-x-use-completion-styles' is used, several actions as
+     of `helm-type-command' are used and executed from here, otherwise
+     this function returns the command as a symbol.
 
-Helm completion is not provided when executing or defining kbd
-macros.
+     Helm completion is not provided when executing or defining kbd
+     macros.
 
-Arg COLLECTION should be an `obarray' but can be any object
-suitable for `try-completion'.  Arg PREDICATE is a function that
-default to `commandp' see also `try-completion'.  Arg HISTORY
-default to `extended-command-history'."
-    (let* ((helm--mode-line-display-prefarg t)
-          (minibuffer-completion-confirm t)
-          (pred (or predicate #'commandp))
-          (metadata (unless (assq 'flex completion-styles-alist)
-                      '(metadata (display-sort-function
-                                  .
-                                  (lambda (candidates)
-                                    (sort candidates #'helm-generic-sort-fn))))))
-          (sources `(,(helm-make-source "Emacs Commands history" 'helm-M-x-class
-                        :candidates (helm-dynamic-completion
-                                      ;; A list of strings.
-                                      (or history extended-command-history)
-                                      (lambda (str) (funcall pred (intern-soft str)))
-                                      nil 'nosort t))
-                      ,(helm-make-source "Emacs Commands" 'helm-M-x-class
-                        :candidates (helm-dynamic-completion
-                                      collection pred
-                                      nil metadata t))))
-          (prompt (concat (cond
-                            ((eq helm-M-x-prefix-argument '-) "- ")
-                            ((and (consp helm-M-x-prefix-argument)
-                                  (eq (car helm-M-x-prefix-argument) 4)) "C-u ")
-                            ((and (consp helm-M-x-prefix-argument)
-                                  (integerp (car helm-M-x-prefix-argument)))
-                            (format "%d " (car helm-M-x-prefix-argument)))
-                            ((integerp helm-M-x-prefix-argument)
-                            (format "%d " helm-M-x-prefix-argument)))
-                          helm-M-x-prompt-string))) ; this is the line I modified
-      (setq helm-M-x--timer (run-at-time 1 0.1 'helm-M-x--notify-prefix-arg))
-      ;; Fix Bug#2250, add `helm-move-selection-after-hook' which
-      ;; reset prefix arg to nil only for this helm session.
-      (add-hook 'helm-move-selection-after-hook
-                'helm-M-x--move-selection-after-hook)
-      (add-hook 'helm-before-action-hook
-                'helm-M-x--before-action-hook)
-      (when (and sources helm-M-x-reverse-history)
-        (setq sources (nreverse sources)))
-      (unwind-protect
-          (progn
-            (setq current-prefix-arg nil)
-            (helm :sources sources
-                  :prompt prompt
-                  :buffer "*helm M-x*"
-                  :history 'helm-M-x-input-history))
-        (helm-M-x--unwind-forms)))))
+     Arg COLLECTION should be an `obarray' but can be any object
+     suitable for `try-completion'.  Arg PREDICATE is a function that
+     default to `commandp' see also `try-completion'.  Arg HISTORY
+     default to `extended-command-history'."
+         (let* ((helm--mode-line-display-prefarg t)
+               (minibuffer-completion-confirm t)
+               (pred (or predicate #'commandp))
+               (metadata (unless (assq 'flex completion-styles-alist)
+                           '(metadata (display-sort-function
+                                       .
+                                       (lambda (candidates)
+                                         (sort candidates #'helm-generic-sort-fn))))))
+               (sources `(,(helm-make-source "Emacs Commands history" 'helm-M-x-class
+                             :candidates (helm-dynamic-completion
+                                           ;; A list of strings.
+                                           (or history extended-command-history)
+                                           (lambda (str) (funcall pred (intern-soft str)))
+                                           nil 'nosort t))
+                           ,(helm-make-source "Emacs Commands" 'helm-M-x-class
+                             :candidates (helm-dynamic-completion
+                                           collection pred
+                                           nil metadata t))))
+               (prompt (concat (cond
+                                 ((eq helm-M-x-prefix-argument '-) "- ")
+                                 ((and (consp helm-M-x-prefix-argument)
+                                       (eq (car helm-M-x-prefix-argument) 4)) "C-u ")
+                                 ((and (consp helm-M-x-prefix-argument)
+                                       (integerp (car helm-M-x-prefix-argument)))
+                                 (format "%d " (car helm-M-x-prefix-argument)))
+                                 ((integerp helm-M-x-prefix-argument)
+                                 (format "%d " helm-M-x-prefix-argument)))
+                               helm-M-x-prompt-string))) ; this is the line I modified
+           (setq helm-M-x--timer (run-at-time 1 0.1 'helm-M-x--notify-prefix-arg))
+           ;; Fix Bug#2250, add `helm-move-selection-after-hook' which
+           ;; reset prefix arg to nil only for this helm session.
+           (add-hook 'helm-move-selection-after-hook
+                     'helm-M-x--move-selection-after-hook)
+           (add-hook 'helm-before-action-hook
+                     'helm-M-x--before-action-hook)
+           (when (and sources helm-M-x-reverse-history)
+             (setq sources (nreverse sources)))
+           (unwind-protect
+               (progn
+                 (setq current-prefix-arg nil)
+                 (helm :sources sources
+                       :prompt prompt
+                       :buffer "*helm M-x*"
+                       :history 'helm-M-x-input-history))
+             (helm-M-x--unwind-forms)))))
    #+end_src
 
 * Text editing
@@ -1311,10 +1336,6 @@ The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 100 1000 1000))
 #+end_src
 
-Load every elisp file in =~/.emacs.d/config=.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
-#+end_src
 
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
     (defun load-user-file (filename)
@@ -1367,7 +1388,13 @@ Dial the GC threshold back down so that garbage collection happens more frequent
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 #+end_src
-   
+
+** config files   
+Load every elisp file in =~/.emacs.d/config=.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+#+end_src
+
 * Appearance
 ** General
 Best theme fight me.
