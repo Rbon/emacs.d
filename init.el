@@ -19,6 +19,8 @@
 
 (setq gc-cons-threshold (* 100 1000 1000))
 
+(mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+
 (defun load-user-file (filename)
   "Load a file in current user's configuration directory"
   (interactive "f")
