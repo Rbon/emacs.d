@@ -70,8 +70,8 @@ Why is this not a built-in function?"
   (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
         (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
     (set-frame-position (selected-frame) h-offset v-offset)))
-     (eval-after-load "~/.dshdusdhsudh"
-       (when window-system (rbon-center-frame)))
+(eval-after-load "~/.dshdusdhsudh"
+  (when window-system (rbon-center-frame)))
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

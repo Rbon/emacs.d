@@ -172,21 +172,21 @@ The solution I have gone for, in this case, is to forgo using a =:config= sectio
 
 "This variable is needed or else =some-package= will not run."
 #+begin_src emacs-lisp
-#+begin_src emacs-lisp
-(with-eval-after-load 'some-package
-  (setq important-var t))
+  ,#+begin_src emacs-lisp
+  (with-eval-after-load 'some-package
+    (setq important-var t))
 #+end_src
 
 "I'm not sure what this is, but disabling it stopped a crash I was having."
 #+begin_src emacs-lisp
-(with-eval-after-load 'some-package
-  (setq another-thing nil))
+  (with-eval-after-load 'some-package
+    (setq another-thing nil))
 #+end_src
 
 "By default, =some-package= downloads a lot of great things, but I have too many apples as it is."
 #+begin_src emacs-lisp
-(with-eval-after-load 'some-package
-  (setq dont-download "apples"))
+  (with-eval-after-load 'some-package
+    (setq dont-download "apples"))
 #+end_src
 
 Now each snippet is self-contained and portable. I'm free to move one to an entirely unrelated section of the greater configuration if I want to, and Emacs will happily boot without error. In the end, this results in more lines of code, and that was an especially contrived example, but in the end, I believe the benefits of stability and flexibility outweigh the small cost of writing a few more lines of code. As such, I will employ a similar pattern of "re-wrapping" snippets whenever I can, not just in the case of =use-package=.
@@ -222,234 +222,232 @@ the
 Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC"   ("the final frontier"))
-                   '("SPC f" ("files"))
-                   '("SPC F" ("frame"))
-                   '("SPC b" ("buffers"))
-                   '("SPC e" ("eval"))
-                   '("SPC n" ("narrow"))
-                   '("SPC s" ("selection"))
-                   '("SPC C" ("cursors"))
-                   '("SPC h" ("help"))
-                   '("SPC w" ("window"))
-                   '("SPC j" ("jump"))
-                   '("SPC q" ("quit"))
-                   '("SPC c" ("configuration"))
-                   '("SPC a" ("applications")))
+    '("SPC"   ("the final frontier"))
+    '("SPC f" ("files"))
+    '("SPC F" ("frame"))
+    '("SPC b" ("buffers"))
+    '("SPC e" ("eval"))
+    '("SPC n" ("narrow"))
+    '("SPC s" ("selection"))
+    '("SPC C" ("cursors"))
+    '("SPC h" ("help"))
+    '("SPC w" ("window"))
+    '("SPC j" ("jump"))
+    '("SPC q" ("quit"))
+    '("SPC c" ("configuration"))
+    '("SPC a" ("applications")))
 #+end_src
 
 ** Miscellaneous
- Escape key stuff
- Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
+Escape key stuff
+Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
- (rbon-define-key 'global '(normal visual motion emacs)
-   '("<escape>" rbon-escape))
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+  (rbon-define-key 'global '(normal visual motion emacs)
+    '("<escape>" rbon-escape))
 #+end_src
 
 Cursor shortcuts
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global 'normal
-                   '("J" rbon-add-cursor-move-down)
-                   '("K" rbon-add-cursor-move-up)
-                   '("N" evil-mc-make-and-goto-next-match)
-                   '("M" evil-mc-make-all-cursors))
+    '("J" rbon-add-cursor-move-down)
+    '("K" rbon-add-cursor-move-up)
+    '("N" evil-mc-make-and-goto-next-match)
+    '("M" evil-mc-make-all-cursors))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-
-
   (rbon-define-key 'global 'visual
-                   '("I" evil-mc-make-cursor-in-visual-selection-beg)
-                   '("A" evil-mc-make-cursor-in-visual-selection-end))
+    '("I" evil-mc-make-cursor-in-visual-selection-beg)
+    '("A" evil-mc-make-cursor-in-visual-selection-end))
 
 
   (rbon-define-key 'global 'insert '("TAB" dabbrev-expand))
                                           ; tab completion in insert mode
 
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC SPC" ("run a command" . helm-M-x))
-                   '("SPC DEL" ("go to last location" . pop-global-mark)))
+    '("SPC SPC" ("run a command" . helm-M-x))
+    '("SPC DEL" ("go to last location" . pop-global-mark)))
 
 #+end_src
 
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a d" dired))
+    '("SPC a d" dired))
 #+end_src
 
 ** Files
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC f f" ("find a file" . helm-find-files))
-                   '("SPC f s" ("save this file" . save-buffer))
-                   '("SPC f r" ("recent files" . helm-recentf))
-                   '("SPC f b" ("open file browser" . magit-dired-jump))
-                   '("SPC f c" ("open a user config file" . find-config-file)))
+    '("SPC f f" ("find a file" . helm-find-files))
+    '("SPC f s" ("save this file" . save-buffer))
+    '("SPC f r" ("recent files" . helm-recentf))
+    '("SPC f b" ("open file browser" . magit-dired-jump))
+    '("SPC f c" ("open a user config file" . find-config-file)))
 #+end_src
 
 ** Frame
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC F c" ("center this frame" . rbon-center-frame))
-  '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
-  '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC F c" ("center this frame" . rbon-center-frame))
+    '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
+    '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
+#+end_src
 
 ** Buffers
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC b s"   ("save this buffer" . save-buffer))
-  '("SPC b c"   ("close this buffer" . kill-this-buffer))
-  '("SPC b k"   ("kill this buffer" . kill-this-buffer))
-  '("SPC b b"   ("open the buffer list" . helm-buffers-list))
-  '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
-  '("SPC b e"   ("eval this buffer" . eval-buffer)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC b s"   ("save this buffer" . save-buffer))
+    '("SPC b c"   ("close this buffer" . kill-this-buffer))
+    '("SPC b k"   ("kill this buffer" . kill-this-buffer))
+    '("SPC b b"   ("open the buffer list" . helm-buffers-list))
+    '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
+    '("SPC b e"   ("eval this buffer" . eval-buffer)))
+#+end_src
 
 ** Eval
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC e e" ("eval expression" . eval-expression))
-  '("SPC e b" ("eval this buffer" . eval-buffer))
-  '("SPC e s" ("eval selection" . eval-region)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC e e" ("eval expression" . eval-expression))
+    '("SPC e b" ("eval this buffer" . eval-buffer))
+    '("SPC e s" ("eval selection" . eval-region)))
+#+end_src
 
 ** Narrow
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC n s" ("narrow to selection" . narrow-to-region))
-  '("SPC n w" ("widen" . widen)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC n s" ("narrow to selection" . narrow-to-region))
+    '("SPC n w" ("widen" . widen)))
+#+end_src
 
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC s a" ("select everything" . mark-whole-buffer))
-                   '("SPC s e" ("eval selection" . eval-region))
-                   '("SPC s i" ("indent selection" . indent-region)))
+    '("SPC s a" ("select everything" . mark-whole-buffer))
+    '("SPC s e" ("eval selection" . eval-region))
+    '("SPC s i" ("indent selection" . indent-region)))
 #+end_src
 
 ** Cursors
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
-  '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
-  '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
-  '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
-  '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
+    '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
+    '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
+    '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
+    '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
+#+end_src
 
 ** Help
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
 
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC h h" ("describe something" . helm-apropos))
-  '("SPC h l" ("list definitions" . helm-imenu))
-  '("SPC h k" ("describe a keybind" . describe-key))
-  '("SPC h v" ("describe a keybind" . describe-variable))
-  '("SPC h K" ("search keybinds" . helm-descbinds))
-  '("SPC h f" ("describe face" . describe-face))
-  '("SPC h F" ("describe face" . list-faces-display)))
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC h h" ("describe something" . helm-apropos))
+    '("SPC h l" ("list definitions" . helm-imenu))
+    '("SPC h k" ("describe a keybind" . describe-key))
+    '("SPC h v" ("describe a keybind" . describe-variable))
+    '("SPC h K" ("search keybinds" . helm-descbinds))
+    '("SPC h f" ("describe face" . describe-face))
+    '("SPC h F" ("describe face" . list-faces-display)))
 
-  #+end_src
+#+end_src
 
 ** Window
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC w c" ("close this window" . delete-window))
-  '("SPC w f" ("fullscreen this window" . delete-other-windows))
-  '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
-  '("SPC w V" ("split this window vertically" . split-window-vertically))
-  '("SPC w h" ("move window focus left" . windmove-left))
-  '("SPC w l" ("move window focus right" . windmove-right))
-  '("SPC w k" ("move window focus up" . windmove-up))
-  '("SPC w j" ("move window focus down" . windmove-down)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC w c" ("close this window" . delete-window))
+    '("SPC w f" ("fullscreen this window" . delete-other-windows))
+    '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
+    '("SPC w V" ("split this window vertically" . split-window-vertically))
+    '("SPC w h" ("move window focus left" . windmove-left))
+    '("SPC w l" ("move window focus right" . windmove-right))
+    '("SPC w k" ("move window focus up" . windmove-up))
+    '("SPC w j" ("move window focus down" . windmove-down)))
+#+end_src
   
 ** Quit
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
+#+end_src
 
 ** Jump
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC j d" ("jump to definition" . find-function)))
-  #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC j d" ("jump to definition" . find-function)))
+#+end_src
 
 ** Configuration
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'global '(normal visual emacs)
-  '("SPC c a" ("load all configs" . rbon-load-config))
-  '("SPC c b" ("bootstrap" . bootstrap))
-  '("SPC c c" ("go to config" . rbon-goto-config))
-  '("SPC c k" ("go to keybinds" . rbon-goto-keybinds))
-  '("SPC c m" ("go to misc config" . rbon-goto-misc))
-  '("SPC c f" ("go to functions" . rbon-goto-functions))
-  '("SPC c p" ("to go packages" . rbon-goto-packages))
-  '("SPC c i" ("to go init" . rbon-goto-init)))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'global '(normal visual emacs)
+    '("SPC c a" ("load all configs" . rbon-load-config))
+    '("SPC c b" ("bootstrap" . bootstrap))
+    '("SPC c c" ("go to config" . rbon-goto-config))
+    '("SPC c k" ("go to keybinds" . rbon-goto-keybinds))
+    '("SPC c m" ("go to misc config" . rbon-goto-misc))
+    '("SPC c f" ("go to functions" . rbon-goto-functions))
+    '("SPC c p" ("to go packages" . rbon-goto-packages))
+    '("SPC c i" ("to go init" . rbon-goto-init)))
+#+end_src
 
 ** Help
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (evil-set-initial-state 'help-mode 'normal)
- (rbon-define-key 'help-mode 'normal '("<escape>" quit-window))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (evil-set-initial-state 'help-mode 'normal)
+  (rbon-define-key 'help-mode 'normal '("<escape>" quit-window))
+#+end_src
 
 ** Recentf Dialog
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-     (evil-set-initial-state 'recentf-dialog-mode 'normal)
-     (rbon-define-key 'recentf-dialog-mode 'normal
-                      '("l" widget-button-press)
-                      '("h" nop)
-                      '("q" recentf-cancel-dialog))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (evil-set-initial-state 'recentf-dialog-mode 'normal)
+  (rbon-define-key 'recentf-dialog-mode 'normal
+    '("l" widget-button-press)
+    '("h" nop)
+    '("q" recentf-cancel-dialog))
+#+end_src
 
 ** With Editor
- #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'with-editor-mode 'normal
-   '("SPC q f" with-editor-finish)
-   '("SPC q c" with-editor-cancel))
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'with-editor-mode 'normal
+    '("SPC q f" with-editor-finish)
+    '("SPC q c" with-editor-cancel))
 
-   #+end_src
+#+end_src
 
 * Functions
 Be sure to read the docstrings of the functions themselves.
 ** =efs/display-startup-time=
 Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org#lets-find-out-how-long-its-taking][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-    (defun efs/display-startup-time ()
-      (interactive)
-      (message "Emacs loaded in %s with %d garbage collections."
-               (format "%.2f seconds"
-                       (float-time
-                       (time-subtract after-init-time before-init-time)))
-               gcs-done))
+  (defun efs/display-startup-time ()
+    (interactive)
+    (message "Emacs loaded in %s with %d garbage collections."
+             (format "%.2f seconds"
+                     (float-time
+                      (time-subtract after-init-time before-init-time)))
+             gcs-done))
 
   (add-hook 'emacs-startup-hook #'efs/display-startup-time)
 #+end_src
 
 ** =rbon-switch-to-scratch=
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-switch-to-scratch ()
-  "This probably doesn't work right now."
-  (interactive)
-  (display-buffer-pop-up-frame (get-buffer-create "scratch")))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-switch-to-scratch ()
+    "This probably doesn't work right now."
+    (interactive)
+    (display-buffer-pop-up-frame (get-buffer-create "scratch")))
+#+end_src
 
 ** =rbon-center-frame=
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-center-frame ()
-  "Move the current frame to the center of the display.
-Why is this not a built-in function?"
-  (interactive)
-  (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
-        (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
-    (set-frame-position (selected-frame) h-offset v-offset)))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-center-frame ()
+    "Move the current frame to the center of the display.
+  Why is this not a built-in function?"
+    (interactive)
+    (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
+          (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
+      (set-frame-position (selected-frame) h-offset v-offset)))
+#+end_src
 
 ** =rbon-define-key=
 This is probably the one portion of this config that I'm most proud of. In essence, it wraps =evil-define-key= and =add-hook= to create a one-size-fits-all function for defining both global binds, and mode-specific binds, making sure that the latter doesn't pollute the global map.
@@ -512,142 +510,142 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
 I'm not sure these even work.
 *** =my-change-buffer=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun my-change-buffer (change-buffer)
-  "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
-  (let ((initial (current-buffer)))
-    (funcall change-buffer)
-    (let ((first-change (current-buffer)))
-      (catch 'loop
-        (while (member (buffer-name) my-skippable-buffers)
-          (funcall change-buffer)
-          (when (eq (current-buffer) first-change)
-            (switch-to-buffer initial)
-            (throw 'loop t)))))))
+  (defun my-change-buffer (change-buffer)
+    "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
+    (let ((initial (current-buffer)))
+      (funcall change-buffer)
+      (let ((first-change (current-buffer)))
+        (catch 'loop
+          (while (member (buffer-name) my-skippable-buffers)
+            (funcall change-buffer)
+            (when (eq (current-buffer) first-change)
+              (switch-to-buffer initial)
+              (throw 'loop t)))))))
 #+end_src
 
 *** =my-next-buffer=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun my-next-buffer ()
-  "Variant of `next-buffer' that skips `my-skippable-buffers'."
-  (interactive)
-  (my-change-buffer 'next-buffer))
+  (defun my-next-buffer ()
+    "Variant of `next-buffer' that skips `my-skippable-buffers'."
+    (interactive)
+    (my-change-buffer 'next-buffer))
 #+end_src
 
 *** =my-previous-buffer= 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun my-previous-buffer ()
-  "Variant of `previous-buffer' that skips `my-skippable-buffers'."
-  (interactive)
-  (my-change-buffer 'previous-buffer))
+  (defun my-previous-buffer ()
+    "Variant of `previous-buffer' that skips `my-skippable-buffers'."
+    (interactive)
+    (my-change-buffer 'previous-buffer))
 #+end_src
 
 ** =nop=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun nop ()
-  "Needed to unbind keys. Yes really."
-  (interactive))
+  (defun nop ()
+    "Needed to unbind keys. Yes really."
+    (interactive))
 #+end_src
 
 ** =rbon-insert-heading-respect-content=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-insert-heading-respect-content ()
-  "Insert a heading and then change to insert state."
-  (interactive)
-  (org-insert-heading-respect-content)
-  (evil-append 0))
+  (defun rbon-insert-heading-respect-content ()
+    "Insert a heading and then change to insert state."
+    (interactive)
+    (org-insert-heading-respect-content)
+    (evil-append 0))
 #+end_src
 
 ** =rbon-escape=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-escape ()
-  "Get rid of extra cursors while also normally escaping."
-  (interactive)
-  (evil-mc-undo-all-cursors)
-  (evil-force-normal-state))
+  (defun rbon-escape ()
+    "Get rid of extra cursors while also normally escaping."
+    (interactive)
+    (evil-mc-undo-all-cursors)
+    (evil-force-normal-state))
 #+end_src
 
 ** =rbon-add-cursor-move-down=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-add-cursor-move-down ()
-  "Add a cursor, and then move down one line."
-  (interactive)
-  (evil-mc-make-cursor-here) 
-  (evil-mc-pause-cursors) 
-  (next-line)
-  (evil-mc-resume-cursors))
+  (defun rbon-add-cursor-move-down ()
+    "Add a cursor, and then move down one line."
+    (interactive)
+    (evil-mc-make-cursor-here) 
+    (evil-mc-pause-cursors) 
+    (next-line)
+    (evil-mc-resume-cursors))
 #+end_src
 
 ** =rbon-add-cursor-move-up=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-add-cursor-move-up ()
-  "Add a cursor, and then move up one line."
-  (interactive)
-  (evil-mc-make-cursor-here) 
-  (evil-mc-pause-cursors) 
-  (previous-line)
-  (evil-mc-resume-cursors))
+  (defun rbon-add-cursor-move-up ()
+    "Add a cursor, and then move up one line."
+    (interactive)
+    (evil-mc-make-cursor-here) 
+    (evil-mc-pause-cursors) 
+    (previous-line)
+    (evil-mc-resume-cursors))
 #+end_src
 
 ** =rbon-evil-mc-make-cursor-in-visual-selection-beg=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
-  (interactive)
-  (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
-  (call-interactively 'evil-force-normal-state)
-  (call-interactively 'evil-next-visual-line)
-  ;(call-interactively 'evil-insert-line))
-  )
+  (defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
+    (interactive)
+    (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
+    (call-interactively 'evil-force-normal-state)
+    (call-interactively 'evil-next-visual-line)
+                                          ;(call-interactively 'evil-insert-line))
+    )
 #+end_src
 
 ** =narrow-and-unfold=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun narrow-and-unfold ()
-  (interactive)
-  (evil-open-fold)
-  (evil-end-of-line)
-  (narrow-to-defun)
-  (evil-digit-argument-or-evil-beginning-of-line))
+  (defun narrow-and-unfold ()
+    (interactive)
+    (evil-open-fold)
+    (evil-end-of-line)
+    (narrow-to-defun)
+    (evil-digit-argument-or-evil-beginning-of-line))
 #+end_src
 
 ** =widen-and-fold=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun widen-and-fold ()
-  (interactive)
-  (evil-close-folds)
-  (widen))
+  (defun widen-and-fold ()
+    (interactive)
+    (evil-close-folds)
+    (widen))
 #+end_src
 
 ** =make-bold=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun make-bold ()
-  (interactive)
-  (org-emphasize ?*))
+  (defun make-bold ()
+    (interactive)
+    (org-emphasize ?*))
 #+end_src
 
 ** =make-italic=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun make-italic ()
-  (interactive)
-  (org-emphasize ?/))
+  (defun make-italic ()
+    (interactive)
+    (org-emphasize ?/))
 #+end_src
 
 ** =run-code=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun run-code ()
-  (interactive)
-  (haskell-process-load-file)
-  (other-window 1)
-  (evil-append-line 1))
+  (defun run-code ()
+    (interactive)
+    (haskell-process-load-file)
+    (other-window 1)
+    (evil-append-line 1))
 #+end_src
 
 ** =my-switch-to-buffer=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun my-switch-to-buffer ()
-  "Switch buffers, excluding special buffers."
-  (interactive)
-  (let ((completion-regexp-list '("\\`[^*]"
-                                  "\\`\\([^T]\\|T\\($\\|[^A]\\|A\\($\\|[^G]\\|G\\($\\|[^S]\\|S.\\)\\)\\)\\).*")))
-    (switch-to-buffer nil)))
+  (defun my-switch-to-buffer ()
+    "Switch buffers, excluding special buffers."
+    (interactive)
+    (let ((completion-regexp-list '("\\`[^*]"
+                                    "\\`\\([^T]\\|T\\($\\|[^A]\\|A\\($\\|[^G]\\|G\\($\\|[^S]\\|S.\\)\\)\\)\\).*")))
+      (switch-to-buffer nil)))
 #+end_src
 
 ** =touch-file=
@@ -673,60 +671,60 @@ I'm not sure these even work.
       (when new
         (dired-add-file new)
         (dired-move-to-filename))))
-  #+end_src
+#+end_src
 
 ** =evil-recentf=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun evil-recentf ()
-  (interactive)
-  (recentf-open-files)
-  (evil-normal-state))
+  (defun evil-recentf ()
+    (interactive)
+    (recentf-open-files)
+    (evil-normal-state))
 #+end_src
 
 ** =display-startup-echo-area-message=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun display-startup-echo-area-message ()
-  "This function replaces the startup minibuffer message with nil."
-  (message nil))
+  (defun display-startup-echo-area-message ()
+    "This function replaces the startup minibuffer message with nil."
+    (message nil))
 #+end_src
 
 ** =find-init=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun find-init ()
-  (interactive)
-  (find-file init-path))
+  (defun find-init ()
+    (interactive)
+    (find-file init-path))
 #+end_src
 
 ** =find-config-file=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun find-config-file ()
-  (interactive)
-  (cd user-emacs-directory)
-  (call-interactively 'find-file))
+  (defun find-config-file ()
+    (interactive)
+    (cd user-emacs-directory)
+    (call-interactively 'find-file))
 #+end_src
 
 ** =load-init=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun load-init ()
-  (interactive)
-  (load-user-file "init.el"))
+  (defun load-init ()
+    (interactive)
+    (load-user-file "init.el"))
 #+end_src
 
 ** =split-h-and-change-focus=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun split-h-and-change-focus ()
-  (interactive)
-  (split-window-horizontally)
-  (other-window 1))
+  (defun split-h-and-change-focus ()
+    (interactive)
+    (split-window-horizontally)
+    (other-window 1))
 #+end_src
 
 ** =rbon-insert-heading-respect-content=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-insert-heading-respect-content ()
-  "Insert a heading and then change to insert state."
-  (interactive)
-  (org-insert-heading-respect-content)
-  (evil-append 0))
+  (defun rbon-insert-heading-respect-content ()
+    "Insert a heading and then change to insert state."
+    (interactive)
+    (org-insert-heading-respect-content)
+    (evil-append 0))
 #+end_src
 
 ** =formatted-copy=
@@ -748,147 +746,147 @@ Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Cop
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC s c" formatted-copy))
+    '("SPC s c" formatted-copy))
 #+end_src
    
 * Misc
 ** Other  
 This section is pretty messy. I'm slowly trying to organize it.
 *** Misc
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
 
-    ;     (load-file "~/.emacs.d/leuven-theme.el")
-    ;     (load-theme 'leuven t)
-
-
-        (setq org-src-fontify-natively t)
-
-        ;; (require 'evil-textobj-line)
-        ; (load "~/.emacs.d/evil-textobj-line")
-        (setq smex-prompt-string "Run command: ")
-        (setq confirm-kill-processes nil)
-
-        ; (powerline-default-theme)
+                                          ;     (load-file "~/.emacs.d/leuven-theme.el")
+                                          ;     (load-theme 'leuven t)
 
 
-        (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
-          "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
-          :type '(repeat string))
+  (setq org-src-fontify-natively t)
 
-        (global-set-key [remap next-buffer] 'my-next-buffer)
-        (global-set-key [remap previous-buffer] 'my-previous-buffer)
+  ;; (require 'evil-textobj-line)
+                                          ; (load "~/.emacs.d/evil-textobj-line")
+  (setq smex-prompt-string "Run command: ")
+  (setq confirm-kill-processes nil)
 
-        (setq org-hide-emphasis-markers t)
-
-        ; (setq dired-omit-extensions '(".hi" ".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs"))
+                                          ; (powerline-default-theme)
 
 
-        (setq default-directory "~/") 
+  (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
+    "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
+    :type '(repeat string))
 
-        ; dired stuff
-        (setq ls-lisp-use-insert-directory-program nil)
-        (require 'ls-lisp)
+  (global-set-key [remap next-buffer] 'my-next-buffer)
+  (global-set-key [remap previous-buffer] 'my-previous-buffer)
 
-        (setq haskell-process-show-debug-tips nil)
-        (setq backup-directory-alist '(("." . "~/.emacs_saves")))
-        (ido-mode 1) ; better find-file
-        (exec-path-from-shell-initialize) ; fix PATH on macos
-        (set-custom-file-path (expand-file-name "custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
-        (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
-        (tool-bar-mode -1) ; disable toolbar
-        (scroll-bar-mode -1) ; disable scroll bar
-        ; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
-        (setq inhibit-splash-screen t) ; disable splash screen
-        ;; (which-key-setup-side-window-bottom)
-        (setq which-key-idle-secondary-delay 0)
-        (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
-        ;; (add-to-list 'load-path "~/.emacs.d") ; needed for 'require' to see my other configs
-        (setq help-window-select t) ; switch to help windows automatically
-        (setq initial-scratch-message "") ; make scratch empty
-        (setq-default indent-tabs-mode nil) ; use spaces, not tabs
-        (setq-default tab-width 2)
-        (setq lua-indent-level 2) ; why
-        (setq-default evil-shift-width 2) ; whyy
-        (blink-cursor-mode 0) ; stop the cursor from blinking
+  (setq org-hide-emphasis-markers t)
 
-        ;; HOOKS
-        ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
-;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
-;;         (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
-;;         (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-;;         (add-hook 'haskell-mode-hook #'lsp)
-;;         (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-;;         (add-hook 'haskell-literate-mode-hook #'lsp)
-;;         (add-hook 'error-mode-hook 'evil-emacs-state)
-
-        (setq org-agenda-files (list "~/Documents/School/agenda.org"))
-        ;; recent file stuff
-        (recentf-mode 1)
-        (setq recentf-max-menu-items 25)
-        (setq recentf-max-saved-items 25)
-
-        (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
-        (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
-        (setq-default fill-column 80)
-
-        (setq ispell-program-name "/opt/local/bin/ispell") ; teach emacs how to spell
-
-        ;; enable spell check for text-mode
-        (dolist (hook '(text-mode-hook))
-              (add-hook hook (lambda () (flyspell-mode 1))))
+                                          ; (setq dired-omit-extensions '(".hi" ".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" ".svn/" ".hg/" ".git/" ".bzr/" "CVS/" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".vr" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo" ".idx" ".lof" ".lot" ".glo" ".blg" ".bbl" ".cp" ".cps" ".fn" ".fns" ".ky" ".kys" ".pg" ".pgs" ".tp" ".tps" ".vr" ".vrs"))
 
 
+  (setq default-directory "~/") 
 
+                                          ; dired stuff
+  (setq ls-lisp-use-insert-directory-program nil)
+  (require 'ls-lisp)
 
-        (autothemer-deftheme
-         thing "a test theme"
+  (setq haskell-process-show-debug-tips nil)
+  (setq backup-directory-alist '(("." . "~/.emacs_saves")))
+  (ido-mode 1) ; better find-file
+  (exec-path-from-shell-initialize) ; fix PATH on macos
+  (set-custom-file-path (expand-file-name "custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
+  (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
+  (tool-bar-mode -1) ; disable toolbar
+  (scroll-bar-mode -1) ; disable scroll bar
+                                          ; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
+  (setq inhibit-splash-screen t) ; disable splash screen
+  ;; (which-key-setup-side-window-bottom)
+  (setq which-key-idle-secondary-delay 0)
+  (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
+  ;; (add-to-list 'load-path "~/.emacs.d") ; needed for 'require' to see my other configs
+  (setq help-window-select t) ; switch to help windows automatically
+  (setq initial-scratch-message "") ; make scratch empty
+  (setq-default indent-tabs-mode nil) ; use spaces, not tabs
+  (setq-default tab-width 2)
+  (setq lua-indent-level 2) ; why
+  (setq-default evil-shift-width 2) ; whyy
+  (blink-cursor-mode 0) ; stop the cursor from blinking
 
-         ((((class color) (min-colors #xFFFFFF)))
+  ;; HOOKS
+  ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
+  ;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
+  ;;         (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
+  ;;         (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+  ;;         (add-hook 'haskell-mode-hook #'lsp)
+  ;;         (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  ;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+  ;;         (add-hook 'haskell-literate-mode-hook #'lsp)
+  ;;         (add-hook 'error-mode-hook 'evil-emacs-state)
 
-          (thing-background "gray90"))
+  (setq org-agenda-files (list "~/Documents/School/agenda.org"))
+  ;; recent file stuff
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (setq recentf-max-saved-items 25)
 
-         ((default (:background "gray90"))))
+  (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
+  (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
+  (setq-default fill-column 80)
 
-        (provide-theme 'thing)
+  (setq ispell-program-name "/opt/local/bin/ispell") ; teach emacs how to spell
+
+  ;; enable spell check for text-mode
+  (dolist (hook '(text-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode 1))))
 
 
 
 
-        ;; (setq default-frame-alist
-              ;; (append (list '(width . 72) '(height . 40))))
+  (autothemer-deftheme
+   thing "a test theme"
 
-        ; (set-face-attribute 'mode-line nil
-                            ; :height 10
-                            ; :underline "red"
-                            ; :background "black"
-                            ; :foreground "white"
-                            ; :box nil)
-        ; 
-        ; (set-face-attribute 'mode-line-inactive nil
-                            ; :box nil
-                            ; :background "black"
-                            ; :inherit 'mode-line)
+   ((((class color) (min-colors #xFFFFFF)))
 
-        ; (set-face-attribute 'minibuffer-prompt nil
-                            ; :height 10
-                            ; :underline "red"
-                            ; :background "red"
-                ; :foreground "blue"
-                            ; :box "red")
+    (thing-background "gray90"))
 
-        (pixel-scroll-mode t)
+   ((default (:background "gray90"))))
 
-        (defvar booted nil)
-        (unless booted (progn 
-          ; (switch-to-buffer "Untitled")
-          ; (text-mode) ; needed for spell check
-          ; (dired ".")
-          (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
-            (recentf-open-files))
-          (setq booted t))) 
+  (provide-theme 'thing)
 
-  #+end_src
+
+
+
+  ;; (setq default-frame-alist
+  ;; (append (list '(width . 72) '(height . 40))))
+
+                                          ; (set-face-attribute 'mode-line nil
+                                          ; :height 10
+                                          ; :underline "red"
+                                          ; :background "black"
+                                          ; :foreground "white"
+                                          ; :box nil)
+                                          ; 
+                                          ; (set-face-attribute 'mode-line-inactive nil
+                                          ; :box nil
+                                          ; :background "black"
+                                          ; :inherit 'mode-line)
+
+                                          ; (set-face-attribute 'minibuffer-prompt nil
+                                          ; :height 10
+                                          ; :underline "red"
+                                          ; :background "red"
+                                          ; :foreground "blue"
+                                          ; :box "red")
+
+  (pixel-scroll-mode t)
+
+  (defvar booted nil)
+  (unless booted (progn 
+                                          ; (switch-to-buffer "Untitled")
+                                          ; (text-mode) ; needed for spell check
+                                          ; (dired ".")
+                   (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
+                       (recentf-open-files))
+                   (setq booted t))) 
+
+#+end_src
 
 ** Force certain buffers to use the current window
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
@@ -952,7 +950,7 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
    '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-  #+end_src
+#+end_src
   
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -961,77 +959,77 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
     :defer
     :config
     (require 'org-tempo)
-        (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-        (add-to-list 'org-structure-template-alist
-                     '("ke" . "src emacs-lisp :tangle ~/.emacs.d/keybinds.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("fu" . "src emacs-lisp :tangle ~/.emacs.d/functions.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
-        (add-to-list 'org-structure-template-alist
-                     '("co" . "src emacs-lisp :tangle ~/.emacs.d/config/name.el"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist
+                 '("ke" . "src emacs-lisp :tangle ~/.emacs.d/keybinds.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("fu" . "src emacs-lisp :tangle ~/.emacs.d/functions.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("ap" . "src emacs-lisp :tangle ~/.emacs.d/appearance.el"))
+    (add-to-list 'org-structure-template-alist
+                 '("co" . "src emacs-lisp :tangle ~/.emacs.d/config/name.el"))
     (rbon-define-key 'org-mode '(normal visual emacs)
-                     '("SPC o"   ("org mode"))
-                     '("SPC o q" org-edit-special)
-                     '("SPC o a" ("open the agenda" . org-agenda))
-                     ;; '("SPC o l" org-babel-execute-src-block)
-                     '("SPC o a" ("open the agenda" . org-agenda))
-                     '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-                     '("SPC s b" ("make bold" . make-bold))
-                     '("SPC o s" ("scedule a task" . org-schedule))
-                     '("SPC o d" ("set a deadline" . org-deadline)))
+      '("SPC o"   ("org mode"))
+      '("SPC o q" org-edit-special)
+      '("SPC o a" ("open the agenda" . org-agenda))
+      ;; '("SPC o l" org-babel-execute-src-block)
+      '("SPC o a" ("open the agenda" . org-agenda))
+      '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
+      '("SPC s b" ("make bold" . make-bold))
+      '("SPC o s" ("scedule a task" . org-schedule))
+      '("SPC o d" ("set a deadline" . org-deadline)))
 
     )
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-(rbon-define-key 'org-mode '(normal visual emacs insert)
-  '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content)))
+  (rbon-define-key 'org-mode '(normal visual emacs insert)
+    '("<S-return>" ("insert a heading" . rbon-insert-heading-respect-content)))
 #+end_src
 
 This leaves =evil-ret= unbound, which is fine.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'org-src-mode 'normal
-                   '("<escape>" org-edit-src-exit))
+    '("<escape>" org-edit-src-exit))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'org-mode 'normal
-                     '("<return>" org-edit-special))
+    '("<return>" org-edit-special))
 #+end_src
 
 Org-agenda stuff.
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'org-agenda-mode 'normal
-   '("j" org-agenda-next-line)
-   '("k" org-agenda-previous-line)
-   '("l" org-agenda-later)
-   '("h" org-agenda-earlier))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  (rbon-define-key 'org-agenda-mode 'normal
+    '("j" org-agenda-next-line)
+    '("k" org-agenda-previous-line)
+    '("l" org-agenda-later)
+    '("h" org-agenda-earlier))
+#+end_src
 
 ** Promoting and demoting subtrees
 Hydra for promoting and demoting subtrees.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (defhydra org-move-hydra (:color red)
-  g ("h" org-promote-subtree "promote subtree")
+    g ("h" org-promote-subtree "promote subtree")
     ("l" org-demote-subtree  "demote subtree"))
 
   (rbon-define-key 'org-mode 'normal
-                   '("SPC o h"
-                     ("promote subtree" . org-move-hydra/org-promote-subtree))
-                   '("SPC o l"
-                     ("demote subtree" . org-move-hydra/org-demote-subtree)))
+    '("SPC o h"
+      ("promote subtree" . org-move-hydra/org-promote-subtree))
+    '("SPC o l"
+      ("demote subtree" . org-move-hydra/org-demote-subtree)))
 #+end_src
 
 ** Start folded
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(setq-default org-startup-folded t)
+  (setq-default org-startup-folded t)
 #+end_src
 
 * Indent Buffer
@@ -1044,7 +1042,7 @@ Hydra for promoting and demoting subtrees.
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'emacs-lisp-mode 'normal
-                   '("SPC b i" '("indent buffer" rbon-indent-buffer)))
+    '("SPC b i" '("indent buffer" rbon-indent-buffer)))
 #+end_src
 
 * Completion
@@ -1129,76 +1127,76 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
 
 ** functions
 *** =helm-M-x-read-extended-command= 
-   By default, =helm-M-x-read-extended-command= doesn't let you change the prompt. It's just hardcoded into the function. So I blatantly copy/pasted it here, with one whole line changed to allow the prompt to be a user variable. Maybe one day when I know how, I'll submit a pull request.
+By default, =helm-M-x-read-extended-command= doesn't let you change the prompt. It's just hardcoded into the function. So I blatantly copy/pasted it here, with one whole line changed to allow the prompt to be a user variable. Maybe one day when I know how, I'll submit a pull request.
 
-   It probably has something to do with the way packages are ordered, but this needs to be wrapped in an =with-eval-after-load= in order to be properly loaded.
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-     (with-eval-after-load 'helm-command
-       (defun helm-M-x-read-extended-command (collection &optional predicate history)
-         "Read or execute action on command name in COLLECTION or HISTORY.
+It probably has something to do with the way packages are ordered, but this needs to be wrapped in an =with-eval-after-load= in order to be properly loaded.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (with-eval-after-load 'helm-command
+    (defun helm-M-x-read-extended-command (collection &optional predicate history)
+      "Read or execute action on command name in COLLECTION or HISTORY.
 
-     This function has been copied verbatim from its original location and now lives
-     in `~/.emacs.d/functions.el', with one line changed to allow user to change the
-     prompt from \"M-x\" to something else.
-     Customize `helm-M-x-prompt-string' to change the prompt.
+  This function has been copied verbatim from its original location and now lives
+  in `~/.emacs.d/functions.el', with one line changed to allow user to change the
+  prompt from \"M-x\" to something else.
+  Customize `helm-M-x-prompt-string' to change the prompt.
 
-     When `helm-M-x-use-completion-styles' is used, several actions as
-     of `helm-type-command' are used and executed from here, otherwise
-     this function returns the command as a symbol.
+  When `helm-M-x-use-completion-styles' is used, several actions as
+  of `helm-type-command' are used and executed from here, otherwise
+  this function returns the command as a symbol.
 
-     Helm completion is not provided when executing or defining kbd
-     macros.
+  Helm completion is not provided when executing or defining kbd
+  macros.
 
-     Arg COLLECTION should be an `obarray' but can be any object
-     suitable for `try-completion'.  Arg PREDICATE is a function that
-     default to `commandp' see also `try-completion'.  Arg HISTORY
-     default to `extended-command-history'."
-         (let* ((helm--mode-line-display-prefarg t)
-               (minibuffer-completion-confirm t)
-               (pred (or predicate #'commandp))
-               (metadata (unless (assq 'flex completion-styles-alist)
-                           '(metadata (display-sort-function
-                                       .
-                                       (lambda (candidates)
-                                         (sort candidates #'helm-generic-sort-fn))))))
-               (sources `(,(helm-make-source "Emacs Commands history" 'helm-M-x-class
-                             :candidates (helm-dynamic-completion
-                                           ;; A list of strings.
-                                           (or history extended-command-history)
-                                           (lambda (str) (funcall pred (intern-soft str)))
-                                           nil 'nosort t))
-                           ,(helm-make-source "Emacs Commands" 'helm-M-x-class
-                             :candidates (helm-dynamic-completion
-                                           collection pred
-                                           nil metadata t))))
-               (prompt (concat (cond
-                                 ((eq helm-M-x-prefix-argument '-) "- ")
-                                 ((and (consp helm-M-x-prefix-argument)
-                                       (eq (car helm-M-x-prefix-argument) 4)) "C-u ")
-                                 ((and (consp helm-M-x-prefix-argument)
-                                       (integerp (car helm-M-x-prefix-argument)))
-                                 (format "%d " (car helm-M-x-prefix-argument)))
-                                 ((integerp helm-M-x-prefix-argument)
-                                 (format "%d " helm-M-x-prefix-argument)))
-                               helm-M-x-prompt-string))) ; this is the line I modified
-           (setq helm-M-x--timer (run-at-time 1 0.1 'helm-M-x--notify-prefix-arg))
-           ;; Fix Bug#2250, add `helm-move-selection-after-hook' which
-           ;; reset prefix arg to nil only for this helm session.
-           (add-hook 'helm-move-selection-after-hook
-                     'helm-M-x--move-selection-after-hook)
-           (add-hook 'helm-before-action-hook
-                     'helm-M-x--before-action-hook)
-           (when (and sources helm-M-x-reverse-history)
-             (setq sources (nreverse sources)))
-           (unwind-protect
-               (progn
-                 (setq current-prefix-arg nil)
-                 (helm :sources sources
-                       :prompt prompt
-                       :buffer "*helm M-x*"
-                       :history 'helm-M-x-input-history))
-             (helm-M-x--unwind-forms)))))
-   #+end_src
+  Arg COLLECTION should be an `obarray' but can be any object
+  suitable for `try-completion'.  Arg PREDICATE is a function that
+  default to `commandp' see also `try-completion'.  Arg HISTORY
+  default to `extended-command-history'."
+      (let* ((helm--mode-line-display-prefarg t)
+             (minibuffer-completion-confirm t)
+             (pred (or predicate #'commandp))
+             (metadata (unless (assq 'flex completion-styles-alist)
+                         '(metadata (display-sort-function
+                                     .
+                                     (lambda (candidates)
+                                       (sort candidates #'helm-generic-sort-fn))))))
+             (sources `(,(helm-make-source "Emacs Commands history" 'helm-M-x-class
+                                           :candidates (helm-dynamic-completion
+                                                        ;; A list of strings.
+                                                        (or history extended-command-history)
+                                                        (lambda (str) (funcall pred (intern-soft str)))
+                                                        nil 'nosort t))
+                        ,(helm-make-source "Emacs Commands" 'helm-M-x-class
+                                           :candidates (helm-dynamic-completion
+                                                        collection pred
+                                                        nil metadata t))))
+             (prompt (concat (cond
+                              ((eq helm-M-x-prefix-argument '-) "- ")
+                              ((and (consp helm-M-x-prefix-argument)
+                                    (eq (car helm-M-x-prefix-argument) 4)) "C-u ")
+                              ((and (consp helm-M-x-prefix-argument)
+                                    (integerp (car helm-M-x-prefix-argument)))
+                               (format "%d " (car helm-M-x-prefix-argument)))
+                              ((integerp helm-M-x-prefix-argument)
+                               (format "%d " helm-M-x-prefix-argument)))
+                             helm-M-x-prompt-string))) ; this is the line I modified
+        (setq helm-M-x--timer (run-at-time 1 0.1 'helm-M-x--notify-prefix-arg))
+        ;; Fix Bug#2250, add `helm-move-selection-after-hook' which
+        ;; reset prefix arg to nil only for this helm session.
+        (add-hook 'helm-move-selection-after-hook
+                  'helm-M-x--move-selection-after-hook)
+        (add-hook 'helm-before-action-hook
+                  'helm-M-x--before-action-hook)
+        (when (and sources helm-M-x-reverse-history)
+          (setq sources (nreverse sources)))
+        (unwind-protect
+            (progn
+              (setq current-prefix-arg nil)
+              (helm :sources sources
+                    :prompt prompt
+                    :buffer "*helm M-x*"
+                    :history 'helm-M-x-input-history))
+          (helm-M-x--unwind-forms)))))
+#+end_src
 
 * Text editing
 ** Packages
@@ -1294,118 +1292,118 @@ I won't pretend to understand what everything here does.
 
 ** =use-package=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-    (straight-use-package 'use-package)
-    (setq use-package-verbose t)
-    (setq use-package-always-defer t)
+  (straight-use-package 'use-package)
+  (setq use-package-verbose t)
+  (setq use-package-always-defer t)
 #+end_src
 
 ** misc
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
 
 
 
-    ;; smooth-scrolling-mode
+  ;; smooth-scrolling-mode
 
-    (use-package markdown-mode)
+  (use-package markdown-mode)
 
-    (use-package lua-mode
-      :mode "\\.lua\\'"
-      :interpreter "lua")
+  (use-package lua-mode
+    :mode "\\.lua\\'"
+    :interpreter "lua")
 
-    (use-package solarized-theme
-      :defer t)
+  (use-package solarized-theme
+    :defer t)
 
-    (use-package exec-path-from-shell) ; fix path on macos
-                                            ; (use-package smex) ; better than M-x
-
-
-                                            ; (use-package autothemer)
-                                            ; (use-package doom-themes)
-                                            ; (use-package spacegray-theme)
-
-    (use-package hydra
-      :defer t)
+  (use-package exec-path-from-shell) ; fix path on macos
+                                          ; (use-package smex) ; better than M-x
 
 
-    (defun set-custom-file-path (path)
-      (unless (file-exists-p path)
-        (write-region "" nil path))
-      (setq custom-file path)
-      (load custom-file))
-  #+end_src
+                                          ; (use-package autothemer)
+                                          ; (use-package doom-themes)
+                                          ; (use-package spacegray-theme)
+
+  (use-package hydra
+    :defer t)
+
+
+  (defun set-custom-file-path (path)
+    (unless (file-exists-p path)
+      (write-region "" nil path))
+    (setq custom-file path)
+    (load custom-file))
+#+end_src
 
 * Init
 ** Misc
 The default is 800 kilobytes.  Measured in bytes.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(setq gc-cons-threshold (* 100 1000 1000))
+  (setq gc-cons-threshold (* 100 1000 1000))
 #+end_src
 
-  #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-    (defun my/load-softly (filename)
-      "As `require', but instead of an error just print a message.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (defun my/load-softly (filename)
+    "As `require', but instead of an error just print a message.
 
-    If there is an error, its message will be included in the message
-    printed.
+  If there is an error, its message will be included in the message
+  printed.
 
-    Like `require', the return value will be FEATURE if the load was
-    successful (or unnecessary) and nil if not."
-      (condition-case err
-          (load filename) 
-        (error (message "Error loading %s: \"%s\""
-                        (if filename (format "%s (%s)" "TEST" filename) "TEST")
-                        (error-message-string err))
-               nil)))
+  Like `require', the return value will be FEATURE if the load was
+  successful (or unnecessary) and nil if not."
+    (condition-case err
+        (load filename) 
+      (error (message "Error loading %s: \"%s\""
+                      (if filename (format "%s (%s)" "TEST" filename) "TEST")
+                      (error-message-string err))
+             nil)))
 
-    (defun load-user-file (filename)
-      "Load a file in current user's configuration directory"
-      (interactive "f")
-      (unless (file-exists-p
-               (expand-file-name filename user-emacs-directory))
-        (write-region "" nil filename))
-      (load-file (expand-file-name filename user-emacs-directory)))  
+  (defun load-user-file (filename)
+    "Load a file in current user's configuration directory"
+    (interactive "f")
+    (unless (file-exists-p
+             (expand-file-name filename user-emacs-directory))
+      (write-region "" nil filename))
+    (load-file (expand-file-name filename user-emacs-directory)))  
 
-    (defun bootstrap ()
-      "Sync and load user configs."
-      (interactive)
-      (load-user-file "packages.el")
-      ;; (sync-all-packages)
-      (load-user-file "functions.el")
-      (load-user-file "appearance.el")
-      (load-user-file "misc.el")
-      (load-user-file "keybinds.el"))
+  (defun bootstrap ()
+    "Sync and load user configs."
+    (interactive)
+    (load-user-file "packages.el")
+    ;; (sync-all-packages)
+    (load-user-file "functions.el")
+    (load-user-file "appearance.el")
+    (load-user-file "misc.el")
+    (load-user-file "keybinds.el"))
 
-    (bootstrap)
-    (put 'narrow-to-region 'disabled nil)
+  (bootstrap)
+  (put 'narrow-to-region 'disabled nil)
 
-    ;; (defun goto-config ()
-    ;; "Open emacs.org."
-    ;; (interactive)
-    ;; (find-file "~/.emacs.d/emacs.org")
-    ;; (widen)
-    ;; (evil-goto-first-line)
-    ;; (evil-close-folds))
-  #+end_src
+  ;; (defun goto-config ()
+  ;; "Open emacs.org."
+  ;; (interactive)
+  ;; (find-file "~/.emacs.d/emacs.org")
+  ;; (widen)
+  ;; (evil-goto-first-line)
+  ;; (evil-close-folds))
+#+end_src
 
 ** Center the frame on startup
 This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-     (defun rbon-center-frame ()
-       "Move the current frame to the center of the display.
-     Why is this not a built-in function?"
-       (interactive)
-       (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
-             (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
-         (set-frame-position (selected-frame) h-offset v-offset)))
-          (eval-after-load "~/.dshdusdhsudh"
-            (when window-system (rbon-center-frame)))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (defun rbon-center-frame ()
+    "Move the current frame to the center of the display.
+  Why is this not a built-in function?"
+    (interactive)
+    (let ((h-offset (/ (- (display-pixel-width) (frame-native-width)) 2))
+          (v-offset (/ (- (display-pixel-height) (frame-native-height)) 2)))
+      (set-frame-position (selected-frame) h-offset v-offset)))
+  (eval-after-load "~/.dshdusdhsudh"
+    (when window-system (rbon-center-frame)))
+#+end_src
 
 ** garbage collection again
 Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
+  ;; Make gc pauses faster by decreasing the threshold.
+  (setq gc-cons-threshold (* 2 1000 1000))
 #+end_src
 
 ** config files   
@@ -1418,16 +1416,16 @@ Load every elisp file in =~/.emacs.d/config=.
 * Appearance
 ** General
 Best theme fight me.
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-     (load-theme 'solarized-light t) ; 
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+  (load-theme 'solarized-light t) ; 
+#+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-(set-face-attribute 'default nil
-  :family "Hasklig"
-  :height 150
-  :weight 'normal
-  :width 'normal)
+  (set-face-attribute 'default nil
+                      :family "Hasklig"
+                      :height 150
+                      :weight 'normal
+                      :width 'normal)
 #+end_src
 
 
@@ -1439,42 +1437,42 @@ In terms of modeline, we have no modeline. No but in all seriousness. I use the 
 *** Packages
 *** [[https://github.com/kiennq/emacs-mini-modeline][mini-modeline]]
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
-    (use-package mini-modeline :demand)
+  (use-package mini-modeline :demand)
 #+end_src
 
 *** Options
 This is super messy and I don't really know everything that's going on. I just kinda poked at this until things looked right. Future me should definitely clean this up.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
   (with-eval-after-load 'mini-modeline
-      (setq-default mode-line-format nil) 
-      (setq mode-line-format nil) 
-      ;; (setq-default mode-line-format "") ; get rid of status line
-      ;;   (setq mode-line-format nil) 
-      (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
-      (setq-default mini-modeline-display-gui-line t)
-      (setq-default window-divider-default-places t) 
-      (setq-default window-divider-default-bottom-width 1) 
-      (setq-default window-divider-default-right-width 1)
-      (setq mode-line-format nil) 
-      (mini-modeline-mode t)
-      (window-divider-mode t)
-      (setq mode-line-format nil) 
+    (setq-default mode-line-format nil) 
+    (setq mode-line-format nil) 
+    ;; (setq-default mode-line-format "") ; get rid of status line
+    ;;   (setq mode-line-format nil) 
+    (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+    (setq-default mini-modeline-display-gui-line t)
+    (setq-default window-divider-default-places t) 
+    (setq-default window-divider-default-bottom-width 1) 
+    (setq-default window-divider-default-right-width 1)
+    (setq mode-line-format nil) 
+    (mini-modeline-mode t)
+    (window-divider-mode t)
+    (setq mode-line-format nil) 
 
-      (setq-default mini-modeline-r-format
-                    (list
-                     '("%e"
-                       mode-line-buffer-identification
-                       mode-line-modified)))
+    (setq-default mini-modeline-r-format
+                  (list
+                   '("%e"
+                     mode-line-buffer-identification
+                     mode-line-modified)))
 
-  ;;     (setq-default mini-modeline-r-format
-  ;;                   (list
-  ;;                    '("%e"
-  ;;                      mode-line-buffer-identification
-  ;;                      mode-line-modified) " "
-  ;;                    '(:eval (eyebrowse-mode-line-indicator))))
+    ;;     (setq-default mini-modeline-r-format
+    ;;                   (list
+    ;;                    '("%e"
+    ;;                      mode-line-buffer-identification
+    ;;                      mode-line-modified) " "
+    ;;                    '(:eval (eyebrowse-mode-line-indicator))))
 
-      (setq-default mode-line-format nil) 
-      )
+    (setq-default mode-line-format nil) 
+    )
 #+end_src
 
 * LSP
@@ -1483,10 +1481,10 @@ This is super messy and I don't really know everything that's going on. I just k
     :after haskell-mode
     :config
     (rbon-define-key 'lsp-mode 'normal
-                     '("SPC b f" ("format this buffer" . lsp-format-buffer))
-                     '("SPC s f" ("format selection" . lsp-format-region))
-                     '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
-                     '("SPC j d" ("jump to definition" . lsp-find-definition)))
+      '("SPC b f" ("format this buffer" . lsp-format-buffer))
+      '("SPC s f" ("format selection" . lsp-format-region))
+      '("SPC h h" ("describe something" . lsp-describe-thing-at-point))
+      '("SPC j d" ("jump to definition" . lsp-find-definition)))
     )
   (use-package lsp-haskell
     :after haskell-mode)
@@ -1502,16 +1500,16 @@ This is super messy and I don't really know everything that's going on. I just k
 ** keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a m" magit))
+    '("SPC a m" magit))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
   (rbon-define-key 'magit-mode 'emacs
-                   '("J"        magit-status-jump)
-                   '("j"        magit-next-line)
-                   '("k"        magit-previous-line)
-                   '("H"        magit-discard)
-                   '("<escape>" magit-mode-bury-buffer))
+    '("J"        magit-status-jump)
+    '("j"        magit-next-line)
+    '("k"        magit-previous-line)
+    '("H"        magit-discard)
+    '("<escape>" magit-mode-bury-buffer))
 #+end_src
 
 * Haskell
@@ -1559,38 +1557,38 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+end_src
 
 *** =rbon-insert-haskell-prompt-start=
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-insert-haskell-prompt-start ()
-  "Enter the insert state at the start of the haskell prompt."
-  (interactive)
-  (goto-char haskell-interactive-mode-prompt-start)
-  (call-interactively 'evil-insert))
-   #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-insert-haskell-prompt-start ()
+    "Enter the insert state at the start of the haskell prompt."
+    (interactive)
+    (goto-char haskell-interactive-mode-prompt-start)
+    (call-interactively 'evil-insert))
+#+end_src
    
 *** =rbon-goto-haskell-prompt-start=
-    #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
-(defun rbon-goto-haskell-prompt-start ()
-  "Go to the start of the haskell prompt."
-  (interactive)
-  (goto-char haskell-interactive-mode-prompt-start))
-    #+end_src
+#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+  (defun rbon-goto-haskell-prompt-start ()
+    "Go to the start of the haskell prompt."
+    (interactive)
+    (goto-char haskell-interactive-mode-prompt-start))
+#+end_src
 
 ** keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'haskell-mode 'normal
-                   '("SPC b e" ("eval this buffer" . run-code)))
+    '("SPC b e" ("eval this buffer" . run-code)))
 
   (rbon-define-key 'haskell-interactive-mode 'insert
-                   '("TAB" haskell-interactive-mode-tab)
-                   '("SPC" haskell-interactive-mode-space))
+    '("TAB" haskell-interactive-mode-tab)
+    '("SPC" haskell-interactive-mode-space))
 
   (rbon-define-key 'haskell-interactive-mode 'normal
-                   '("J" rbon-haskell-interactive-mode-history-next)
-                   '("K" rbon-haskell-interactive-mode-history-previous)
-                   '("I" rbon-insert-haskell-prompt-start)
-                   '("^" rbon-goto-haskell-prompt-start)
-                   '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
-                   '("RET" haskell-interactive-mode-return))
+    '("J" rbon-haskell-interactive-mode-history-next)
+    '("K" rbon-haskell-interactive-mode-history-previous)
+    '("I" rbon-insert-haskell-prompt-start)
+    '("^" rbon-goto-haskell-prompt-start)
+    '("<S-backspace>" rbon-haskell-interactive-mode-kill-whole-line)
+    '("RET" haskell-interactive-mode-return))
 
   (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
 #+end_src
@@ -1598,7 +1596,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 * Webkit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'xwidget-webkit-mode '(normal)
-                   '("DEL"   xwidget-webkit-back))
+    '("DEL"   xwidget-webkit-back))
 #+end_src
 
 * Internet radio
@@ -1611,10 +1609,10 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 ** Options
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
   (with-eval-after-load 'eradio
-                       (setq eradio-player
-                             '("/Applications/mpv.app/Contents/MacOS/mpv"
-                               "--no-video"
-                               "--no-terminal")))
+    (setq eradio-player
+          '("/Applications/mpv.app/Contents/MacOS/mpv"
+            "--no-video"
+            "--no-terminal")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
@@ -1642,74 +1640,74 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC r"  ("radio"))
-                   '("SPC r p" ("play" . eradio-play))
-                   '("SPC r s" ("stop" . eradio-stop))
-                   '("SPC r t" ("toggle" . eradio-toggle)))
+    '("SPC r"  ("radio"))
+    '("SPC r p" ("play" . eradio-play))
+    '("SPC r s" ("stop" . eradio-stop))
+    '("SPC r t" ("toggle" . eradio-toggle)))
 #+end_src
 
 * youtube-dl
-   #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
-          ;;  (rbon-define-key 'dired-mode 'normal
-          ;;    '("h" dired-up-directory)
-          ;;    '("j" dired-next-line)
-          ;;    '("k" dired-previous-line)
-          ;;    '("l" dired-find-file)
-          ;;    '("/" evil-search-forward)
-          ;;    '("t" touch-file))
+#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+  ;;  (rbon-define-key 'dired-mode 'normal
+  ;;    '("h" dired-up-directory)
+  ;;    '("j" dired-next-line)
+  ;;    '("k" dired-previous-line)
+  ;;    '("l" dired-find-file)
+  ;;    '("/" evil-search-forward)
+  ;;    '("t" touch-file))
 
-          ;; (add-hook 'dired-mode-hook 'dired-hydra/body)
+  ;; (add-hook 'dired-mode-hook 'dired-hydra/body)
 
-     (setq youtube-dl-command "youtube-dl --simulate")
+  (setq youtube-dl-command "youtube-dl --simulate")
 
-     (defun youtube-dl-test ()
-       (interactive)
-       (insert (shell-command-to-string "uptime"))
-       )
-
-
+  (defun youtube-dl-test ()
+    (interactive)
+    (insert (shell-command-to-string "uptime"))
+    )
 
 
-     ;; (defvar youtube-dl-mode-map nil "Keymap for `youtube-dl-mode'")
-     ;; ;; make sure that the var name is your mode name followed by -map. That way, define-derived-mode will automatically set it as local map
-     ;; 
-     ;; ;; also, by convention, variable names for keymap should end in -map
-     ;; 
-     ;; (progn
-     ;;   (setq youtube-dl-mode (make-sparse-keymap))
-     ;; 
-     ;;   (define-key youtube-dl-mode-map (kbd "d") 'youtube-dl-test)
-     ;; 
-     ;; 
-     ;;   ;; by convention, major mode's keys should begin with the form C-c C-‹key›
-     ;;   ;; by convention, keys of the form C-c ‹letter› are reserved for user. don't define such keys in your major mode
-     ;;   )
-     ;; 
-     ;; ;; ----------------------------------------
-     ;; ;; define the mode
-     ;; 
-     ;; (define-derived-mode my-mode prog-mode "my"
-     ;;   "my-mode is a major mode for editing language my.
-     ;; 
-     ;; \\{my-mode-map}"
-     ;; 
-     ;;   ;; actually no need
-     ;;   (use-local-map my-mode-map) ; if your keymap name is modename follow by -map, then this line is not necessary, because define-derived-mode will find it and set it for you
-     ;; 
-     ;;   )
-     ;; 
-     ;;      (define-derived-mode youtube-dl-mode fundamental-mode "youtube-dl"
-     ;;        "work in progress"
-     ;; 
-     ;;        )
 
-   #+end_src
+
+  ;; (defvar youtube-dl-mode-map nil "Keymap for `youtube-dl-mode'")
+  ;; ;; make sure that the var name is your mode name followed by -map. That way, define-derived-mode will automatically set it as local map
+  ;; 
+  ;; ;; also, by convention, variable names for keymap should end in -map
+  ;; 
+  ;; (progn
+  ;;   (setq youtube-dl-mode (make-sparse-keymap))
+  ;; 
+  ;;   (define-key youtube-dl-mode-map (kbd "d") 'youtube-dl-test)
+  ;; 
+  ;; 
+  ;;   ;; by convention, major mode's keys should begin with the form C-c C-‹key›
+  ;;   ;; by convention, keys of the form C-c ‹letter› are reserved for user. don't define such keys in your major mode
+  ;;   )
+  ;; 
+  ;; ;; ----------------------------------------
+  ;; ;; define the mode
+  ;; 
+  ;; (define-derived-mode my-mode prog-mode "my"
+  ;;   "my-mode is a major mode for editing language my.
+  ;; 
+  ;; \\{my-mode-map}"
+  ;; 
+  ;;   ;; actually no need
+  ;;   (use-local-map my-mode-map) ; if your keymap name is modename follow by -map, then this line is not necessary, because define-derived-mode will find it and set it for you
+  ;; 
+  ;;   )
+  ;; 
+  ;;      (define-derived-mode youtube-dl-mode fundamental-mode "youtube-dl"
+  ;;        "work in progress"
+  ;; 
+  ;;        )
+
+#+end_src
    
 * Japanese Input
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC i"  ("input method"))
-                   '("SPC i t" ("toggle input method" . toggle-input-method)))
+    '("SPC i"  ("input method"))
+    '("SPC i t" ("toggle input method" . toggle-input-method)))
 #+end_src
 
 * RSS Feed Reader
@@ -1722,7 +1720,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 ** Global binds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a e" elfeed))
+    '("SPC a e" elfeed))
 #+end_src
 
 ** Local binds
@@ -1730,21 +1728,21 @@ Binds for the main feed list buffer.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (with-eval-after-load 'elfeed
     (rbon-define-key 'elfeed-search-mode '(normal)
-                     '("g" elfeed-search-update--force)
-                     '("G" elfeed-search-fetch)
-                     '("s" elfeed-search-live-filter)
-                     '("c" elfeed-search-clear-filter)
-                     '("<return>" elfeed-search-show-entry)
-                     '("b" elfeed-search-browse-url)
-                     '("y" elfeed-search-yank)
-                     '("r" elfeed-search-untag-all-unread)
-                     '("u" elfeed-search-tag-all-unread)
-                     '("+" elfeed-search-tag-all)
-                     '("-" elfeed-search-untag-all)
-                     '("m" elfeed-mpv)
-                     '("j" evil-next-line)
-                     '("k" evil-previous-line)
-                     '("<escape>" kill-this-buffer)))
+      '("g" elfeed-search-update--force)
+      '("G" elfeed-search-fetch)
+      '("s" elfeed-search-live-filter)
+      '("c" elfeed-search-clear-filter)
+      '("<return>" elfeed-search-show-entry)
+      '("b" elfeed-search-browse-url)
+      '("y" elfeed-search-yank)
+      '("r" elfeed-search-untag-all-unread)
+      '("u" elfeed-search-tag-all-unread)
+      '("+" elfeed-search-tag-all)
+      '("-" elfeed-search-untag-all)
+      '("m" elfeed-mpv)
+      '("j" evil-next-line)
+      '("k" evil-previous-line)
+      '("<escape>" kill-this-buffer)))
 #+end_src
 
 Binds specifically for the buffer that shows the full info for specific entries.
@@ -1752,8 +1750,8 @@ Binds specifically for the buffer that shows the full info for specific entries.
   (with-eval-after-load 'elfeed
     (message "loaded some keybinds")
     (rbon-define-key 'elfeed-show-mode '(normal)
-                     '("m" elfeed-mpv)
-                     '("<escape>" kill-this-buffer)))
+      '("m" elfeed-mpv)
+      '("<escape>" kill-this-buffer)))
 #+end_src
 
 * youtube links
@@ -1761,13 +1759,13 @@ Binds specifically for the buffer that shows the full info for specific entries.
   (defun mpv-play-url (url &rest args)
     ""
     (interactive)
-    ; (start-process "mpv" "*mpv*" "mpv" url))
+                                          ; (start-process "mpv" "*mpv*" "mpv" url))
     (shell-command (concat "open -a mpv \"" url "\"")))
 
-;   (setq browse-url-browser-function
-;     (quote
-;       (("youtu\\.?be" . mpv-play-url)
-;       ("." . eww-browse-url))))
+                                          ;   (setq browse-url-browser-function
+                                          ;     (quote
+                                          ;       (("youtu\\.?be" . mpv-play-url)
+                                          ;       ("." . eww-browse-url))))
 #+end_src
 
 * Enqueue youtube videos
@@ -1790,8 +1788,8 @@ I use these functions everyday and have integrated them with my browser (qutebro
 ** =mpvarchive=
 First define a variable for where you like to keep your archive file. You can change this location here if you want:
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(defvar mpvarchive "~/.cache/mpvarchive"
-  "file to use as archive for \\[mpv-enqueue-maybe-archive]")
+  (defvar mpvarchive "~/.cache/mpvarchive"
+    "file to use as archive for \\[mpv-enqueue-maybe-archive]")
 #+end_src
 
 ** =mpv-enqueue-maybe-archive=
@@ -1832,9 +1830,9 @@ Now, here's the main function. It creates with mkfifo a named pipe in the /tmp/ 
 Here is how I integrate the above function with qutebrowser such that I simply use the keybinding ",n" and hint all the links I want enqueued in mpv, or ",m" for a single link, or ",M" for the link of the webpage itself. Simply add these lines to config.py of qutebrowser:
 
 #+begin_src python
-config.bind(',M', 'spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{url}\\")"')
-config.bind(',m', 'hint links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
-config.bind(',n', 'hint --rapid links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
+  config.bind(',M', 'spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{url}\\")"')
+  config.bind(',m', 'hint links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
+  config.bind(',n', 'hint --rapid links spawn emacsclient -n -e "(mpv-enqueue-maybe-archive \\"{hint-url}\\")"')
 #+end_src
 
 ** =elfeed-mpv=
@@ -1843,58 +1841,58 @@ The following function and keybindings integrate the enqueuer with elfeed so tha
   (defun elfeed-mpv ()
     (interactive)
     (mpv-play-url (elfeed-entry-link (elfeed-search-selected :single)))
-    ; (mpv-enqueue-maybe-archive (elfeed-entry-link (elfeed-search-selected :single)))
+                                          ; (mpv-enqueue-maybe-archive (elfeed-entry-link (elfeed-search-selected :single)))
     (elfeed-search-untag-all-unread))
 
-  ; (define-key elfeed-search-mode-map "m" 'elfeed-mpv)
-  ; (define-key elfeed-search-mode-map "n" 'elfeed-search-untag-all-unread)
+                                          ; (define-key elfeed-search-mode-map "m" 'elfeed-mpv)
+                                          ; (define-key elfeed-search-mode-map "n" 'elfeed-search-untag-all-unread)
 #+end_src
 
 If you are not an elfeed user I suggest that you give it a try as it's the best feed reader I've found. Here are some video feeds to get you started:
 #+begin_src elisp
-(setq elfeed-feeds
-      '(("https://www.reddit.com/r/lectures/new/.rss") ; new videos from r/lectures
-        ("https://www.reddit.com/r/documentaries/top/.rss?sort=top&t=day") ; daily top videos from r/documentaries
-        ("https://www.reddit.com/search.rss?q=url%3A%28youtu.be+OR+youtube.com%29&sort=top&t=week&include_over_18=1&type=link") ; weekly top youtube videos
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCn-HUzO0Xfn1Jx4bRZ7kPew") ; Ben Franklin's World
-        ("https://www.youtube.com/feeds/videos.xml?playlist_id=PLp12xt0S4J0UYXerKrIPCLTk15ZUzFdKz") ; Popular on Youtube Canada
-        ("https://www.youtube.com/feeds/videos.xml?user=academyofideas") ; Academy of Ideas
-        ))
+  (setq elfeed-feeds
+        '(("https://www.reddit.com/r/lectures/new/.rss") ; new videos from r/lectures
+          ("https://www.reddit.com/r/documentaries/top/.rss?sort=top&t=day") ; daily top videos from r/documentaries
+          ("https://www.reddit.com/search.rss?q=url%3A%28youtu.be+OR+youtube.com%29&sort=top&t=week&include_over_18=1&type=link") ; weekly top youtube videos
+          ("https://www.youtube.com/feeds/videos.xml?channel_id=UCn-HUzO0Xfn1Jx4bRZ7kPew") ; Ben Franklin's World
+          ("https://www.youtube.com/feeds/videos.xml?playlist_id=PLp12xt0S4J0UYXerKrIPCLTk15ZUzFdKz") ; Popular on Youtube Canada
+          ("https://www.youtube.com/feeds/videos.xml?user=academyofideas") ; Academy of Ideas
+          ))
 #+end_src
 
 ** =mpv-search-archive=
 Now, for searching the archive that you would have created by using the above functions:
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(defun mpv-search-archive (query)
-  (interactive (list (read-from-minibuffer "Search mpv archive: " nil nil nil 'mpv-history)))
-  (let ((link)(title)(time)(lines))
-    (with-temp-buffer (insert-file-contents mpvarchive)
-                      (goto-char (point-min))
-                      (while (search-forward query nil t)
-                        (re-search-backward "^https?://")
-                        (setq link (thing-at-point 'url))
-                        (forward-line 1)
-                        (setq title (buffer-substring (line-beginning-position)(line-end-position)))
-                        (forward-line 1)
-                        (setq time (buffer-substring (line-beginning-position)(line-end-position)))
-                        (setq lines (cons (cons (concat title " [" time "]") link) lines))))
-    (delq nil (delete-dups lines))
-    (ivy-read "mpv archive result(s): " (mapcar 'car lines)
-              :sort nil
-              :re-builder #'regexp-quote
-              :action '(1
-                        ("o" (lambda (x)
-                               (mpv-enqueue-maybe-archive (cdr (assoc x lines)) t))
-                         "play")
-                        ("b" (lambda (x)
-                               (browse-url-browser-function (cdr (assoc x lines))))
-                         "browse")
-                        ("w" (lambda (x)
-                               (kill-new (cdr (assoc x lines))))
-                         "copy url")
-                        ("d" (lambda (x)
-                               (ivy-youtube-dl (cdr (assoc x lines))))
-                         "download")))))
+  (defun mpv-search-archive (query)
+    (interactive (list (read-from-minibuffer "Search mpv archive: " nil nil nil 'mpv-history)))
+    (let ((link)(title)(time)(lines))
+      (with-temp-buffer (insert-file-contents mpvarchive)
+                        (goto-char (point-min))
+                        (while (search-forward query nil t)
+                          (re-search-backward "^https?://")
+                          (setq link (thing-at-point 'url))
+                          (forward-line 1)
+                          (setq title (buffer-substring (line-beginning-position)(line-end-position)))
+                          (forward-line 1)
+                          (setq time (buffer-substring (line-beginning-position)(line-end-position)))
+                          (setq lines (cons (cons (concat title " [" time "]") link) lines))))
+      (delq nil (delete-dups lines))
+      (ivy-read "mpv archive result(s): " (mapcar 'car lines)
+                :sort nil
+                :re-builder #'regexp-quote
+                :action '(1
+                          ("o" (lambda (x)
+                                 (mpv-enqueue-maybe-archive (cdr (assoc x lines)) t))
+                           "play")
+                          ("b" (lambda (x)
+                                 (browse-url-browser-function (cdr (assoc x lines))))
+                           "browse")
+                          ("w" (lambda (x)
+                                 (kill-new (cdr (assoc x lines))))
+                           "copy url")
+                          ("d" (lambda (x)
+                                 (ivy-youtube-dl (cdr (assoc x lines))))
+                           "download")))))
 #+end_src
 
 The above function which searches the mpv archive can also directly download the video with youtube-dl using the "ivy-youtube-dl" function which I've included at the end of this post.
@@ -1902,87 +1900,87 @@ The above function which searches the mpv archive can also directly download the
 ** =mpv-build-playlist=
 Sometimes, you may want to save the links for later viewing without enqueueing them right then. In that case you can use the following function which will build a plaintext .m3u playlist which you can later feed to mpv with a handy function that comes next after this.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(defun mpv-build-playlist (&optional link)
-  (interactive)
-  (unless link (setq link (current-kill 0)))
-  (write-region (concat link "\n") nil "~/.cache/mpv-built-playlist.m3u" t))
+  (defun mpv-build-playlist (&optional link)
+    (interactive)
+    (unless link (setq link (current-kill 0)))
+    (write-region (concat link "\n") nil "~/.cache/mpv-built-playlist.m3u" t))
 #+end_src
 
 You can integrate it with qutebrowser by putting the following lines in your config.py:
 #+begin_src python
-config.bind(',P', 'spawn emacsclient -n -e "(mpv-build-playlist \\"{url}\\")"')
-config.bind(',p', 'hint links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
-config.bind(',l', 'hint --rapid links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
+  config.bind(',P', 'spawn emacsclient -n -e "(mpv-build-playlist \\"{url}\\")"')
+  config.bind(',p', 'hint links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
+  config.bind(',l', 'hint --rapid links spawn emacsclient -n -e "(mpv-build-playlist \\"{hint-url}\\")"')
 #+end_src
 
 ** =save_playlist.lua=
 Sometimes you may have enqueued a bunch of videos in mpv, and midway you want to stop watching videos and save them for later viewing. The easiet way to do that is to have the following script saved at the location "~/.config/mpv/scripts/save_playlist.lua". Then you can simply hit "y" to save the currently playing list of videos and quit mpv with "Shift-q" so that when you later replay the playlist it will start from where you had left off. I had found this online somewhere but sorry I can't find its direct link now.
 #+begin_src lua :tangle ~/.config/mpv/scripts/save_playlist.lua
-local playlist_savepath = (os.getenv('HOME')..'/.cache')
-local utils = require("mp.utils")
-local msg = require("mp.msg")
-local filename = nil
+  local playlist_savepath = (os.getenv('HOME')..'/.cache')
+  local utils = require("mp.utils")
+  local msg = require("mp.msg")
+  local filename = nil
 
-function save_playlist()
+  function save_playlist()
     local length = mp.get_property_number('playlist-count', 0)
-        if length == 0 then return end
+    if length == 0 then return end
     local savepath = utils.join_path(playlist_savepath, os.time().."-size_"..length.."-playlist.m3u")
     local file, err = io.open(savepath, "w")
     if not file then
-        msg.error("Error in creating playlist file, check permissions and paths: "..(err or ""))
+      msg.error("Error in creating playlist file, check permissions and paths: "..(err or ""))
     else
-        local i=0
-        while i < length do
-            local pwd = mp.get_property("working-directory")
-            local filename = mp.get_property('playlist/'..i..'/filename')
-            local fullpath = filename
-            if not filename:match("^%a%a+:%/%/") then
-                fullpath = utils.join_path(pwd, filename)
-            end
-            file:write(fullpath, "\n")
-            i=i+1
+      local i=0
+      while i < length do
+        local pwd = mp.get_property("working-directory")
+        local filename = mp.get_property('playlist/'..i..'/filename')
+        local fullpath = filename
+        if not filename:match("^%a%a+:%/%/") then
+          fullpath = utils.join_path(pwd, filename)
         end
-        msg.info("Playlist written to: "..savepath)
-        mp.osd_message("Playlist written to: "..savepath)
-        file:close()
+        file:write(fullpath, "\n")
+        i=i+1
+      end
+      msg.info("Playlist written to: "..savepath)
+      mp.osd_message("Playlist written to: "..savepath)
+      file:close()
     end
-end
+  end
 
-mp.add_key_binding("y", save_playlist)
+  mp.add_key_binding("y", save_playlist)
 #+end_src
 
 ** =mpv-enqueue-play-playlist=
 Now after you've saved or built your playlists you can later select them for playing with this handy function which will search for all the m3u files in the cache directory. Once you select a file it will be sent to mpv and deleted from your cache folder so that it won't be littered with unneeded files.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(defun mpv-enqueue-play-playlist ()
-  (interactive)
-  (ivy-read "Files: "
-            (directory-files "~/.cache/" t "\\.m3u")
-            :action (lambda (x)
-                      (mpv-enqueue-archive x t)
-                      (sleep-for 2)
-                      (delete-file x))
-            :require-match t
-            :sort nil))
+  (defun mpv-enqueue-play-playlist ()
+    (interactive)
+    (ivy-read "Files: "
+              (directory-files "~/.cache/" t "\\.m3u")
+              :action (lambda (x)
+                        (mpv-enqueue-archive x t)
+                        (sleep-for 2)
+                        (delete-file x))
+              :require-match t
+              :sort nil))
 #+end_src
 
 ** =mpv-enqueue-play-archive=
 But in case you did not save your playlist and you simply want to replay the last n number of videos you had enqueued you can use the following function and send it the number with a prefix argument like "C-u 10" otherwise it will play only one last video. This function creates a temporary playlist files and sends it to mpv and then deletes the file.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-(defun mpv-enqueue-play-archive (number)
-  (interactive "p")
-  (let ((url)(list)(playlist))
-    (with-temp-buffer (insert-file-contents mpvarchive)
-                      (goto-char (point-max))
-                      (dotimes (i number list)
-                        (re-search-backward "^https?://" nil t)
-                        (setq url (thing-at-point 'url))
-                        (setq list (cons url list))))
-    (setq list (nreverse list))
-    (setq playlist (make-temp-file "archive-playlist" nil ".m3u" (mapconcat 'identity list "\n")))
-    (mpv-enqueue-archive playlist t)
-    (sleep-for 2)
-    (delete-file playlist)))
+  (defun mpv-enqueue-play-archive (number)
+    (interactive "p")
+    (let ((url)(list)(playlist))
+      (with-temp-buffer (insert-file-contents mpvarchive)
+                        (goto-char (point-max))
+                        (dotimes (i number list)
+                          (re-search-backward "^https?://" nil t)
+                          (setq url (thing-at-point 'url))
+                          (setq list (cons url list))))
+      (setq list (nreverse list))
+      (setq playlist (make-temp-file "archive-playlist" nil ".m3u" (mapconcat 'identity list "\n")))
+      (mpv-enqueue-archive playlist t)
+      (sleep-for 2)
+      (delete-file playlist)))
 #+end_src
 
 ** =ivy-youtube-dl=
@@ -2053,8 +2051,8 @@ And here's the youtube-dl function which you can integrate with the archive sear
 
 And you can integrate it with qutebrowser by adding the following lines to your config.py:
 #+begin_src python
-config.bind(',y', 'hint links spawn emacsclient -n -e "(ivy-youtube-dl \\"{hint-url}\\")"')
-config.bind(',Y', 'spawn emacsclient -n -e "(ivy-youtube-dl \\"{url}\\")"')
+  config.bind(',y', 'hint links spawn emacsclient -n -e "(ivy-youtube-dl \\"{hint-url}\\")"')
+  config.bind(',Y', 'spawn emacsclient -n -e "(ivy-youtube-dl \\"{url}\\")"')
 #+end_src
 
 Sorry, no screenshots as it's basically the standard ivy and mpv interface that you will see when using these functions. Give them a try, they work really well for me and are very basic.
@@ -2067,34 +2065,34 @@ Boy this sure is verbose. I hope future me dries this up.
     (eyebrowse-mode t)
     :init
     (rbon-define-key 'global '(normal visual emacs)
-                     '("SPC `"     ("workspace"))
-                     '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
-                     '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
-                     '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
-                     '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
-                     '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
-                     '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
-                     '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
-                     '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-                     '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-                     '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-                     '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-                     '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-                     '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-                     '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-                     '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-                     '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-                     '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-                     '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-                     '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-                     '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-                     '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-                     '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-                     '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-                     '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-                     '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-                     '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-                     '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-                     '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config))))
+      '("SPC `"     ("workspace"))
+      '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
+      '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
+      '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
+      '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
+      '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
+      '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
+      '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
+      '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+      '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+      '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+      '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+      '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+      '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+      '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+      '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+      '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+      '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+      '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+      '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+      '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+      '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+      '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+      '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+      '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+      '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+      '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+      '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+      '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config))))
 #+end_src
 
