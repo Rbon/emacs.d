@@ -19,6 +19,21 @@
 
 (setq gc-cons-threshold (* 100 1000 1000))
 
+(defun my/load-softly (filename)
+  "As `require', but instead of an error just print a message.
+
+If there is an error, its message will be included in the message
+printed.
+
+Like `require', the return value will be FEATURE if the load was
+successful (or unnecessary) and nil if not."
+  (condition-case err
+      (load filename) 
+    (error (message "Error loading %s: \"%s\""
+                    (if filename (format "%s (%s)" "TEST" filename) "TEST")
+                    (error-message-string err))
+           nil)))
+
 (defun load-user-file (filename)
   "Load a file in current user's configuration directory"
   (interactive "f")
@@ -61,4 +76,5 @@ Why is this not a built-in function?"
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
-(mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+;; (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+(mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el"))

@@ -217,7 +217,7 @@ the
 ** Keystrokes are the enemy
 ** If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap
 
-* Keybinds
+* Global Keybinds
 ** skeleton
 Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -276,8 +276,7 @@ Cursor shortcuts
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
-                   '("SPC a d" dired)
-                   '("SPC a m" magit))
+                   '("SPC a d" dired))
 #+end_src
 
 ** Files
@@ -402,10 +401,11 @@ Cursor shortcuts
 
 ** Recentf Dialog
    #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
- (rbon-define-key 'recentf-dialog-mode 'normal
-   '("l" widget-button-press)
-   '("h" nop)
-   '("q" recentf-cancel-dialog))
+     (evil-set-initial-state 'recentf-dialog-mode 'normal)
+     (rbon-define-key 'recentf-dialog-mode 'normal
+                      '("l" widget-button-press)
+                      '("h" nop)
+                      '("q" recentf-cancel-dialog))
    #+end_src
 
 ** With Editor
@@ -1048,7 +1048,7 @@ Hydra for promoting and demoting subtrees.
 #+end_src
 
 * Completion
-** packages
+** Packages
 *** [[https://github.com/emacs-helm/helm][helm]]
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
   (use-package helm :config (helm-mode 1))
@@ -1061,7 +1061,7 @@ Hydra for promoting and demoting subtrees.
     :config (helm-descbinds-mode))
 #+end_src
 
-** options
+** Options
 Enable this to do stuff like =helm-imenu=.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
   (with-eval-after-load 'helm
@@ -1080,7 +1080,7 @@ Set a custom =M-x= prompt. Be default, =helm= doesn't let you do this, so I had 
     (setq helm-M-x-prompt-string "Command: "))
 #+end_src
 
-** keybinds
+** Keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
   (with-eval-after-load 'helm
@@ -1269,7 +1269,7 @@ Making moving up and down lines behave like a modern text editor.
     (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
 #+end_src
 
-* Packages
+* Package Management
 ** =straight.el=
 This makes each use-package form also invoke straight.el to install the package, unless otherwise specified.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -1343,6 +1343,21 @@ The default is 800 kilobytes.  Measured in bytes.
 
 
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+    (defun my/load-softly (filename)
+      "As `require', but instead of an error just print a message.
+
+    If there is an error, its message will be included in the message
+    printed.
+
+    Like `require', the return value will be FEATURE if the load was
+    successful (or unnecessary) and nil if not."
+      (condition-case err
+          (load filename) 
+        (error (message "Error loading %s: \"%s\""
+                        (if filename (format "%s (%s)" "TEST" filename) "TEST")
+                        (error-message-string err))
+               nil)))
+
     (defun load-user-file (filename)
       "Load a file in current user's configuration directory"
       (interactive "f")
@@ -1397,7 +1412,8 @@ Dial the GC threshold back down so that garbage collection happens more frequent
 ** config files   
 Load every elisp file in =~/.emacs.d/config=.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+  ;; (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
+  (mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el"))
 #+end_src
 
 * Appearance
@@ -1417,6 +1433,50 @@ Best theme fight me.
 
 
 #  LocalWords:  Keybinds babel Org Misc Magit Dired Recentf rbon
+
+** Modeline
+In terms of modeline, we have no modeline. No but in all seriousness. I use the package =mini-modeline= to put the modeline in the minibuffer.
+
+*** Packages
+*** [[https://github.com/kiennq/emacs-mini-modeline][mini-modeline]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
+    (use-package mini-modeline :demand)
+#+end_src
+
+*** Options
+This is super messy and I don't really know everything that's going on. I just kinda poked at this until things looked right. Future me should definitely clean this up.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
+  (with-eval-after-load 'mini-modeline
+      (setq-default mode-line-format nil) 
+      (setq mode-line-format nil) 
+      ;; (setq-default mode-line-format "") ; get rid of status line
+      ;;   (setq mode-line-format nil) 
+      (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
+      (setq-default mini-modeline-display-gui-line t)
+      (setq-default window-divider-default-places t) 
+      (setq-default window-divider-default-bottom-width 1) 
+      (setq-default window-divider-default-right-width 1)
+      (setq mode-line-format nil) 
+      (mini-modeline-mode t)
+      (window-divider-mode t)
+      (setq mode-line-format nil) 
+
+      (setq-default mini-modeline-r-format
+                    (list
+                     '("%e"
+                       mode-line-buffer-identification
+                       mode-line-modified)))
+
+  ;;     (setq-default mini-modeline-r-format
+  ;;                   (list
+  ;;                    '("%e"
+  ;;                      mode-line-buffer-identification
+  ;;                      mode-line-modified) " "
+  ;;                    '(:eval (eyebrowse-mode-line-indicator))))
+
+      (setq-default mode-line-format nil) 
+      )
+#+end_src
 
 * LSP
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
@@ -1534,46 +1594,6 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
                    '("RET" haskell-interactive-mode-return))
 
   (rbon-define-key 'haskell-error-mode 'normal '("q" quit-window))
-#+end_src
-
-* Modeline
-#+begin_src emacs-lisp :tangle ~/.emacs.d/misc.el
-    ;; put the modeline in the minibuffer added benefit of only having one modeline
-    (use-package mini-modeline
-      :demand
-      ;; :after eyebrowse
-      ;; :defer t
-      :init 
-      (setq-default mode-line-format nil) 
-      (setq mode-line-format nil) 
-      :config
-      ;; (setq-default mode-line-format "") ; get rid of status line
-      ;;   (setq mode-line-format nil) 
-      (setq-default mini-modeline-enhance-visual nil) ; does the opposite of what I would think
-      (setq-default mini-modeline-display-gui-line t)
-      (setq-default window-divider-default-places t) 
-      (setq-default window-divider-default-bottom-width 1) 
-      (setq-default window-divider-default-right-width 1)
-      (setq mode-line-format nil) 
-      (mini-modeline-mode t)
-      (window-divider-mode t)
-      (setq mode-line-format nil) 
-
-      (setq-default mini-modeline-r-format
-                    (list
-                     '("%e"
-                       mode-line-buffer-identification
-                       mode-line-modified)))
-
-  ;;     (setq-default mini-modeline-r-format
-  ;;                   (list
-  ;;                    '("%e"
-  ;;                      mode-line-buffer-identification
-  ;;                      mode-line-modified) " "
-  ;;                    '(:eval (eyebrowse-mode-line-indicator))))
-
-      (setq-default mode-line-format nil) 
-      )
 #+end_src
 
 * Webkit
