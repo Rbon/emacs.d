@@ -453,7 +453,6 @@ Why is this not a built-in function?"
 
 ** =rbon-define-key=
 This is probably the one portion of this config that I'm most proud of. In essence, it wraps =evil-define-key= and =add-hook= to create a one-size-fits-all function for defining both global binds, and mode-specific binds, making sure that the latter doesn't pollute the global map.
-
 Currently, there is a limitation that it assumes the associated hook of a mode is just the name of the mode followed by "-hook." This means that if a dev breaks that pattern, this function will silently fail. I might, in the future, add a way to manually add a hook name instead of a mode name, or perhaps I will just make it so that you always use the hook name instead. As it is, it works perfectly for me.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-define-key (mode state &rest bindings)
@@ -492,6 +491,7 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
     (rbon-define-key 'global 'normal
       '(\"k\" (\"make stuff\" . myfun1))
       '(\"j\" (\"do the thing\" . myfun2)))"
+    (declare (indent 2))
     (if (eq mode 'global)
         (mapcar (apply-partially 'rbon--global-set-key state) bindings)
       (add-hook
@@ -1340,7 +1340,6 @@ The default is 800 kilobytes.  Measured in bytes.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
 (setq gc-cons-threshold (* 100 1000 1000))
 #+end_src
-
 
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
     (defun my/load-softly (filename)
