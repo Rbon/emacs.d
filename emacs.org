@@ -1726,8 +1726,9 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 ** Options
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/elfeed.el
+  (defvar rbon-elfeed-timeframe "@1-month-ago")
+  (defvar rbon-elfeed-unread "+unread")
   (defvar rbon-elfeed-tags "")
-  (defvar rbon-elfeed-timeframe "")
 #+end_src
 
 ** Global binds
@@ -1755,12 +1756,12 @@ Binds for the main feed list buffer.
       '("m" elfeed-mpv)
       '("j" evil-next-line)
       '("k" evil-previous-line)
-      '("t u" ("unread" . rbon-elfeed-set-tags-unread))
-      '("t a" ("all" . rbon-elfeed-set-tags-none))
-      '("t v" ("vtuber" . rbon-elfeed-set-tags-vtuber))
-      '("t V" ("not vtuber" . rbon-elfeed-set-tags-no-vtuber))
-      '("T w" ("week" . rbon-elfeed-set-timeframe-one-week))
-      '("T m" ("month" . rbon-elfeed-set-timeframe-one-month))
+      '("f u" ("unread" . rbon-elfeed-set-unread-true))
+      '("f a" ("all" . rbon-elfeed-set-unread-false))
+      '("f v" ("vtuber" . rbon-elfeed-set-tags-vtuber))
+      '("f V" ("not vtuber" . rbon-elfeed-set-tags-no-vtuber))
+      '("f w" ("week" . rbon-elfeed-set-timeframe-one-week))
+      '("f m" ("month" . rbon-elfeed-set-timeframe-one-month))
       '("<escape>" kill-this-buffer)))
 #+end_src
 
@@ -1776,39 +1777,47 @@ Binds specifically for the buffer that shows the full info for specific entries.
 ** Functions
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/elfeed.el
   (defun rbon-elfeed-search-update ()
-    (setq elfeed-search-filter (concat
-                                rbon-elfeed-timeframe " " rbon-elfeed-tags))
-    (elfeed-search-update--force))
+    ;;    (setq elfeed-search-filter
+    ;;          (mapconcat 'identity '(rbon-elfeed-timeframe
+    ;;                                rbon-elfeed-unread
+    ;;                                rbon-elfeed-tags) " ")))
+      (setq elfeed-search-filter (concat
+                                  rbon-elfeed-timeframe
+                                  " "
+                                  rbon-elfeed-unread
+                                  " "
+                                  rbon-elfeed-tags))
+     (elfeed-search-update--force))
 
-  (defun rbon-elfeed-set-timeframe-one-week ()
-    (interactive)
-    (setq rbon-elfeed-timeframe "@1-week-ago")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-timeframe-one-week ()
+      (interactive)
+      (setq rbon-elfeed-timeframe "@1-week-ago")
+      (rbon-elfeed-search-update))
 
-  (defun rbon-elfeed-set-timeframe-one-month ()
-    (interactive)
-    (setq rbon-elfeed-timeframe "@1-month-ago")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-timeframe-one-month ()
+      (interactive)
+      (setq rbon-elfeed-timeframe "@1-month-ago")
+      (rbon-elfeed-search-update))
 
-  (defun rbon-elfeed-set-tags-unread ()
-    (interactive)
-    (setq rbon-elfeed-tags "+unread")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-unread-true ()
+      (interactive)
+      (setq rbon-elfeed-unread "+unread")
+      (rbon-elfeed-search-update))
 
-  (defun rbon-elfeed-set-tags-none ()
-    (interactive)
-    (setq rbon-elfeed-tags "")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-unread-false ()
+      (interactive)
+      (setq rbon-elfeed-unread "")
+      (rbon-elfeed-search-update))
 
-  (defun rbon-elfeed-set-tags-vtuber ()
-    (interactive)
-    (setq rbon-elfeed-tags "+vtuber")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-tags-vtuber ()
+      (interactive)
+      (setq rbon-elfeed-tags "+vtuber")
+      (rbon-elfeed-search-update))
 
-  (defun rbon-elfeed-set-tags-no-vtuber ()
-    (interactive)
-    (setq rbon-elfeed-tags "-vtuber")
-    (rbon-elfeed-search-update))
+    (defun rbon-elfeed-set-tags-no-vtuber ()
+      (interactive)
+      (setq rbon-elfeed-tags "-vtuber")
+      (rbon-elfeed-search-update))
 #+end_src
 
 * youtube links
