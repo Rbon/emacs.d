@@ -1075,6 +1075,7 @@ Set a custom =M-x= prompt. Be default, =helm= doesn't let you do this, so I had 
 #+end_src
 
 ** Keybinds
+*** Local Keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
   (with-eval-after-load 'helm
@@ -1119,6 +1120,12 @@ Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/w
     (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
     (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
     (define-key helm-map (kbd "C-o") 'helm-like-unite/body))
+#+end_src
+
+*** Global Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
+  (rbon-define-key 'global 'normal
+    '("SPC /" helm-occur))
 #+end_src
 
 ** Functions
