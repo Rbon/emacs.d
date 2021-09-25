@@ -1028,6 +1028,18 @@ Hydra for promoting and demoting subtrees.
       ("demote subtree" . org-move-hydra/org-demote-subtree)))
 #+end_src
 
+I don't know why but evil is overriding this for me.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
+  (rbon-define-key 'org-mode 'normal
+    '("<tab>" org-cycle))
+#+end_src
+
+Count the words in the current region.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/text.el
+  (rbon-define-key 'org-mode '(normal visual)
+    '("SPC r w" ("count words in region" . count-words-region)))
+#+end_src
+
 * Indent Buffer
 #+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
   (defun rbon-indent-buffer ()
