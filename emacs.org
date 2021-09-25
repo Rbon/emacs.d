@@ -756,22 +756,22 @@ This section is pretty messy. I'm slowly trying to organize it.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/misc.el
   (setq smex-prompt-string "Run command: ")
   (setq confirm-kill-processes nil)
-
+  
   (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
     "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
     :type '(repeat string))
-
+  
   (global-set-key [remap next-buffer] 'my-next-buffer)
   (global-set-key [remap previous-buffer] 'my-previous-buffer)
-
+  
   (setq org-hide-emphasis-markers t)
-
+  
   (setq default-directory "~/") 
-
+  
   ;; dired stuff
   (setq ls-lisp-use-insert-directory-program nil)
   (require 'ls-lisp)
-
+  
   (setq haskell-process-show-debug-tips nil)
   (setq backup-directory-alist '(("." . "~/.emacs_saves")))
   (ido-mode 1) ; better find-file
@@ -793,7 +793,7 @@ This section is pretty messy. I'm slowly trying to organize it.
   (setq lua-indent-level 2) ; why
   (setq-default evil-shift-width 2) ; whyy
   (blink-cursor-mode 0) ; stop the cursor from blinking
-
+  
   ;; HOOKS
   ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
   ;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
@@ -804,43 +804,47 @@ This section is pretty messy. I'm slowly trying to organize it.
   ;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
   ;;         (add-hook 'haskell-literate-mode-hook #'lsp)
   ;;         (add-hook 'error-mode-hook 'evil-emacs-state)
-
+  
   (setq org-agenda-files (list "~/Documents/School/agenda.org"))
   ;; recent file stuff
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
-
+  
   (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
   (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
   (setq-default fill-column 80)
-
-  (setq ispell-program-name "/opt/local/bin/ispell") ; teach emacs how to spell
-
+  
+  ;; teach emacs how to spell
+  (setq some-var
+        (substring 
+         (shell-command-to-string "which ispell")
+         0 -1))
+  
   ;; enable spell check for text-mode
   (dolist (hook '(text-mode-hook))
     (add-hook hook (lambda () (flyspell-mode 1))))
-
-
-
-
+  
+  
+  
+  
   (autothemer-deftheme
    thing "a test theme"
-
+  
    ((((class color) (min-colors #xFFFFFF)))
-
+  
     (thing-background "gray90"))
-
+  
    ((default (:background "gray90"))))
-
+  
   (provide-theme 'thing)
-
-
-
-
+  
+  
+  
+  
   ;; (setq default-frame-alist
   ;; (append (list '(width . 72) '(height . 40))))
-
+  
                                           ; (set-face-attribute 'mode-line nil
                                           ; :height 10
                                           ; :underline "red"
@@ -852,16 +856,16 @@ This section is pretty messy. I'm slowly trying to organize it.
                                           ; :box nil
                                           ; :background "black"
                                           ; :inherit 'mode-line)
-
+  
                                           ; (set-face-attribute 'minibuffer-prompt nil
                                           ; :height 10
                                           ; :underline "red"
                                           ; :background "red"
                                           ; :foreground "blue"
                                           ; :box "red")
-
+  
   (pixel-scroll-mode t)
-
+  
   (defvar booted nil)
   (unless booted (progn 
                                           ; (switch-to-buffer "Untitled")
@@ -870,7 +874,7 @@ This section is pretty messy. I'm slowly trying to organize it.
                    (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
                        (recentf-open-files))
                    (setq booted t))) 
-
+  
 #+end_src
 
 ** Force certain buffers to use the current window
