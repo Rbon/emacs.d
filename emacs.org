@@ -172,7 +172,6 @@ The solution I have gone for, in this case, is to forgo using a =:config= sectio
 
 "This variable is needed or else =some-package= will not run."
 #+begin_src emacs-lisp
-  ,#+begin_src emacs-lisp
   (with-eval-after-load 'some-package
     (setq important-var t))
 #+end_src
