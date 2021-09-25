@@ -778,6 +778,7 @@ This section is pretty messy. I'm slowly trying to organize it.
   (set-custom-file-path (expand-file-name "custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
   (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
   (tool-bar-mode -1) ; disable toolbar
+  (menu-bar-mode -1) ; disable menubar
   (scroll-bar-mode -1) ; disable scroll bar
   ;; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
   (setq inhibit-splash-screen t) ; disable splash screen
