@@ -1054,7 +1054,7 @@ Count the words in the current region.
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
   (rbon-define-key 'emacs-lisp-mode 'normal
-    '("SPC b i" '("indent buffer" rbon-indent-buffer)))
+    '("SPC b i" ("indent buffer" rbon-indent-buffer)))
 #+end_src
 
 * Completion
