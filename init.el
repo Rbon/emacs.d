@@ -43,13 +43,15 @@ successful (or unnecessary) and nil if not."
   (load-file (expand-file-name filename user-emacs-directory)))  
 
 (defun bootstrap ()
-  "Sync and load user configs."
+  "Generate and load all config files.
+
+This process will download any missing package files, so you'll need an internet
+connection unless you already have local copies of every package."
   (interactive)
-  (load-user-file "config/packages.el")
-  ;; (sync-all-packages)
-  (load-user-file "config/functions.el")
-  (load-user-file "config/keybinds.el"))
-(bootstrap)
+  (org-mode)
+  (org-babel-tangle-file (expand-file-name "emacs.org" user-emacs-directory))
+  (fundamental-mode))
+
 (put 'narrow-to-region 'disabled nil)
 
 ;; (defun goto-config ()
