@@ -1,4 +1,5 @@
 #+TITLE: Rbon's Emacs Config
+#+PROPERTY: header-args :mkdirp yes
 
 Hello! You have somehow found my emacs configuration. This file is written in [[https://en.wikipedia.org/wiki/Literate_programming][literate programming style]] using [[https://orgmode.org/][org-mode]]. I'll try not to be more verbose than is necessary.
 * Table of Contents                                                     :toc:
@@ -1412,6 +1413,8 @@ The default is 800 kilobytes.  Measured in bytes.
 
 ** Center the frame on startup
 This is called last to ensure frame is properly centered. If I could figure out a way to keep this out of ~init.el~ it would not be here, but this needs to be called after everything else otherwise it doesn't work.
+
+UPDATE FROM THE FUTURE: This doesn't even work on my current platform anymore, but it's not hurting anything, so I'll leave it here... for now.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (defun rbon-center-frame ()
     "Move the current frame to the center of the display.
