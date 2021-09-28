@@ -45,13 +45,10 @@ successful (or unnecessary) and nil if not."
 (defun bootstrap ()
   "Sync and load user configs."
   (interactive)
-  (load-user-file "packages.el")
+  (load-user-file "config/packages.el")
   ;; (sync-all-packages)
-  (load-user-file "functions.el")
-  (load-user-file "appearance.el")
-  (load-user-file "misc.el")
-  (load-user-file "keybinds.el"))
-
+  (load-user-file "config/functions.el")
+  (load-user-file "config/keybinds.el"))
 (bootstrap)
 (put 'narrow-to-region 'disabled nil)
 

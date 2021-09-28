@@ -220,7 +220,7 @@ the
 * Global Keybinds
 ** skeleton
 Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC"   ("the final frontier"))
     '("SPC f" ("files"))
@@ -241,14 +241,14 @@ Giving names to the groups of my global leader keybinds. I don't like how this h
 ** Miscellaneous
 Escape key stuff
 Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
   (rbon-define-key 'global '(normal visual motion emacs)
     '("<escape>" rbon-escape))
 #+end_src
 
 Cursor shortcuts
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global 'normal
     '("J" rbon-add-cursor-move-down)
     '("K" rbon-add-cursor-move-up)
@@ -256,7 +256,7 @@ Cursor shortcuts
     '("M" evil-mc-make-all-cursors))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global 'visual
     '("I" evil-mc-make-cursor-in-visual-selection-beg)
     '("A" evil-mc-make-cursor-in-visual-selection-end))
@@ -272,13 +272,13 @@ Cursor shortcuts
 #+end_src
 
 ** Applications
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC a d" dired))
 #+end_src
 
 ** Files
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC f f" ("find a file" . helm-find-files))
     '("SPC f s" ("save this file" . save-buffer))
@@ -288,7 +288,7 @@ Cursor shortcuts
 #+end_src
 
 ** Frame
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC F c" ("center this frame" . rbon-center-frame))
     '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
@@ -296,7 +296,7 @@ Cursor shortcuts
 #+end_src
 
 ** Buffers
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC b s"   ("save this buffer" . save-buffer))
     '("SPC b c"   ("close this buffer" . kill-this-buffer))
@@ -307,7 +307,7 @@ Cursor shortcuts
 #+end_src
 
 ** Eval
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC e e" ("eval expression" . eval-expression))
     '("SPC e b" ("eval this buffer" . eval-buffer))
@@ -315,14 +315,14 @@ Cursor shortcuts
 #+end_src
 
 ** Narrow
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC n s" ("narrow to selection" . narrow-to-region))
     '("SPC n w" ("widen" . widen)))
 #+end_src
 
 ** Selection
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC s a" ("select everything" . mark-whole-buffer))
     '("SPC s e" ("eval selection" . eval-region))
@@ -330,7 +330,7 @@ Cursor shortcuts
 #+end_src
 
 ** Cursors
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
     '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
@@ -340,7 +340,7 @@ Cursor shortcuts
 #+end_src
 
 ** Help
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
 
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC h h" ("describe something" . helm-apropos))
@@ -354,7 +354,7 @@ Cursor shortcuts
 #+end_src
 
 ** Window
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC w c" ("close this window" . delete-window))
     '("SPC w f" ("fullscreen this window" . delete-other-windows))
@@ -367,19 +367,19 @@ Cursor shortcuts
 #+end_src
   
 ** Quit
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
 #+end_src
 
 ** Jump
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC j d" ("jump to definition" . find-function)))
 #+end_src
 
 ** Configuration
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC c a" ("load all configs" . rbon-load-config))
     '("SPC c b" ("bootstrap" . bootstrap))
@@ -392,13 +392,13 @@ Cursor shortcuts
 #+end_src
 
 ** Help
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (evil-set-initial-state 'help-mode 'normal)
   (rbon-define-key 'help-mode 'normal '("<escape>" quit-window))
 #+end_src
 
 ** Recentf Dialog
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (evil-set-initial-state 'recentf-dialog-mode 'normal)
   (rbon-define-key 'recentf-dialog-mode 'normal
     '("l" widget-button-press)
@@ -407,7 +407,7 @@ Cursor shortcuts
 #+end_src
 
 ** With Editor
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'with-editor-mode 'normal
     '("SPC q f" with-editor-finish)
     '("SPC q c" with-editor-cancel))
@@ -418,7 +418,7 @@ Cursor shortcuts
 Be sure to read the docstrings of the functions themselves.
 ** =efs/display-startup-time=
 Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org#lets-find-out-how-long-its-taking][here]].
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun efs/display-startup-time ()
     (interactive)
     (message "Emacs loaded in %s with %d garbage collections."
@@ -431,7 +431,7 @@ Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-not
 #+end_src
 
 ** =rbon-switch-to-scratch=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-switch-to-scratch ()
     "This probably doesn't work right now."
     (interactive)
@@ -439,7 +439,7 @@ Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-not
 #+end_src
 
 ** =rbon-center-frame=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-center-frame ()
     "Move the current frame to the center of the display.
   Why is this not a built-in function?"
@@ -452,7 +452,7 @@ Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-not
 ** =rbon-define-key=
 This is probably the one portion of this config that I'm most proud of. In essence, it wraps =evil-define-key= and =add-hook= to create a one-size-fits-all function for defining both global binds, and mode-specific binds, making sure that the latter doesn't pollute the global map.
 Currently, there is a limitation that it assumes the associated hook of a mode is just the name of the mode followed by "-hook." This means that if a dev breaks that pattern, this function will silently fail. I might, in the future, add a way to manually add a hook name instead of a mode name, or perhaps I will just make it so that you always use the hook name instead. As it is, it works perfectly for me.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-define-key (mode state &rest bindings)
     "Define one or more key bindings.
 
@@ -509,7 +509,7 @@ Currently, there is a limitation that it assumes the associated hook of a mode i
 ** Buffer Switching
 I'm not sure these even work.
 *** =my-change-buffer=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun my-change-buffer (change-buffer)
     "Call CHANGE-BUFFER until current buffer is not in `my-skippable-buffers'."
     (let ((initial (current-buffer)))
@@ -524,7 +524,7 @@ I'm not sure these even work.
 #+end_src
 
 *** =my-next-buffer=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun my-next-buffer ()
     "Variant of `next-buffer' that skips `my-skippable-buffers'."
     (interactive)
@@ -532,7 +532,7 @@ I'm not sure these even work.
 #+end_src
 
 *** =my-previous-buffer= 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun my-previous-buffer ()
     "Variant of `previous-buffer' that skips `my-skippable-buffers'."
     (interactive)
@@ -540,14 +540,14 @@ I'm not sure these even work.
 #+end_src
 
 ** =nop=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun nop ()
     "Needed to unbind keys. Yes really."
     (interactive))
 #+end_src
 
 ** =rbon-insert-heading-respect-content=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-insert-heading-respect-content ()
     "Insert a heading and then change to insert state."
     (interactive)
@@ -556,7 +556,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =rbon-escape=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-escape ()
     "Get rid of extra cursors while also normally escaping."
     (interactive)
@@ -565,7 +565,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =rbon-add-cursor-move-down=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-add-cursor-move-down ()
     "Add a cursor, and then move down one line."
     (interactive)
@@ -576,7 +576,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =rbon-add-cursor-move-up=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-add-cursor-move-up ()
     "Add a cursor, and then move up one line."
     (interactive)
@@ -587,7 +587,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =rbon-evil-mc-make-cursor-in-visual-selection-beg=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-evil-mc-make-cursor-in-visual-selection-beg ()
     (interactive)
     (call-interactively 'evil-mc-make-cursor-in-visual-selection-beg)
@@ -598,7 +598,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =narrow-and-unfold=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun narrow-and-unfold ()
     (interactive)
     (evil-open-fold)
@@ -608,7 +608,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =widen-and-fold=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun widen-and-fold ()
     (interactive)
     (evil-close-folds)
@@ -616,21 +616,21 @@ I'm not sure these even work.
 #+end_src
 
 ** =make-bold=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun make-bold ()
     (interactive)
     (org-emphasize ?*))
 #+end_src
 
 ** =make-italic=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun make-italic ()
     (interactive)
     (org-emphasize ?/))
 #+end_src
 
 ** =run-code=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun run-code ()
     (interactive)
     (haskell-process-load-file)
@@ -639,7 +639,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =my-switch-to-buffer=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun my-switch-to-buffer ()
     "Switch buffers, excluding special buffers."
     (interactive)
@@ -649,7 +649,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =touch-file=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun touch-file (file)
     "Create a file called FILE.
     If FILE already exists, signal an error."
@@ -674,7 +674,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =evil-recentf=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun evil-recentf ()
     (interactive)
     (recentf-open-files)
@@ -682,21 +682,21 @@ I'm not sure these even work.
 #+end_src
 
 ** =display-startup-echo-area-message=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun display-startup-echo-area-message ()
     "This function replaces the startup minibuffer message with nil."
     (message nil))
 #+end_src
 
 ** =find-init=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun find-init ()
     (interactive)
     (find-file init-path))
 #+end_src
 
 ** =find-config-file=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun find-config-file ()
     (interactive)
     (cd user-emacs-directory)
@@ -704,14 +704,14 @@ I'm not sure these even work.
 #+end_src
 
 ** =load-init=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun load-init ()
     (interactive)
     (load-user-file "init.el"))
 #+end_src
 
 ** =split-h-and-change-focus=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun split-h-and-change-focus ()
     (interactive)
     (split-window-horizontally)
@@ -719,7 +719,7 @@ I'm not sure these even work.
 #+end_src
 
 ** =rbon-insert-heading-respect-content=
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-insert-heading-respect-content ()
     "Insert a heading and then change to insert state."
     (interactive)
@@ -729,7 +729,7 @@ I'm not sure these even work.
 
 ** =formatted-copy=
 Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Copy-formatted-org-mode-text-from-Emacs-to-other-applications/][here]].
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun formatted-copy ()
     "Export region to HTML, and copy it to the clipboard."
     (interactive)
@@ -744,7 +744,7 @@ Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Cop
         (kill-buffer buf))))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC s c" formatted-copy))
 #+end_src
@@ -776,7 +776,7 @@ This section is pretty messy. I'm slowly trying to organize it.
   (setq backup-directory-alist '(("." . "~/.emacs_saves")))
   (ido-mode 1) ; better find-file
   (exec-path-from-shell-initialize) ; fix PATH on macos
-  (set-custom-file-path (expand-file-name "custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
+  (set-custom-file-path (expand-file-name "config/custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
   (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
   (tool-bar-mode -1) ; disable toolbar
   (menu-bar-mode -1) ; disable menubar
@@ -929,13 +929,13 @@ I don't know what this does.
     (require 'org-tempo)
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
     (add-to-list 'org-structure-template-alist
-                 '("ke" . "src emacs-lisp :tangle ~/.emacs.d/keybinds.el"))
+                 '("ke" . "src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el"))
     (add-to-list 'org-structure-template-alist
-                 '("fu" . "src emacs-lisp :tangle ~/.emacs.d/functions.el"))
+                 '("fu" . "src emacs-lisp :tangle ~/.emacs.d/config/functions.el"))
     (add-to-list 'org-structure-template-alist
                  '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
     (add-to-list 'org-structure-template-alist
-                 '("pa" . "src emacs-lisp :tangle ~/.emacs.d/packages.el"))
+                 '("pa" . "src emacs-lisp :tangle ~/.emacs.d/config/packages.el"))
     (add-to-list 'org-structure-template-alist
                  '("in" . "src emacs-lisp :tangle ~/.emacs.d/init.el"))
     (add-to-list 'org-structure-template-alist
@@ -1046,14 +1046,14 @@ Count the words in the current region.
 #+end_src
 
 * Indent Buffer
-#+begin_src emacs-lisp :tangle ~/.emacs.d/functions.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/functions.el
   (defun rbon-indent-buffer ()
     (interactive)
     (call-interactively 'mark-whole-buffer)
     (call-interactively 'indent-region))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'emacs-lisp-mode 'normal
     '("SPC b i" ("indent buffer" rbon-indent-buffer)))
 #+end_src
@@ -1228,33 +1228,33 @@ It probably has something to do with the way packages are ordered, but this need
 ** Packages
 *** [[https://github.com/emacs-evil/evil][evil]]
 Emacs is a pretty good operating system, but it's just missing a good text editor.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package evil :demand
     :config (evil-mode 1))
 #+end_src
 
 *** [[https://github.com/emacsorphanage/evil-textobj-line][evil-textobj-line]]
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package evil-textobj-line :demand :after evil)
 #+end_src
 
 *** [[https://github.com/gabesoft/evil-mc][evil-mc]]
 Multiple cursors.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package evil-mc :demand :after evil
     :config (global-evil-mc-mode 1))
 #+end_src
 
 *** [[https://github.com/emacs-evil/evil-surround][evil-surround]]
 Surround text with stuff.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package evil-surround :demand :after evil
     :config (global-evil-surround-mode 1))
 #+end_src
 
 *** [[https://elpa.gnu.org/packages/undo-tree.html][undo-tree]]
 I don't like this package, but I'm too lazy to change it.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package undo-tree :after evil
     :config
     (global-undo-tree-mode 1)
@@ -1263,7 +1263,7 @@ I don't like this package, but I'm too lazy to change it.
 
 *** [[https://github.com/flycheck/flycheck][flycheck]]
 Spellchecking.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package flycheck)
 #+end_src
 
@@ -1276,7 +1276,7 @@ Set this to =t= to enable keybinds with custom names, using this syntax: ='("foo
 #+end_src
 
 Enable the package itself.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
   (use-package which-key :demand :config (which-key-mode))
 #+end_src
 
@@ -1324,7 +1324,7 @@ I won't pretend to understand what everything here does.
 #+end_src
 
 ** misc
-#+begin_src emacs-lisp :tangle ~/.emacs.d/packages.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/packages.el
 
 
 
@@ -1392,13 +1392,10 @@ The default is 800 kilobytes.  Measured in bytes.
   (defun bootstrap ()
     "Sync and load user configs."
     (interactive)
-    (load-user-file "packages.el")
+    (load-user-file "config/packages.el")
     ;; (sync-all-packages)
-    (load-user-file "functions.el")
-    (load-user-file "appearance.el")
-    (load-user-file "misc.el")
-    (load-user-file "keybinds.el"))
-
+    (load-user-file "config/functions.el")
+    (load-user-file "config/keybinds.el"))
   (bootstrap)
   (put 'narrow-to-region 'disabled nil)
 
@@ -1444,11 +1441,11 @@ Load every elisp file in =~/.emacs.d/config=.
 * Appearance
 ** General
 Best theme fight me.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
-  (load-theme 'solarized-light t) ; 
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
+  (load-theme 'solarized-light t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/appearance.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
   (set-face-attribute 'default nil
                       :family "Hasklig"
                       :height 150
@@ -1460,14 +1457,14 @@ Best theme fight me.
 In terms of modeline, we have no modeline. No but in all seriousness. I use the package =mini-modeline= to put the modeline in the minibuffer.
 
 *** Packages
-*** [[https://github.com/kiennq/emacs-mini-modeline][mini-modeline]]
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
+**** [[https://github.com/kiennq/emacs-mini-modeline][mini-modeline]]
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
   (use-package mini-modeline :demand)
 #+end_src
 
 *** Options
 This is super messy and I don't really know everything that's going on. I just kinda poked at this until things looked right. Future me should definitely clean this up.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/mini-modeline.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
   (with-eval-after-load 'mini-modeline
     (setq-default mode-line-format nil) 
     (setq mode-line-format nil) 
@@ -1675,7 +1672,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+end_src
 
 * youtube-dl
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   ;;  (rbon-define-key 'dired-mode 'normal
   ;;    '("h" dired-up-directory)
   ;;    '("j" dired-next-line)
@@ -1732,7 +1729,7 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+end_src
    
 * Japanese Input
-#+begin_src emacs-lisp :tangle ~/.emacs.d/keybinds.el
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybinds.el
   (rbon-define-key 'global '(normal visual emacs)
     '("SPC i"  ("input method"))
     '("SPC i t" ("toggle input method" . toggle-input-method)))
