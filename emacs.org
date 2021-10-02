@@ -1433,11 +1433,35 @@ Dial the GC threshold back down so that garbage collection happens more frequent
   (setq gc-cons-threshold (* 2 1000 1000))
 #+end_src
 
-** config files   
-Load every elisp file in =~/.emacs.d/config=. As far as I can tell, this loads in alphabetical order, with numbers being loaded first. I've exploited this behavior to force certain .el files to load first, and in sequence, by prepending "1-" or a similar prefix.
+** restart emacs
+Shamelessly stolen from [[https://emacs.stackexchange.com/questions/5428/restart-emacs-from-within-emacs][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  ;; (mapc 'load (file-expand-wildcards "~/.emacs.d/config/*.el"))
-  (mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el"))
+  (defun launch-separate-emacs-in-terminal ()
+    (suspend-emacs "fg ; emacs -nw"))
+
+  (defun launch-separate-emacs-under-x ()
+    (call-process "sh" nil nil nil "-c" "emacs &"))
+
+  (defun restart-emacs ()
+    (interactive)
+    ;; We need the new emacs to be spawned after all kill-emacs-hooks
+    ;; have been processed and there is nothing interesting left
+    (let ((kill-emacs-hook (append kill-emacs-hook (list (if (display-graphic-p)
+                                                             #'launch-separate-emacs-under-x
+                                                           #'launch-separate-emacs-in-terminal)))))
+      (save-buffers-kill-emacs)))
+#+end_src
+
+** config files
+Load every elisp file in =~/.emacs.d/config=. As far as I can tell, this loads in alphabetical order, with numbers being loaded first. I've exploited this behavior to force certain .el files to load first, and in sequence, by prepending "1-" or a similar prefix.
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (defun rbon-load-all-configs ()
+    (mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el")))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (rbon-load-all-configs)
 #+end_src
 
 * Appearance
