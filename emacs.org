@@ -933,7 +933,7 @@ I don't know what this does.
     (add-to-list 'org-structure-template-alist
                  '("fu" . "src emacs-lisp :tangle ~/.emacs.d/config/2-functions.el"))
     (add-to-list 'org-structure-template-alist
-                 '("mi" . "src emacs-lisp :tangle ~/.emacs.d/misc.el"))
+                 '("mi" . "src emacs-lisp :tangle ~/.emacs.d/config/4-misc.el"))
     (add-to-list 'org-structure-template-alist
                  '("pa" . "src emacs-lisp :tangle ~/.emacs.d/config/1-packages.el"))
     (add-to-list 'org-structure-template-alist
@@ -1359,19 +1359,15 @@ I won't pretend to understand what everything here does.
 #+end_src
 
 * Init
-** Misc
-The default is 800 kilobytes.  Measured in bytes.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (setq gc-cons-threshold (* 100 1000 1000))
-#+end_src
-
+** Functions
+*** =my/load-softly=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (defun my/load-softly (filename)
     "As `require', but instead of an error just print a message.
-  
+
   If there is an error, its message will be included in the message
   printed.
-  
+
   Like `require', the return value will be FEATURE if the load was
   successful (or unnecessary) and nil if not."
     (condition-case err
@@ -1380,7 +1376,9 @@ The default is 800 kilobytes.  Measured in bytes.
                       (if filename (format "%s (%s)" "TEST" filename) "TEST")
                       (error-message-string err))
              nil)))
-  
+#+end_src
+
+  #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (defun load-user-file (filename)
     "Load a file in current user's configuration directory"
     (interactive "f")
@@ -1388,7 +1386,16 @@ The default is 800 kilobytes.  Measured in bytes.
              (expand-file-name filename user-emacs-directory))
       (write-region "" nil filename))
     (load-file (expand-file-name filename user-emacs-directory)))  
-  
+  #+end_src
+
+** Misc
+The default is 800 kilobytes.  Measured in bytes.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (setq gc-cons-threshold (* 100 1000 1000))
+#+end_src
+
+*** =bootstrap=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (defun bootstrap ()
     "Generate and load all config files.
   
@@ -1399,15 +1406,6 @@ The default is 800 kilobytes.  Measured in bytes.
     (org-babel-tangle-file (expand-file-name "emacs.org" user-emacs-directory))
     (fundamental-mode))
   
-  (put 'narrow-to-region 'disabled nil)
-  
-  ;; (defun goto-config ()
-  ;; "Open emacs.org."
-  ;; (interactive)
-  ;; (find-file "~/.emacs.d/emacs.org")
-  ;; (widen)
-  ;; (evil-goto-first-line)
-  ;; (evil-close-folds))
 #+end_src
 
 ** Center the frame on startup
@@ -1454,13 +1452,23 @@ Shamelessly stolen from [[https://emacs.stackexchange.com/questions/5428/restart
 
 ** config files
 Load every elisp file in =~/.emacs.d/config=. As far as I can tell, this loads in alphabetical order, with numbers being loaded first. I've exploited this behavior to force certain .el files to load first, and in sequence, by prepending "1-" or a similar prefix.
-
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (defun rbon-load-all-configs ()
     (mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el")))
 #+end_src
 
+** putting it all together
+This stuff has to go last in the file, which kinda sucks because I hate not being able to move my code around.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (put 'narrow-to-region 'disabled nil)
+  
+  ;; (defun goto-config ()
+  ;; "Open emacs.org."
+  ;; (interactive)
+  ;; (find-file "~/.emacs.d/emacs.org")
+  ;; (widen)
+  ;; (evil-goto-first-line)
+  ;; (evil-close-folds))
   (rbon-load-all-configs)
 #+end_src
 

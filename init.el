@@ -1,5 +1,3 @@
-(setq gc-cons-threshold (* 100 1000 1000))
-
 (defun my/load-softly (filename)
   "As `require', but instead of an error just print a message.
 
@@ -21,7 +19,9 @@ successful (or unnecessary) and nil if not."
   (unless (file-exists-p
            (expand-file-name filename user-emacs-directory))
     (write-region "" nil filename))
-  (load-file (expand-file-name filename user-emacs-directory)))  
+  (load-file (expand-file-name filename user-emacs-directory)))
+
+(setq gc-cons-threshold (* 100 1000 1000))
 
 (defun bootstrap ()
   "Generate and load all config files.
@@ -32,16 +32,6 @@ connection unless you already have local copies of every package."
   (org-mode)
   (org-babel-tangle-file (expand-file-name "emacs.org" user-emacs-directory))
   (fundamental-mode))
-
-(put 'narrow-to-region 'disabled nil)
-
-;; (defun goto-config ()
-;; "Open emacs.org."
-;; (interactive)
-;; (find-file "~/.emacs.d/emacs.org")
-;; (widen)
-;; (evil-goto-first-line)
-;; (evil-close-folds))
 
 (defun rbon-center-frame ()
   "Move the current frame to the center of the display.
@@ -74,4 +64,13 @@ Why is this not a built-in function?"
 (defun rbon-load-all-configs ()
   (mapc 'my/load-softly (file-expand-wildcards "~/.emacs.d/config/*.el")))
 
+(put 'narrow-to-region 'disabled nil)
+
+;; (defun goto-config ()
+;; "Open emacs.org."
+;; (interactive)
+;; (find-file "~/.emacs.d/emacs.org")
+;; (widen)
+;; (evil-goto-first-line)
+;; (evil-close-folds))
 (rbon-load-all-configs)
