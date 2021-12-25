@@ -305,21 +305,26 @@ Cursor shortcuts
   (defalias 'frame-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "c") '("center this frame" . rbon-center-frame))
-      (define-key map (kbd "b") '("toggle maximized" . toggle-frame-maximized))
-      (define-key map (kbd "c") '("toggle fullscreen" . toggle-frame-fullscreen))
+      (define-key map (kbd "m") '("toggle maximized" . toggle-frame-maximized))
+      (define-key map (kbd "f") '("toggle fullscreen" . toggle-frame-fullscreen))
       map)
     "Frame-related bindings.")
 #+end_src
 
 ** Buffers
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC b s"   ("save this buffer" . save-buffer))
-    '("SPC b c"   ("close this buffer" . kill-this-buffer))
-    '("SPC b k"   ("kill this buffer" . kill-this-buffer))
-    '("SPC b b"   ("open the buffer list" . helm-buffers-list))
-    '("SPC b TAB" ("open last buffer" . my-switch-to-buffer))
-    '("SPC b e"   ("eval this buffer" . eval-buffer)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC b") '("buffer" . buffer-map))
+  (defalias 'buffer-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "s") '("save this buffer" . save-buffer))
+      (define-key map (kbd "c") '("close this buffer" . kill-this-buffer))
+      (define-key map (kbd "k") '("kill this buffer" . kill-this-buffer))
+      (define-key map (kbd "b") '("open the buffer list" . helm-buffers-list))
+      (define-key map (kbd "TAB") '("open last buffer" . my-switch-to-buffer))
+      (define-key map (kbd "e") '("eval this buffer" . eval-buffer))
+      map)
+    "Buffer-related bindings.")
 #+end_src
 
 ** Eval
