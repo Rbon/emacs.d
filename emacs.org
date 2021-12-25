@@ -221,20 +221,20 @@ the
 ** skeleton
 Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC"   ("the final frontier"))
-    '("SPC f" ("files"))
-    '("SPC F" ("frame"))
-    '("SPC b" ("buffers"))
-    '("SPC e" ("eval"))
-    '("SPC n" ("narrow"))
-    '("SPC s" ("selection"))
-    '("SPC C" ("cursors"))
-    '("SPC h" ("help"))
-    '("SPC w" ("window"))
-    '("SPC j" ("jump"))
-    '("SPC q" ("quit"))
-    '("SPC c" ("configuration")))
+  ;(rbon-define-key 'global '(normal visual emacs)
+  ;  '("SPC"   ("the final frontier"))
+  ;  '("SPC f" ("files"))
+  ;  '("SPC F" ("frame"))
+  ;  '("SPC b" ("buffers"))
+  ;  '("SPC e" ("eval"))
+  ;  '("SPC n" ("narrow"))
+  ;  '("SPC s" ("selection"))
+  ;  '("SPC C" ("cursors"))
+  ;  '("SPC h" ("help"))
+  ;  '("SPC w" ("window"))
+  ;  '("SPC j" ("jump"))
+  ;  '("SPC q" ("quit"))
+  ;  '("SPC c" ("configuration")))
 #+end_src
 
 ** Miscellaneous
@@ -300,10 +300,15 @@ Cursor shortcuts
 
 ** Frame
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC F c" ("center this frame" . rbon-center-frame))
-    '("SPC F m" ("toggle maximized" . toggle-frame-maximized))
-    '("SPC F f" ("toggle fullscreen" . toggle-frame-fullscreen)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC F") '("frame" . frame-map))
+  (defalias 'frame-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "c") '("center this frame" . rbon-center-frame))
+      (define-key map (kbd "b") '("toggle maximized" . toggle-frame-maximized))
+      (define-key map (kbd "c") '("toggle fullscreen" . toggle-frame-fullscreen))
+      map)
+    "Frame-related bindings.")
 #+end_src
 
 ** Buffers
