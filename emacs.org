@@ -234,8 +234,7 @@ Giving names to the groups of my global leader keybinds. I don't like how this h
     '("SPC w" ("window"))
     '("SPC j" ("jump"))
     '("SPC q" ("quit"))
-    '("SPC c" ("configuration"))
-    '("SPC a" ("applications")))
+    '("SPC c" ("configuration")))
 #+end_src
 
 ** Miscellaneous
@@ -273,8 +272,26 @@ Cursor shortcuts
 
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC a d" dired))
+
+  ; (evil-define-key '(normal visual emacs) 'global (kbd "SPC a") "applicaitions")
+  ; (define-key evil-normal-state-map "SPC a" 'evil-previous-visual-line)
+
+  ; (rbon-define-key 'global '(normal visual emacs)
+  ;   '("SPC a m" magit))
+
+  ; (rbon-define-key 'global '(normal visual emacs)
+
+  ;   '("SPC a e" elfeed))
+  ; '("<escape>" rbon-escape))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC a") '("applications" . applications-map))
+  (defalias 'applications-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "d") 'dired)
+      (define-key map (kbd "m") 'magit)
+      (define-key map (kbd "e") 'elfeed)
+      map)
+    "Application-related bindings.")
 #+end_src
 
 ** Files
@@ -1553,10 +1570,6 @@ This is super messy and I don't really know everything that's going on. I just k
 #+end_src
 
 ** Keybinds
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC a m" magit))
-#+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/magit.el
   (rbon-define-key 'magit-mode 'emacs
@@ -1794,10 +1807,6 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 #+end_src
 
 ** Global binds
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/elfeed.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC a e" elfeed))
-#+end_src
 
 ** Local binds
 Binds for the main feed list buffer.
