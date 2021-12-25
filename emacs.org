@@ -399,40 +399,61 @@ Cursor shortcuts
 
 ** Window
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC w c" ("close this window" . delete-window))
-    '("SPC w f" ("fullscreen this window" . delete-other-windows))
-    '("SPC w H" ("split this window horizontally" . split-h-and-change-focus))
-    '("SPC w V" ("split this window vertically" . split-window-vertically))
-    '("SPC w h" ("move window focus left" . windmove-left))
-    '("SPC w l" ("move window focus right" . windmove-right))
-    '("SPC w k" ("move window focus up" . windmove-up))
-    '("SPC w j" ("move window focus down" . windmove-down)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC w") '("window" . user-window-map))
+  (defalias 'user-window-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "c") '("close this window" . delete-window))
+      (define-key map (kbd "f") '("fullscreen this window" . delete-other-windows))
+      (define-key map (kbd "H") '("split this window horizontally" . split-h-and-change-focus))
+      (define-key map (kbd "V") '("split this window vertically" . split-window-vertically))
+      (define-key map (kbd "h") '("move window focus left" . windmove-left))
+      (define-key map (kbd "l") '("move window focus right" . windmove-right))
+      (define-key map (kbd "k") '("move window focus up" . windmove-up))
+      (define-key map (kbd "j") '("move window focus down" . windmove-down))
+      map)
+    "Window-related bindings.")
 #+end_src
   
 ** Quit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC q q" ("quit emacs" . save-buffers-kill-terminal)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC q") '("quit" . user-quit-map))
+  (defalias 'user-quit-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "q") '("quit emacs" . save-buffers-kill-terminal))
+      map)
+    "Quit-related bindings.")
 #+end_src
 
 ** Jump
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC j d" ("jump to definition" . find-function)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC j") '("jump" . user-jump-map))
+  (defalias 'user-jump-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "d") '("jump to definition" . find-function))
+      map)
+    "Jump-related bindings.")
 #+end_src
 
 ** Configuration
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC c a" ("load all configs" . rbon-load-config))
-    '("SPC c b" ("bootstrap" . bootstrap))
-    '("SPC c c" ("go to config" . rbon-goto-config))
-    '("SPC c k" ("go to keybinds" . rbon-goto-keybinds))
-    '("SPC c m" ("go to misc config" . rbon-goto-misc))
-    '("SPC c f" ("go to functions" . rbon-goto-functions))
-    '("SPC c p" ("to go packages" . rbon-goto-packages))
-    '("SPC c i" ("to go init" . rbon-goto-init)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC c") '("config" . user-config-map))
+  (defalias 'user-config-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "a") '("load all configs" . rbon-load-config))
+      (define-key map (kbd "b") '("bootstrap" . bootstrap))
+      (define-key map (kbd "c") '("go to config" . rbon-goto-config))
+      (define-key map (kbd "k") '("go to keybinds" . rbon-goto-keybinds))
+      (define-key map (kbd "m") '("go to misc config" . rbon-goto-misc))
+      (define-key map (kbd "f") '("go to functions" . rbon-goto-functions))
+      (define-key map (kbd "p") '("to go packages" . rbon-goto-packages))
+      (define-key map (kbd "i") '("to go init" . rbon-goto-init))
+      map)
+    "Config-related bindings.")
+
 #+end_src
 
 ** Help
