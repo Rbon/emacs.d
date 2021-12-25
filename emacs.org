@@ -329,10 +329,15 @@ Cursor shortcuts
 
 ** Eval
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC e e" ("eval expression" . eval-expression))
-    '("SPC e b" ("eval this buffer" . eval-buffer))
-    '("SPC e s" ("eval selection" . eval-region)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC e") '("eval" . eval-map))
+  (defalias 'eval-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "e") '("eval expression" . eval-expression))
+      (define-key map (kbd "b") '("eval this buffer" . eval-buffer))
+      (define-key map (kbd "s") '("eval selection" . eval-region))
+      map)
+    "Eval-related bindings.")
 #+end_src
 
 ** Narrow
