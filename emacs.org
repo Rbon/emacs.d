@@ -354,10 +354,17 @@ Cursor shortcuts
 
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC s a" ("select everything" . mark-whole-buffer))
-    '("SPC s e" ("eval selection" . eval-region))
-    '("SPC s i" ("indent selection" . indent-region)))
+
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC s") '("selection" . selection-map))
+  (defalias 'selection-map
+    (let ((map (make-sparse-keymap)))
+    '("SPC s a" )
+      (define-key map (kbd "s") '("select all" . mark-whole-buffer))
+      (define-key map (kbd "e") '("eval selection" . eval-region))
+      (define-key map (kbd "i") '("indent selection" . indent-region))
+      map)
+    "Selection-related bindings.")
 #+end_src
 
 ** Cursors
