@@ -273,8 +273,8 @@ Cursor shortcuts
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC a") '("application" . application-map))
-  (defalias 'application-map
+    (kbd "SPC a") '("applications" . user-applications-map))
+  (defalias 'user-applications-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "d") 'dired)
       (define-key map (kbd "m") 'magit)
@@ -286,8 +286,8 @@ Cursor shortcuts
 ** Files
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC f") '("file" . file-map))
-  (defalias 'file-map
+    (kbd "SPC f") '("file" . user-file-map))
+  (defalias 'user-file-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "f") '("find a file" . helm-find-files))
       (define-key map (kbd "s") '("save this file" . save-buffer))
@@ -301,8 +301,8 @@ Cursor shortcuts
 ** Frame
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC F") '("frame" . frame-map))
-  (defalias 'frame-map
+    (kbd "SPC F") '("frame" . user-frame-map))
+  (defalias 'user-frame-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "c") '("center this frame" . rbon-center-frame))
       (define-key map (kbd "m") '("toggle maximized" . toggle-frame-maximized))
@@ -314,8 +314,8 @@ Cursor shortcuts
 ** Buffers
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC b") '("buffer" . buffer-map))
-  (defalias 'buffer-map
+    (kbd "SPC b") '("buffer" . user-buffer-map))
+  (defalias 'user-buffer-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "s") '("save this buffer" . save-buffer))
       (define-key map (kbd "c") '("close this buffer" . kill-this-buffer))
@@ -330,8 +330,8 @@ Cursor shortcuts
 ** Eval
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC e") '("eval" . eval-map))
-  (defalias 'eval-map
+    (kbd "SPC e") '("eval" . user-eval-map))
+  (defalias 'user-eval-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "e") '("eval expression" . eval-expression))
       (define-key map (kbd "b") '("eval this buffer" . eval-buffer))
@@ -343,8 +343,8 @@ Cursor shortcuts
 ** Narrow
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC n") '("narrow" . narrow-map))
-  (defalias 'narrow-map
+    (kbd "SPC n") '("narrow" . user-narrow-map))
+  (defalias 'user-narrow-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "s") '("narrow to selection" . narrow-to-region))
       (define-key map (kbd "w") '("widen" . widen))
@@ -355,8 +355,8 @@ Cursor shortcuts
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC s") '("selection" . selection-map))
-  (defalias 'selection-map
+    (kbd "SPC s") '("selection" . user-selection-map))
+  (defalias 'user-selection-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "a") '("select all" . mark-whole-buffer))
       (define-key map (kbd "e") '("eval selection" . eval-region))
@@ -368,8 +368,8 @@ Cursor shortcuts
 ** Cursors
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC C") '("cursor" . cursor-map))
-  (defalias 'cursor-map
+    (kbd "SPC C") '("cursor" . user-cursor-map))
+  (defalias 'user-cursor-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "a") '("add all matches" . evil-mc-make-all-cursors))
       (define-key map (kbd "<escape>") '("remove all extra cursors" . evil-mc-undo-all-cursors))
