@@ -382,16 +382,19 @@ Cursor shortcuts
 
 ** Help
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC h h" ("describe something" . helm-apropos))
-    '("SPC h l" ("list definitions" . helm-imenu))
-    '("SPC h k" ("describe a keybind" . describe-key))
-    '("SPC h v" ("describe a keybind" . describe-variable))
-    '("SPC h K" ("search keybinds" . helm-descbinds))
-    '("SPC h f" ("describe face" . describe-face))
-    '("SPC h F" ("describe face" . list-faces-display)))
-
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC h") '("help" . user-help-map))
+  (defalias 'user-help-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "h") '("describe something" . helm-apropos))
+      (define-key map (kbd "l") '("list definitions" . helm-imenu))
+      (define-key map (kbd "k") '("describe a keybind" . describe-key))
+      (define-key map (kbd "v") '("describe a keybind" . describe-variable))
+      (define-key map (kbd "K") '("search keybinds" . helm-descbinds))
+      (define-key map (kbd "f") '("describe face" . describe-face))
+      (define-key map (kbd "F") '("describe face" . list-faces-display))
+      map)
+    "Help-related bindings.")
 #+end_src
 
 ** Window
