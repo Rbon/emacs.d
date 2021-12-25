@@ -272,20 +272,9 @@ Cursor shortcuts
 
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-
-  ; (evil-define-key '(normal visual emacs) 'global (kbd "SPC a") "applicaitions")
-  ; (define-key evil-normal-state-map "SPC a" 'evil-previous-visual-line)
-
-  ; (rbon-define-key 'global '(normal visual emacs)
-  ;   '("SPC a m" magit))
-
-  ; (rbon-define-key 'global '(normal visual emacs)
-
-  ;   '("SPC a e" elfeed))
-  ; '("<escape>" rbon-escape))
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC a") '("applications" . applications-map))
-  (defalias 'applications-map
+    (kbd "SPC a") '("application" . application-map))
+  (defalias 'application-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "d") 'dired)
       (define-key map (kbd "m") 'magit)
@@ -296,12 +285,17 @@ Cursor shortcuts
 
 ** Files
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC f f" ("find a file" . helm-find-files))
-    '("SPC f s" ("save this file" . save-buffer))
-    '("SPC f r" ("recent files" . helm-recentf))
-    '("SPC f b" ("open file browser" . magit-dired-jump))
-    '("SPC f c" ("open a user config file" . find-config-file)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC f") '("file" . file-map))
+  (defalias 'file-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "f") '("find a file" . helm-find-files))
+      (define-key map (kbd "s") '("save this file" . save-buffer))
+      (define-key map (kbd "r") '("recent files" . helm-recentf))
+      (define-key map (kbd "b") '("open file browser" . magit-dired-jump))
+      (define-key map (kbd "c") '("open a user config file" . find-config-file))
+      map)
+    "File-related bindings.")
 #+end_src
 
 ** Frame
