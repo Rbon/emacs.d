@@ -354,13 +354,11 @@ Cursor shortcuts
 
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-
   (evil-define-key '(normal visual emacs) 'global
     (kbd "SPC s") '("selection" . selection-map))
   (defalias 'selection-map
     (let ((map (make-sparse-keymap)))
-    '("SPC s a" )
-      (define-key map (kbd "s") '("select all" . mark-whole-buffer))
+      (define-key map (kbd "a") '("select all" . mark-whole-buffer))
       (define-key map (kbd "e") '("eval selection" . eval-region))
       (define-key map (kbd "i") '("indent selection" . indent-region))
       map)
@@ -369,12 +367,17 @@ Cursor shortcuts
 
 ** Cursors
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC C a"        ("add all matches" . evil-mc-make-all-cursors))
-    '("SPC C <escape>" ("remove all extra cursors" . evil-mc-undo-all-cursors))
-    '("SPC C j"        ("add and go down a line" . rbon-add-cursor-next-line))
-    '("SPC C u"        ("undo last cursor" . evil-mc-undo-last-added-cursor))
-    '("SPC C n"        ("add next match" . evil-mc-make-and-goto-next-match)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC C") '("cursor" . cursor-map))
+  (defalias 'cursor-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "a") '("add all matches" . evil-mc-make-all-cursors))
+      (define-key map (kbd "<escape>") '("remove all extra cursors" . evil-mc-undo-all-cursors))
+      (define-key map (kbd "j") '("add and go down a line" . rbon-add-cursor-next-line))
+      (define-key map (kbd "u") '("undo last cursor" . evil-mc-undo-last-added-cursor))
+      (define-key map (kbd "n") '("add next match" . evil-mc-make-and-goto-next-match))
+      map)
+    "Cursor-related bindings.")
 #+end_src
 
 ** Help
