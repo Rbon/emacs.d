@@ -56,9 +56,8 @@ Why is this not a built-in function?"
   (interactive)
   ;; We need the new emacs to be spawned after all kill-emacs-hooks
   ;; have been processed and there is nothing interesting left
-  (let ((kill-emacs-hook (append kill-emacs-hook (list (if (display-graphic-p)
-                                                           #'launch-separate-emacs-under-x
-                                                         #'launch-separate-emacs-in-terminal)))))
+  (let (
+        (kill-emacs-hook (append kill-emacs-hook (list (if (display-graphic-p)#'launch-separate-emacs-under-x #'launch-separate-emacs-in-terminal)))))
     (save-buffers-kill-emacs)))
 
 (defun rbon-load-all-configs ()

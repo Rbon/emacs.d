@@ -750,7 +750,7 @@ Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Cop
 #+end_src
    
 * Misc
-** Other  
+** Other
 This section is pretty messy. I'm slowly trying to organize it.
 *** Misc
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/misc.el
@@ -782,7 +782,7 @@ This section is pretty messy. I'm slowly trying to organize it.
   (menu-bar-mode -1) ; disable menubar
   (scroll-bar-mode -1) ; disable scroll bar
   ;; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
-  (setq inhibit-splash-screen t) ; disable splash screen
+  ;; (setq inhibit-splash-screen t) ; disable splash screen
   ;; (which-key-setup-side-window-bottom)
   (setq which-key-idle-secondary-delay 0)
   (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
@@ -829,16 +829,16 @@ This section is pretty messy. I'm slowly trying to organize it.
   
   
   
-  (autothemer-deftheme
-   thing "a test theme"
-  
-   ((((class color) (min-colors #xFFFFFF)))
-  
-    (thing-background "gray90"))
-  
-   ((default (:background "gray90"))))
-  
-  (provide-theme 'thing)
+;;   (autothemer-deftheme
+;;    thing "a test theme"
+;; 
+;;    ((((class color) (min-colors #xFFFFFF)))
+;; 
+;;     (thing-background "gray90"))
+;; 
+;;    ((default (:background "gray90"))))
+;; 
+;;   (provide-theme 'thing)
   
   
   
@@ -1444,9 +1444,8 @@ Shamelessly stolen from [[https://emacs.stackexchange.com/questions/5428/restart
     (interactive)
     ;; We need the new emacs to be spawned after all kill-emacs-hooks
     ;; have been processed and there is nothing interesting left
-    (let ((kill-emacs-hook (append kill-emacs-hook (list (if (display-graphic-p)
-                                                             #'launch-separate-emacs-under-x
-                                                           #'launch-separate-emacs-in-terminal)))))
+    (let (
+          (kill-emacs-hook (append kill-emacs-hook (list (if (display-graphic-p)#'launch-separate-emacs-under-x #'launch-separate-emacs-in-terminal)))))
       (save-buffers-kill-emacs)))
 #+end_src
 
@@ -1482,7 +1481,7 @@ Best theme fight me.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
   (set-face-attribute 'default nil
                       :family "Hasklig"
-                      :height 150
+                      :height 120
                       :weight 'normal
                       :width 'normal)
 #+end_src
