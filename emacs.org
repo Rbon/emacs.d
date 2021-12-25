@@ -342,9 +342,14 @@ Cursor shortcuts
 
 ** Narrow
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC n s" ("narrow to selection" . narrow-to-region))
-    '("SPC n w" ("widen" . widen)))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC n") '("narrow" . narrow-map))
+  (defalias 'narrow-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "s") '("narrow to selection" . narrow-to-region))
+      (define-key map (kbd "w") '("widen" . widen))
+      map)
+    "Narrow-related bindings.")
 #+end_src
 
 ** Selection
