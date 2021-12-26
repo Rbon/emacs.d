@@ -218,25 +218,6 @@ the
 ** If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap
 
 * Global Keybinds
-** skeleton
-Giving names to the groups of my global leader keybinds. I don't like how this has to be loaded before all other leader binds, and I *especially* don't like how evaling this snippet on its own breaks all leader binds. In the future I would like this  snippet to be portable.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  ;(rbon-define-key 'global '(normal visual emacs)
-  ;  '("SPC"   ("the final frontier"))
-  ;  '("SPC f" ("files"))
-  ;  '("SPC F" ("frame"))
-  ;  '("SPC b" ("buffers"))
-  ;  '("SPC e" ("eval"))
-  ;  '("SPC n" ("narrow"))
-  ;  '("SPC s" ("selection"))
-  ;  '("SPC C" ("cursors"))
-  ;  '("SPC h" ("help"))
-  ;  '("SPC w" ("window"))
-  ;  '("SPC j" ("jump"))
-  ;  '("SPC q" ("quit"))
-  ;  '("SPC c" ("configuration")))
-#+end_src
-
 ** Miscellaneous
 Escape key stuff
 Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
@@ -1048,16 +1029,34 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
 
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
-    (rbon-define-key 'org-mode '(normal visual emacs)
-      '("SPC o"   ("org mode"))
-      '("SPC o q" org-edit-special)
-      '("SPC o a" ("open the agenda" . org-agenda))
-      ;; '("SPC o l" org-babel-execute-src-block)
-      '("SPC o a" ("open the agenda" . org-agenda))
-      '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
-      '("SPC s b" ("make bold" . make-bold))
-      '("SPC o s" ("scedule a task" . org-schedule))
-      '("SPC o d" ("set a deadline" . org-deadline)))
+  ;;(rbon-define-key 'org-mode '(normal visual emacs)
+  ;;  '("SPC o"   ("org mode"))
+  ;;  '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
+  ;;  '("SPC s b" ("make bold" . make-bold))
+  ;;  '("SPC o s" ("scedule a task" . org-schedule))
+  ;;  '("SPC o d" ("set a deadline" . org-deadline)))
+
+  ;; '("SPC o l" org-babel-execute-src-block)
+  (add-hook 'org-mode-hook 'my-thing)
+
+  (defun my-thing ()
+    (evil-define-key '(normal visual emacs) 'global
+      (kbd "SPC o") '("org mode" . user-org-mode-map))
+    (defalias 'user-org-mode-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "q") 'org-edit-special)
+        (define-key map (kbd "a") 'org-agenda)
+        map)
+      "Application-related bindings."))
+
+  ;;            (evil-define-key '(normal visual emacs) 'global
+  ;;              (kbd "SPC o") '("org mode" . user-org-mode-map)
+  ;;              (defalias 'user-org-mode-map
+  ;;                (let ((map (make-sparse-keymap)))
+  ;;                  (define-key map (kbd "q") 'org-edit-special))
+  ;;                (define-key map (kbd "a") '("open the agenda" . org-agenda)))
+  ;;              map)
+  ;;            "Narrow-related bindings."))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
@@ -1087,15 +1086,15 @@ Org-agenda stuff.
 
 Hydra for promoting and demoting subtrees.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
-  (defhydra org-move-hydra (:color red)
-    ("h" org-promote-subtree "promote subtree")
-    ("l" org-demote-subtree  "demote subtree"))
-
-  (rbon-define-key 'org-mode 'normal
-    '("SPC o h"
-      ("promote subtree" . org-move-hydra/org-promote-subtree))
-    '("SPC o l"
-      ("demote subtree" . org-move-hydra/org-demote-subtree)))
+;;  (defhydra org-move-hydra (:color red)
+;;    ("h" org-promote-subtree "promote subtree")
+;;    ("l" org-demote-subtree  "demote subtree"))
+;;
+;;  (rbon-define-key 'org-mode 'normal
+;;    '("SPC o h"
+;;      ("promote subtree" . org-move-hydra/org-promote-subtree))
+;;    '("SPC o l"
+;;      ("demote subtree" . org-move-hydra/org-demote-subtree)))
 #+end_src
 
 I don't know why but evil is overriding this for me.
