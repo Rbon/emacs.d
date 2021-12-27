@@ -255,13 +255,18 @@ Cursor shortcuts
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
     (kbd "SPC a") '("applications" . user-applications-map))
-  (defalias 'user-applications-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "d") 'dired)
-      (define-key map (kbd "m") 'magit)
-      (define-key map (kbd "e") 'elfeed)
-      map)
-    "Application-related bindings.")
+  ;; (defalias 'user-applications-map
+  ;;   (let ((map (make-sparse-keymap)))
+  ;;     (define-key map (kbd "d") 'dired)
+  ;;     (define-key map (kbd "m") 'magit)
+  ;;     (define-key map (kbd "e") 'elfeed)
+  ;;     map)
+  ;;   "Application-related bindings.")
+
+  (defalias 'user-applications-map (make-sparse-keymap))
+  (define-key 'user-applications-map (kbd "d") 'dired)
+  (define-key 'user-applications-map (kbd "m") 'magit)
+  (define-key 'user-applications-map (kbd "e") 'elfeed)
 #+end_src
 
 ** Files
@@ -325,12 +330,9 @@ Cursor shortcuts
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
     (kbd "SPC n") '("narrow" . user-narrow-map))
-  (defalias 'user-narrow-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "s") '("narrow to selection" . narrow-to-region))
-      (define-key map (kbd "w") '("widen" . widen))
-      map)
-    "Narrow-related bindings.")
+  (defalias 'user-narrow-map (make-sparse-keymap))
+  (define-key 'user-narrow-map (kbd "s") '("narrow to selection" . narrow-to-region))
+  (define-key 'user-narrow-map (kbd "w") '("widen" . widen))
 #+end_src
 
 ** Selection
@@ -1031,23 +1033,28 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
   ;;(rbon-define-key 'org-mode '(normal visual emacs)
   ;;  '("SPC o"   ("org mode"))
-  ;;  '("SPC n t" ("narrow to subtree" . org-narrow-to-subtree))
   ;;  '("SPC s b" ("make bold" . make-bold))
   ;;  '("SPC o s" ("scedule a task" . org-schedule))
   ;;  '("SPC o d" ("set a deadline" . org-deadline)))
 
   ;; '("SPC o l" org-babel-execute-src-block)
   (add-hook 'org-mode-hook 'my-thing)
-
   (defun my-thing ()
-    (evil-define-key '(normal visual emacs) 'global
-      (kbd "SPC o") '("org mode" . user-org-mode-map))
-    (defalias 'user-org-mode-map
-      (let ((map (make-sparse-keymap)))
-        (define-key map (kbd "q") 'org-edit-special)
-        (define-key map (kbd "a") 'org-agenda)
-        map)
-      "Application-related bindings."))
+    (defalias 'user-org-mode-map (make-sparse-keymap))
+    (evil-local-set-key 'normal
+      (kbd "SPC n") '("narrow" . user-org-mode-map))
+    (define-key 'user-org-mode-map (kbd "t") '("narrow to subtree" . org-narrow-to-subtree))
+    )
+
+
+  ;;   (evil-define-key '(normal visual emacs) 'global
+  ;;     (kbd "SPC o") '("org mode" . user-org-mode-map))
+  ;;   (defalias 'user-org-mode-map
+  ;;     (let ((map (make-sparse-keymap)))
+  ;;       (define-key map (kbd "q") 'org-edit-special)
+  ;;       (define-key map (kbd "a") 'org-agenda)
+  ;;       map)
+  ;;     "Application-related bindings."))
 
   ;;            (evil-define-key '(normal visual emacs) 'global
   ;;              (kbd "SPC o") '("org mode" . user-org-mode-map)
