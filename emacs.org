@@ -1749,11 +1749,13 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 ** Keybinds
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/eradio.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC r"  ("radio"))
-    '("SPC r p" ("play" . eradio-play))
-    '("SPC r s" ("stop" . eradio-stop))
-    '("SPC r t" ("toggle" . eradio-toggle)))
+  (defalias 'user-radio-map (make-sparse-keymap))
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC r") '("radio" . user-radio-map))
+
+  (define-key 'user-radio-map (kbd "p") '("play" . eradio-play))
+  (define-key 'user-radio-map (kbd "s") '("stop" . eradio-stop))
+  (define-key 'user-radio-map (kbd "t") '("toggle" . eradio-toggle))
 #+end_src
 
 * youtube-dl
@@ -2235,40 +2237,57 @@ Sorry, no screenshots as it's basically the standard ivy and mpv interface that 
 
 * Workspaces
 Boy this sure is verbose. I hope future me dries this up.
+
+I'm so sorry.
+ - Future Rbon
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/workspaces.el
   (use-package eyebrowse ; because tab-bar-mode doesn't work on mac
     :config
     (eyebrowse-mode t)
     :init
-    (rbon-define-key 'global '(normal visual emacs)
-      '("SPC `"     ("workspace"))
-      '("SPC TAB"   ("last used workspace" . eyebrowse-last-window-config))
-      '("SPC ` h"   ("previous workspace" . eyebrowse-prev-window-config))
-      '("SPC ` l"   ("next workspace" . eyebrowse-next-window-config))
-      '("SPC ` TAB" ("last used workspace" . eyebrowse-last-window-config))
-      '("SPC ` c"   ("close workspace" . eyebrowse-close-window-config))
-      '("SPC ` r"   ("rename workspace" . eyebrowse-rename-window-config))
-      '("SPC ` s"   ("switch to workspace..." . eyebrowse-switch-to-window-config))
-      '("SPC ` 0"   ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-      '("SPC 0"     ("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
-      '("SPC ` 1"   ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-      '("SPC 1"     ("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
-      '("SPC ` 2"   ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-      '("SPC 2"     ("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
-      '("SPC ` 3"   ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-      '("SPC 3"     ("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
-      '("SPC ` 4"   ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-      '("SPC 4"     ("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
-      '("SPC ` 5"   ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-      '("SPC 5"     ("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
-      '("SPC ` 6"   ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-      '("SPC 6"     ("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
-      '("SPC ` 7"   ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-      '("SPC 7"     ("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
-      '("SPC ` 8"   ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-      '("SPC 8"     ("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
-      '("SPC ` 9"   ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-      '("SPC 9"     ("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
-      '("SPC ` n"   ("new workspace" . eyebrowse-create-window-config))))
+
+    (defalias 'user-workspace-map (make-sparse-keymap))
+    (evil-define-key '(normal visual emacs) 'global
+      (kbd "SPC `") '("workspace" . user-workspace-map)
+      (kbd "SPC 0") '("switch to workspace 0" . eyebrowse-switch-to-window-config-0)
+      (kbd "SPC 1") '("switch to workspace 1" . eyebrowse-switch-to-window-config-1)
+      (kbd "SPC 2") '("switch to workspace 2" . eyebrowse-switch-to-window-config-2)
+      (kbd "SPC 3") '("switch to workspace 3" . eyebrowse-switch-to-window-config-3)
+      (kbd "SPC 4") '("switch to workspace 4" . eyebrowse-switch-to-window-config-4)
+      (kbd "SPC 5") '("switch to workspace 5" . eyebrowse-switch-to-window-config-5)
+      (kbd "SPC 6") '("switch to workspace 6" . eyebrowse-switch-to-window-config-6)
+      (kbd "SPC 7") '("switch to workspace 7" . eyebrowse-switch-to-window-config-7)
+      (kbd "SPC 8") '("switch to workspace 8" . eyebrowse-switch-to-window-config-8)
+      (kbd "SPC 9") '("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+
+    (define-key 'user-workspace-map (kbd "TAB") '("last used workspace" . eyebrowse-last-window-config))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "l") '("next workspace" . eyebrowse-next-window-config))
+    (define-key 'user-workspace-map (kbd "TAB") '("last used workspace" . eyebrowse-last-window-config))
+    (define-key 'user-workspace-map (kbd "c") '("close workspace" . eyebrowse-close-window-config))
+    (define-key 'user-workspace-map (kbd "r") '("rename workspace" . eyebrowse-rename-window-config))
+    (define-key 'user-workspace-map (kbd "s") '("switch to workspace..." . eyebrowse-switch-to-window-config))
+    (define-key 'user-workspace-map (kbd "0") '("switch to workspace 0" . eyebrowse-switch-to-window-config-0))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "1") '("switch to workspace 1" . eyebrowse-switch-to-window-config-1))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "2") '("switch to workspace 2" . eyebrowse-switch-to-window-config-2))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "3") '("switch to workspace 3" . eyebrowse-switch-to-window-config-3))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "4") '("switch to workspace 4" . eyebrowse-switch-to-window-config-4))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "5") '("switch to workspace 5" . eyebrowse-switch-to-window-config-5))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "6") '("switch to workspace 6" . eyebrowse-switch-to-window-config-6))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "7") '("switch to workspace 7" . eyebrowse-switch-to-window-config-7))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "8") '("switch to workspace 8" . eyebrowse-switch-to-window-config-8))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "9") '("switch to workspace 9" . eyebrowse-switch-to-window-config-9))
+    (define-key 'user-workspace-map (kbd "h") '("previous workspace" . eyebrowse-prev-window-config))
+    (define-key 'user-workspace-map (kbd "n") '("new workspace" . eyebrowse-create-window-config))
+  )
 #+end_src
 
