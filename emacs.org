@@ -255,14 +255,6 @@ Cursor shortcuts
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
     (kbd "SPC a") '("applications" . user-applications-map))
-  ;; (defalias 'user-applications-map
-  ;;   (let ((map (make-sparse-keymap)))
-  ;;     (define-key map (kbd "d") 'dired)
-  ;;     (define-key map (kbd "m") 'magit)
-  ;;     (define-key map (kbd "e") 'elfeed)
-  ;;     map)
-  ;;   "Application-related bindings.")
-
   (defalias 'user-applications-map (make-sparse-keymap))
   (define-key 'user-applications-map (kbd "d") 'dired)
   (define-key 'user-applications-map (kbd "m") 'magit)
@@ -457,6 +449,16 @@ Cursor shortcuts
     '("SPC q f" with-editor-finish)
     '("SPC q c" with-editor-cancel))
 
+#+end_src
+
+** Japanese Input
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
+  (evil-define-key '(normal visual emacs) 'global
+    (kbd "SPC i") '("input" . user-input-map))
+  (defalias 'user-input-map (make-sparse-keymap))
+
+  (define-key 'user-input-map (kbd "t")
+    '("toggle input method" . toggle-input-method))
 #+end_src
 
 * Functions
@@ -1820,12 +1822,6 @@ By default, the haskell interactive prompt doesn't play well with evil mode. The
 
 #+end_src
    
-* Japanese Input
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'global '(normal visual emacs)
-    '("SPC i"  ("input method"))
-    '("SPC i t" ("toggle input method" . toggle-input-method)))
-#+end_src
 
 * RSS Feed Reader
 ** Packages
