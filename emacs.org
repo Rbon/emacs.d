@@ -1110,8 +1110,13 @@ I don't know why but evil is overriding this for me.
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'emacs-lisp-mode 'normal
-    '("SPC b i" ("indent buffer" rbon-indent-buffer)))
+  (add-hook 'emacs-lisp-mode-hook 'something)
+  (defun something ()
+      (defalias 'user-emacs-lisp-mode-buffer-map (make-sparse-keymap))
+    (evil-local-set-key 'normal
+                        (kbd "SPC b") '("buffer" . user-emacs-lisp-mode-buffer-map))
+    (define-key 'user-emacs-lisp-mode-buffer-map
+      (kbd "i") '("indent buffer" . rbon-indent-buffer)))
 #+end_src
 
 * Completion
