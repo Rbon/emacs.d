@@ -1029,49 +1029,32 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
 ** Keybinds
 I have learned some important things regarding binds that I feel must be written down, lest I forget them in the morning. Using the method in the source block below, I can append new binds to existing keymaps, while keeping the new binds local only to a buffer. It doesn't matter what the name of the map is. When two maps share the same prefix binding, their contents are somehow "merged." When I make a new binding using this method, =which-key= seems to take that new binding as the name, which means that I have the freedom to change the mnemonic of prefixes on a buffer by buffer basis, should that ever become something I want to do.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
-  ;;(rbon-define-key 'org-mode '(normal visual emacs)
-  ;;  '("SPC o"   ("org mode"))
-  ;;  '("SPC s b" ("make bold" . make-bold))
-  ;;  '("SPC o s" ("scedule a task" . org-schedule))
-  ;;  '("SPC o d" ("set a deadline" . org-deadline)))
-
-  ;; '("SPC o l" org-babel-execute-src-block)
   (add-hook 'org-mode-hook 'my-thing)
   (defun my-thing ()
     (defalias 'user-org-mode-narrow-map (make-sparse-keymap))
     (evil-local-set-key 'normal
-      (kbd "SPC n") '("narrow" . user-org-mode-narrow-map))
+                        (kbd "SPC n") '("narrow" . user-org-mode-narrow-map))
     (define-key 'user-org-mode-narrow-map
       (kbd "t") '("narrow to subtree" . org-narrow-to-subtree))
 
     (defalias 'user-org-mode-selection-map (make-sparse-keymap))
     (evil-local-set-key 'normal
-      (kbd "SPC s") '("selection" . user-org-mode-selection-map))
+                        (kbd "SPC s") '("selection" . user-org-mode-selection-map))
     (define-key 'user-org-mode-selection-map
       (kbd "b") '("make bold" . make-bold))
-
-  ;;  '("SPC o s" ("scedule a task" . org-schedule))
-  ;;  '("SPC o d" ("set a deadline" . org-deadline)))
-    )
+    (define-key 'user-org-mode-selection-map
+      (kbd "w") '("count words in selection" . count-words-region))
 
 
-  ;;   (evil-define-key '(normal visual emacs) 'global
-  ;;     (kbd "SPC o") '("org mode" . user-org-mode-map))
-  ;;   (defalias 'user-org-mode-map
-  ;;     (let ((map (make-sparse-keymap)))
-  ;;       (define-key map (kbd "q") 'org-edit-special)
-  ;;       (define-key map (kbd "a") 'org-agenda)
-  ;;       map)
-  ;;     "Application-related bindings."))
-
-  ;;            (evil-define-key '(normal visual emacs) 'global
-  ;;              (kbd "SPC o") '("org mode" . user-org-mode-map)
-  ;;              (defalias 'user-org-mode-map
-  ;;                (let ((map (make-sparse-keymap)))
-  ;;                  (define-key map (kbd "q") 'org-edit-special))
-  ;;                (define-key map (kbd "a") '("open the agenda" . org-agenda)))
-  ;;              map)
-  ;;            "Narrow-related bindings."))
+    (defalias 'user-org-mode-org-map (make-sparse-keymap))
+    (evil-local-set-key 'normal
+                        (kbd "SPC o") '("org mode" . user-org-mode-org-map))
+    (define-key 'user-org-mode-org-map
+      (kbd "s") '("scedule a task" . org-schedule))
+    (define-key 'user-org-mode-org-map
+      (kbd "d") '("set a deadline" . org-deadline))
+    (define-key 'user-org-mode-org-map
+      (kbd "a") '("open the agenda" . org-agenda)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
@@ -1116,12 +1099,6 @@ I don't know why but evil is overriding this for me.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
   (rbon-define-key 'org-mode 'normal
     '("<tab>" org-cycle))
-#+end_src
-
-Count the words in the current region.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/text.el
-  (rbon-define-key 'org-mode '(normal visual)
-    '("SPC r w" ("count words in region" . count-words-region)))
 #+end_src
 
 * Indent Buffer
