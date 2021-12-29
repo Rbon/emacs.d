@@ -254,177 +254,135 @@ Cursor shortcuts
 ** Applications
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC a") '("applications" . user-applications-map))
-  (defalias 'user-applications-map (make-sparse-keymap))
-  (define-key 'user-applications-map (kbd "d") 'dired)
-  (define-key 'user-applications-map (kbd "m") 'magit)
-  (define-key 'user-applications-map (kbd "e") 'elfeed)
+    (kbd "SPC a"  ) '("applications" . (keymap))
+    (kbd "SPC a d") 'dired
+    (kbd "SPC a m") 'magit
+    (kbd "SPC a e") 'elfeed)
 #+end_src
 
 ** Files
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC f") '("file" . user-file-map))
-  (defalias 'user-file-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "f") '("find a file" . helm-find-files))
-      (define-key map (kbd "s") '("save this file" . save-buffer))
-      (define-key map (kbd "r") '("recent files" . helm-recentf))
-      (define-key map (kbd "b") '("open file browser" . magit-dired-jump))
-      (define-key map (kbd "c") '("open a user config file" . find-config-file))
-      map)
-    "File-related bindings.")
+    (kbd "SPC f"  ) '("file"                    . (keymap)         )
+    (kbd "SPC f f") '("find a file"             . helm-find-files  )
+    (kbd "SPC f s") '("save this file"          . save-buffer      )
+    (kbd "SPC f r") '("recent files"            . helm-recentf     )
+    (kbd "SPC f b") '("open file browser"       . magit-dired-jump )
+    (kbd "SPC f c") '("open a user config file" . find-config-file))
 #+end_src
 
 ** Frame
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC F") '("frame" . user-frame-map))
-  (defalias 'user-frame-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "c") '("center this frame" . rbon-center-frame))
-      (define-key map (kbd "m") '("toggle maximized" . toggle-frame-maximized))
-      (define-key map (kbd "f") '("toggle fullscreen" . toggle-frame-fullscreen))
-      map)
-    "Frame-related bindings.")
+    (kbd "SPC F"  ) '("frame"             . (keymap)                )
+    (kbd "SPC F c") '("center this frame" . rbon-center-frame       )
+    (kbd "SPC F m") '("toggle maximized"  . toggle-frame-maximized  )
+    (kbd "SPC F f") '("toggle fullscreen" . toggle-frame-fullscreen))
 #+end_src
 
 ** Buffers
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC b") '("buffer" . user-buffer-map))
-  (defalias 'user-buffer-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "s") '("save this buffer" . save-buffer))
-      (define-key map (kbd "c") '("close this buffer" . kill-this-buffer))
-      (define-key map (kbd "k") '("kill this buffer" . kill-this-buffer))
-      (define-key map (kbd "b") '("open the buffer list" . helm-buffers-list))
-      (define-key map (kbd "TAB") '("open last buffer" . my-switch-to-buffer))
-      (define-key map (kbd "e") '("eval this buffer" . eval-buffer))
-      map)
-    "Buffer-related bindings.")
+    (kbd "SPC b"    ) '("buffer"               . (keymap)           )
+    (kbd "SPC b s"  ) '("save this buffer"     . save-buffer        )
+    (kbd "SPC b c"  ) '("close this buffer"    . kill-this-buffer   )
+    (kbd "SPC b k"  ) '("kill this buffer"     . kill-this-buffer   )
+    (kbd "SPC b b"  ) '("open the buffer list" . helm-buffers-list  )
+    (kbd "SPC b TAB") '("open last buffer"     . my-switch-to-buffer)
+    (kbd "SPC b e"  ) '("eval this buffer"     . eval-buffer       ))
 #+end_src
 
 ** Eval
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC e") '("eval" . user-eval-map))
-  (defalias 'user-eval-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "e") '("eval expression" . eval-expression))
-      (define-key map (kbd "b") '("eval this buffer" . eval-buffer))
-      (define-key map (kbd "s") '("eval selection" . eval-region))
-      map)
-    "Eval-related bindings.")
+    (kbd "SPC e"  ) '("eval"             . (keymap)       )
+    (kbd "SPC e e") '("eval expression"  . eval-expression)
+    (kbd "SPC e b") '("eval this buffer" . eval-buffer    )
+    (kbd "SPC e s") '("eval selection"   . eval-region   ))
 #+end_src
 
 ** Narrow
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC n") '("narrow" . user-narrow-map))
-  (defalias 'user-narrow-map (make-sparse-keymap))
-  (define-key 'user-narrow-map (kbd "s") '("narrow to selection" . narrow-to-region))
-  (define-key 'user-narrow-map (kbd "w") '("widen" . widen))
+    (kbd "SPC n"  ) '("narrow"              . (keymap)        )
+    (kbd "SPC n s") '("narrow to selection" . narrow-to-region)
+    (kbd "SPC n w") '("widen"               . widen          ))
 #+end_src
 
 ** Selection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC s") '("selection" . user-selection-map))
-  (defalias 'user-selection-map (make-sparse-keymap))
-  (define-key 'user-selection-map (kbd "a") '("select all" . mark-whole-buffer))
-  (define-key 'user-selection-map (kbd "e") '("eval selection" . eval-region))
-  (define-key 'user-selection-map (kbd "i") '("indent selection" . indent-region))
+    (kbd "SPC s"  ) '("selection"        . (keymap)         )
+    (kbd "SPC s a") '("select all"       . mark-whole-buffer)
+    (kbd "SPC s e") '("eval selection"   . eval-region      )
+    (kbd "SPC s i") '("indent selection" . indent-region   ))
 #+end_src
 
 ** Cursors
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC C") '("cursor" . user-cursor-map))
-  (defalias 'user-cursor-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "a") '("add all matches" . evil-mc-make-all-cursors))
-      (define-key map (kbd "<escape>") '("remove all extra cursors" . evil-mc-undo-all-cursors))
-      (define-key map (kbd "j") '("add and go down a line" . rbon-add-cursor-next-line))
-      (define-key map (kbd "u") '("undo last cursor" . evil-mc-undo-last-added-cursor))
-      (define-key map (kbd "n") '("add next match" . evil-mc-make-and-goto-next-match))
-      map)
-    "Cursor-related bindings.")
+    (kbd "SPC C"   ) '("cursor"           . (keymap)                         )
+    (kbd "SPC C a" ) '("add all matches"  . evil-mc-make-all-cursors         )
+    (kbd "SPC C j" ) '("add a line down"  . rbon-add-cursor-next-line        )
+    (kbd "SPC C u" ) '("undo last cursor" . evil-mc-undo-last-added-cursor   )
+    (kbd "SPC C n" ) '("add next match"   . evil-mc-make-and-goto-next-match))
+  (evil-define-key 'normal 'global
+    (kbd "<escape>") 'evil-mc-undo-all-cursors)
 #+end_src
 
 ** Help
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC h") '("help" . user-help-map))
-  (defalias 'user-help-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "h") '("describe something" . helm-apropos))
-      (define-key map (kbd "l") '("list definitions" . helm-imenu))
-      (define-key map (kbd "k") '("describe a keybind" . describe-key))
-      (define-key map (kbd "v") '("describe a keybind" . describe-variable))
-      (define-key map (kbd "K") '("search keybinds" . helm-descbinds))
-      (define-key map (kbd "f") '("describe face" . describe-face))
-      (define-key map (kbd "F") '("describe face" . list-faces-display))
-      map)
-    "Help-related bindings.")
+    (kbd "SPC h"  ) '("help"               . (keymap)           )
+    (kbd "SPC h h") '("describe something" . helm-apropos       )
+    (kbd "SPC h l") '("list definitions"   . helm-imenu         )
+    (kbd "SPC h k") '("describe a keybind" . describe-key       )
+    (kbd "SPC h v") '("describe a keybind" . describe-variable  )
+    (kbd "SPC h K") '("search keybinds"    . helm-descbinds     )
+    (kbd "SPC h f") '("describe face"      . describe-face      )
+    (kbd "SPC h F") '("describe face"      . list-faces-display))
 #+end_src
 
 ** Window
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC w") '("window" . user-window-map))
-  (defalias 'user-window-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "c") '("close this window" . delete-window))
-      (define-key map (kbd "f") '("fullscreen this window" . delete-other-windows))
-      (define-key map (kbd "H") '("split this window horizontally" . split-h-and-change-focus))
-      (define-key map (kbd "V") '("split this window vertically" . split-window-vertically))
-      (define-key map (kbd "h") '("move window focus left" . windmove-left))
-      (define-key map (kbd "l") '("move window focus right" . windmove-right))
-      (define-key map (kbd "k") '("move window focus up" . windmove-up))
-      (define-key map (kbd "j") '("move window focus down" . windmove-down))
-      map)
-    "Window-related bindings.")
+    (kbd "SPC w")   '("window"                    . (keymap)                )
+    (kbd "SPC w c") '("close this window"         . delete-window           )
+    (kbd "SPC w f") '("fullscreen this window"    . delete-other-windows    )
+    (kbd "SPC w H") '("split window horizontally" . split-h-and-change-focus)
+    (kbd "SPC w V") '("split window vertically"   . split-window-vertically )
+    (kbd "SPC w h") '("move window focus left"    . windmove-left           )
+    (kbd "SPC w l") '("move window focus right"   . windmove-right          )
+    (kbd "SPC w k") '("move window focus up"      . windmove-up             )
+    (kbd "SPC w j") '("move window focus down"    . windmove-down          ))
 #+end_src
   
 ** Quit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC q") '("quit" . user-quit-map))
-  (defalias 'user-quit-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "q") '("quit emacs" . save-buffers-kill-terminal))
-      map)
-    "Quit-related bindings.")
+    (kbd "SPC q"  ) '("quit"       . (keymap)                   )
+    (kbd "SPC q q") '("quit emacs" . save-buffers-kill-terminal))
 #+end_src
 
 ** Jump
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC j") '("jump" . user-jump-map))
-  (defalias 'user-jump-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "d") '("jump to definition" . find-function))
-      map)
-    "Jump-related bindings.")
+    (kbd "SPC j"  ) '("jump"               . (keymap)      )
+    (kbd "SPC j d") '("jump to definition" . find-function))
 #+end_src
 
 ** Configuration
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC c") '("config" . user-config-map))
-  (defalias 'user-config-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "a") '("load all configs" . rbon-load-config))
-      (define-key map (kbd "b") '("bootstrap" . bootstrap))
-      (define-key map (kbd "c") '("go to config" . rbon-goto-config))
-      (define-key map (kbd "k") '("go to keybinds" . rbon-goto-keybinds))
-      (define-key map (kbd "m") '("go to misc config" . rbon-goto-misc))
-      (define-key map (kbd "f") '("go to functions" . rbon-goto-functions))
-      (define-key map (kbd "p") '("to go packages" . rbon-goto-packages))
-      (define-key map (kbd "i") '("to go init" . rbon-goto-init))
-      map)
-    "Config-related bindings.")
+    (kbd "SPC c"  ) '("config"            . (keymap)           )
+    (kbd "SPC c a") '("load all configs"  . rbon-load-config   )
+    (kbd "SPC c b") '("bootstrap"         . bootstrap          )
+    (kbd "SPC c c") '("go to config"      . rbon-goto-config   )
+    (kbd "SPC c k") '("go to keybinds"    . rbon-goto-keybinds )
+    (kbd "SPC c m") '("go to misc config" . rbon-goto-misc     )
+    (kbd "SPC c f") '("go to functions"   . rbon-goto-functions)
+    (kbd "SPC c p") '("to go packages"    . rbon-goto-packages )
+    (kbd "SPC c i") '("to go init"        . rbon-goto-init    ))
 
 #+end_src
 
@@ -454,11 +412,8 @@ Cursor shortcuts
 ** Japanese Input
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
   (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC i") '("input" . user-input-map))
-  (defalias 'user-input-map (make-sparse-keymap))
-
-  (define-key 'user-input-map (kbd "t")
-    '("toggle input method" . toggle-input-method))
+    (kbd "SPC i"  ) '("input"               . (keymap)            )
+    (kbd "SPC i t") '("toggle input method" . toggle-input-method))
 #+end_src
 
 * Functions
@@ -1029,12 +984,10 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
 #+end_src
 
 ** Keybinds
-I have learned some important things regarding binds that I feel must be written down, lest I forget them in the morning. Using the method in the source block below, I can append new binds to existing keymaps, while keeping the new binds local only to a buffer. It doesn't matter what the name of the map is. When two maps share the same prefix binding, their contents are somehow "merged." When I make a new binding using this method, =which-key= seems to take that new binding as the name, which means that I have the freedom to change the mnemonic of prefixes on a buffer by buffer basis, should that ever become something I want to do.
+This needs to LITERALLY be '(keymap)'. This is LITERALLY A MAGICAL SEQUENCE OF LETTERS THAT MAKES THIS COMMAND WORK.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
-  (add-hook 'org-mode-hook 'my-thing)
-  (defun my-thing ()
+  (add-hook 'org-mode-hook (lambda ()
     (evil-define-key 'normal 'local
-      ;; this needs to LITERALLY be '(keymap)'. This is LITERALLY A MAGICAL SEQUENCE OF LETTERS THAT MAKES THIS COMMAND WORK
       (kbd "SPC o"  ) '("org mode"                 . (keymap)             )
       (kbd "SPC o s") '("scedule a task"           . org-schedule         )
       (kbd "SPC o d") '("set a deadline"           . org-deadline         )
@@ -1043,9 +996,7 @@ I have learned some important things regarding binds that I feel must be written
       (kbd "SPC n t") '("narrow to subtree"        . org-narrow-to-subtree)
       (kbd "SPC s"  ) '("selection"                . (keymap)             )
       (kbd "SPC s b") '("make bold"                . make-bold            )
-      (kbd "SPC s w") '("count words in selection" . count-words-region   )
-      )
-    )
+      (kbd "SPC s w") '("count words in selection" . count-words-region))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
