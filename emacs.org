@@ -1033,30 +1033,19 @@ I have learned some important things regarding binds that I feel must be written
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
   (add-hook 'org-mode-hook 'my-thing)
   (defun my-thing ()
-    (defalias 'user-org-mode-narrow-map (make-sparse-keymap))
-    (evil-local-set-key 'normal
-                        (kbd "SPC n") '("narrow" . user-org-mode-narrow-map))
-    (define-key 'user-org-mode-narrow-map
-      (kbd "t") '("narrow to subtree" . org-narrow-to-subtree))
-
-    (defalias 'user-org-mode-selection-map (make-sparse-keymap))
-    (evil-local-set-key 'normal
-                        (kbd "SPC s") '("selection" . user-org-mode-selection-map))
-    (define-key 'user-org-mode-selection-map
-      (kbd "b") '("make bold" . make-bold))
-    (define-key 'user-org-mode-selection-map
-      (kbd "w") '("count words in selection" . count-words-region))
-
-
-    (defalias 'user-org-mode-org-map (make-sparse-keymap))
-    (evil-local-set-key 'normal
-                        (kbd "SPC o") '("org mode" . user-org-mode-org-map))
-    (define-key 'user-org-mode-org-map
-      (kbd "s") '("scedule a task" . org-schedule))
-    (define-key 'user-org-mode-org-map
-      (kbd "d") '("set a deadline" . org-deadline))
-    (define-key 'user-org-mode-org-map
-      (kbd "a") '("open the agenda" . org-agenda)))
+    (evil-define-key 'normal 'local
+      ;; this needs to LITERALLY be '(keymap)'. This is LITERALLY A MAGICAL SEQUENCE OF LETTERS THAT MAKES THIS COMMAND WORK
+      (kbd "SPC o"  ) '("org mode"                 . (keymap)             )
+      (kbd "SPC o s") '("scedule a task"           . org-schedule         )
+      (kbd "SPC o d") '("set a deadline"           . org-deadline         )
+      (kbd "SPC o a") '("open the agenda"          . org-agenda           )
+      (kbd "SPC n"  ) '("narrow"                   . (keymap)             )
+      (kbd "SPC n t") '("narrow to subtree"        . org-narrow-to-subtree)
+      (kbd "SPC s"  ) '("selection"                . (keymap)             )
+      (kbd "SPC s b") '("make bold"                . make-bold            )
+      (kbd "SPC s w") '("count words in selection" . count-words-region   )
+      )
+    )
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
