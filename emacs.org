@@ -1296,6 +1296,14 @@ Making moving up and down lines behave like a modern text editor.
     (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
 #+end_src
 
+* File Browser
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/ranger.el
+  (use-package ranger :defer t)
+  (evil-define-key 'normal 'global
+    (kbd "SPC a r") 'ranger)
+
+#+end_src
+
 * Package Management
 ** [[https://github.com/raxod502/straight.el][straight.el]]
 This makes each use-package form also invoke straight.el to install the package, unless otherwise specified.
