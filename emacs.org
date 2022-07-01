@@ -217,7 +217,100 @@ the
 ** Keystrokes are the enemy
 ** If it doesn't fit on a 60% keyboard, it doesn't belong in the keymap
 
-* Global Keybinds
+* Keybinds
+** NEW GLOBAL KEYS
+The new idea is this: define a function that defines all the keys I would want everywhere, but make the binds local, and load the function manually in every mode hook. This means a little boilerplate, but ensures that my keys override any defaults (hopefully).
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
+  (defun rbon-global-binds ()
+    (evil-define-key '(normal visual emacs) 'local
+      (kbd "SPC #"  ) '("toggle code comment" . comment-or-uncomment-region)
+
+      (kbd "SPC a"  ) '("applications" . (keymap))
+      (kbd "SPC a d") 'dired
+      (kbd "SPC a m") 'magit
+      (kbd "SPC a e") 'elfeed
+
+      (kbd "SPC f"  ) '("file"                    . (keymap)        )
+      (kbd "SPC f f") '("find a file"             . helm-find-files )
+      (kbd "SPC f s") '("save this file"          . save-buffer     )
+      (kbd "SPC f r") '("recent files"            . helm-recentf    )
+      (kbd "SPC f b") '("open file browser"       . magit-dired-jump)
+      (kbd "SPC f c") '("open a user config file" . find-config-file)
+
+      (kbd "SPC F"  ) '("frame"             . (keymap)               )
+      (kbd "SPC F c") '("center this frame" . rbon-center-frame      )
+      (kbd "SPC F m") '("toggle maximized"  . toggle-frame-maximized )
+      (kbd "SPC F f") '("toggle fullscreen" . toggle-frame-fullscreen)
+
+      (kbd "SPC b"    ) '("buffer"               . (keymap)           )
+      (kbd "SPC b s"  ) '("save this buffer"     . save-buffer        )
+      (kbd "SPC b c"  ) '("close this buffer"    . kill-this-buffer   )
+      (kbd "SPC b k"  ) '("kill this buffer"     . kill-this-buffer   )
+      (kbd "SPC b b"  ) '("open the buffer list" . helm-buffers-list  )
+      (kbd "SPC b TAB") '("open last buffer"     . my-switch-to-buffer)
+      (kbd "SPC b e"  ) '("eval this buffer"     . eval-buffer        )
+      (kbd "SPC b i"  ) '("indent buffer"        . rbon-indent-buffer )
+
+      (kbd "SPC e"  ) '("eval"             . (keymap)       )
+      (kbd "SPC e e") '("eval expression"  . eval-expression)
+      (kbd "SPC e b") '("eval this buffer" . eval-buffer    )
+      (kbd "SPC e s") '("eval selection"   . eval-region    )
+
+      (kbd "SPC n"  ) '("narrow"              . (keymap)        )
+      (kbd "SPC n s") '("narrow to selection" . narrow-to-region)
+      (kbd "SPC n w") '("widen"               . widen           )
+
+      (kbd "SPC s"  ) '("selection"        . (keymap)         )
+      (kbd "SPC s a") '("select all"       . mark-whole-buffer)
+      (kbd "SPC s e") '("eval selection"   . eval-region      )
+      (kbd "SPC s i") '("indent selection" . indent-region    )
+
+      (kbd "SPC C"   ) '("cursor"           . (keymap)                        )
+      (kbd "SPC C a" ) '("add all matches"  . evil-mc-make-all-cursors        )
+      (kbd "SPC C j" ) '("add a line down"  . rbon-add-cursor-next-line       )
+      (kbd "SPC C u" ) '("undo last cursor" . evil-mc-undo-last-added-cursor  )
+      (kbd "SPC C n" ) '("add next match"   . evil-mc-make-and-goto-next-match)
+
+      (kbd "SPC h"  ) '("help"               . (keymap)          )
+      (kbd "SPC h h") '("describe something" . helm-apropos      )
+      (kbd "SPC h l") '("list definitions"   . helm-imenu        )
+      (kbd "SPC h k") '("describe a keybind" . describe-key      )
+      (kbd "SPC h v") '("describe a keybind" . describe-variable )
+      (kbd "SPC h K") '("search keybinds"    . helm-descbinds    )
+      (kbd "SPC h f") '("describe face"      . describe-face     )
+      (kbd "SPC h F") '("describe face"      . list-faces-display)
+
+      (kbd "SPC w")   '("window"                    . (keymap)                )
+      (kbd "SPC w c") '("close this window"         . delete-window           )
+      (kbd "SPC w f") '("fullscreen this window"    . delete-other-windows    )
+      (kbd "SPC w H") '("split window horizontally" . split-h-and-change-focus)
+      (kbd "SPC w V") '("split window vertically"   . split-window-vertically )
+      (kbd "SPC w h") '("move window focus left"    . windmove-left           )
+      (kbd "SPC w l") '("move window focus right"   . windmove-right          )
+      (kbd "SPC w k") '("move window focus up"      . windmove-up             )
+      (kbd "SPC w j") '("move window focus down"    . windmove-down           )
+
+      (kbd "SPC q"  ) '("quit"       . (keymap)                  )
+      (kbd "SPC q q") '("quit emacs" . save-buffers-kill-terminal)
+
+      (kbd "SPC j"  ) '("jump"               . (keymap)     )
+      (kbd "SPC j d") '("jump to definition" . find-function)
+
+      (kbd "SPC c"  ) '("config"            . (keymap)           )
+      (kbd "SPC c a") '("load all configs"  . rbon-load-config   )
+      (kbd "SPC c b") '("bootstrap"         . bootstrap          )
+      (kbd "SPC c c") '("go to config"      . rbon-goto-config   )
+      (kbd "SPC c k") '("go to keybinds"    . rbon-goto-keybinds )
+      (kbd "SPC c m") '("go to misc config" . rbon-goto-misc     )
+      (kbd "SPC c f") '("go to functions"   . rbon-goto-functions)
+      (kbd "SPC c p") '("to go packages"    . rbon-goto-packages )
+      (kbd "SPC c i") '("to go init"        . rbon-goto-init     )
+
+      (kbd "SPC i"  ) '("input"               . (keymap)           )
+      (kbd "SPC i t") '("toggle input method" . toggle-input-method)
+      ))
+#+end_src
+
 ** Miscellaneous
 Escape key stuff
 Make it so you only have to hit ESC once to quit menus. Probably has other pleasant side-effects.
@@ -251,139 +344,10 @@ Cursor shortcuts
 
 #+end_src
 
-** Applications
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC a"  ) '("applications" . (keymap))
-    (kbd "SPC a d") 'dired
-    (kbd "SPC a m") 'magit
-    (kbd "SPC a e") 'elfeed)
-#+end_src
-
-** Files
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC f"  ) '("file"                    . (keymap)         )
-    (kbd "SPC f f") '("find a file"             . helm-find-files  )
-    (kbd "SPC f s") '("save this file"          . save-buffer      )
-    (kbd "SPC f r") '("recent files"            . helm-recentf     )
-    (kbd "SPC f b") '("open file browser"       . magit-dired-jump )
-    (kbd "SPC f c") '("open a user config file" . find-config-file))
-#+end_src
-
-** Frame
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC F"  ) '("frame"             . (keymap)                )
-    (kbd "SPC F c") '("center this frame" . rbon-center-frame       )
-    (kbd "SPC F m") '("toggle maximized"  . toggle-frame-maximized  )
-    (kbd "SPC F f") '("toggle fullscreen" . toggle-frame-fullscreen))
-#+end_src
-
-** Buffers
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC b"    ) '("buffer"               . (keymap)           )
-    (kbd "SPC b s"  ) '("save this buffer"     . save-buffer        )
-    (kbd "SPC b c"  ) '("close this buffer"    . kill-this-buffer   )
-    (kbd "SPC b k"  ) '("kill this buffer"     . kill-this-buffer   )
-    (kbd "SPC b b"  ) '("open the buffer list" . helm-buffers-list  )
-    (kbd "SPC b TAB") '("open last buffer"     . my-switch-to-buffer)
-    (kbd "SPC b e"  ) '("eval this buffer"     . eval-buffer       ))
-#+end_src
-
-** Eval
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC e"  ) '("eval"             . (keymap)       )
-    (kbd "SPC e e") '("eval expression"  . eval-expression)
-    (kbd "SPC e b") '("eval this buffer" . eval-buffer    )
-    (kbd "SPC e s") '("eval selection"   . eval-region   ))
-#+end_src
-
-** Narrow
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC n"  ) '("narrow"              . (keymap)        )
-    (kbd "SPC n s") '("narrow to selection" . narrow-to-region)
-    (kbd "SPC n w") '("widen"               . widen          ))
-#+end_src
-
-** Selection
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC s"  ) '("selection"        . (keymap)         )
-    (kbd "SPC s a") '("select all"       . mark-whole-buffer)
-    (kbd "SPC s e") '("eval selection"   . eval-region      )
-    (kbd "SPC s i") '("indent selection" . indent-region   ))
-#+end_src
-
 ** Cursors
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC C"   ) '("cursor"           . (keymap)                         )
-    (kbd "SPC C a" ) '("add all matches"  . evil-mc-make-all-cursors         )
-    (kbd "SPC C j" ) '("add a line down"  . rbon-add-cursor-next-line        )
-    (kbd "SPC C u" ) '("undo last cursor" . evil-mc-undo-last-added-cursor   )
-    (kbd "SPC C n" ) '("add next match"   . evil-mc-make-and-goto-next-match))
   (evil-define-key 'normal 'global
     (kbd "<escape>") 'evil-mc-undo-all-cursors)
-#+end_src
-
-** Help
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC h"  ) '("help"               . (keymap)           )
-    (kbd "SPC h h") '("describe something" . helm-apropos       )
-    (kbd "SPC h l") '("list definitions"   . helm-imenu         )
-    (kbd "SPC h k") '("describe a keybind" . describe-key       )
-    (kbd "SPC h v") '("describe a keybind" . describe-variable  )
-    (kbd "SPC h K") '("search keybinds"    . helm-descbinds     )
-    (kbd "SPC h f") '("describe face"      . describe-face      )
-    (kbd "SPC h F") '("describe face"      . list-faces-display))
-#+end_src
-
-** Window
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC w")   '("window"                    . (keymap)                )
-    (kbd "SPC w c") '("close this window"         . delete-window           )
-    (kbd "SPC w f") '("fullscreen this window"    . delete-other-windows    )
-    (kbd "SPC w H") '("split window horizontally" . split-h-and-change-focus)
-    (kbd "SPC w V") '("split window vertically"   . split-window-vertically )
-    (kbd "SPC w h") '("move window focus left"    . windmove-left           )
-    (kbd "SPC w l") '("move window focus right"   . windmove-right          )
-    (kbd "SPC w k") '("move window focus up"      . windmove-up             )
-    (kbd "SPC w j") '("move window focus down"    . windmove-down          ))
-#+end_src
-  
-** Quit
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC q"  ) '("quit"       . (keymap)                   )
-    (kbd "SPC q q") '("quit emacs" . save-buffers-kill-terminal))
-#+end_src
-
-** Jump
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC j"  ) '("jump"               . (keymap)      )
-    (kbd "SPC j d") '("jump to definition" . find-function))
-#+end_src
-
-** Configuration
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC c"  ) '("config"            . (keymap)           )
-    (kbd "SPC c a") '("load all configs"  . rbon-load-config   )
-    (kbd "SPC c b") '("bootstrap"         . bootstrap          )
-    (kbd "SPC c c") '("go to config"      . rbon-goto-config   )
-    (kbd "SPC c k") '("go to keybinds"    . rbon-goto-keybinds )
-    (kbd "SPC c m") '("go to misc config" . rbon-goto-misc     )
-    (kbd "SPC c f") '("go to functions"   . rbon-goto-functions)
-    (kbd "SPC c p") '("to go packages"    . rbon-goto-packages )
-    (kbd "SPC c i") '("to go init"        . rbon-goto-init    ))
-
 #+end_src
 
 ** Help
@@ -394,30 +358,57 @@ Cursor shortcuts
 
 ** Recentf Dialog
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-set-initial-state 'recentf-dialog-mode 'normal)
-  (rbon-define-key 'recentf-dialog-mode 'normal
-    '("l" widget-button-press)
-    '("h" nop)
-    '("q" recentf-cancel-dialog))
+  ;; (defun user-recentf-dialog-binds ()
+  ;;   (rbon-global-binds)
+  ;;   ;; (evil-set-initial-state 'recentf-dialog-mode 'normal)
+  ;;   (evil-define-key '(normal visual emacs) 'local
+  ;;     '("l" widget-button-press)
+  ;;     '("h" nop)
+  ;;     '("q" recentf-cancel-dialog)
+  ;;     ))
+
+  ;; (add-hook 'recentf-dialog-mode-hook 'user-recentf-dialog-binds)
 #+end_src
 
-** With Editor
+** =with-editor-mode=
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (rbon-define-key 'with-editor-mode 'normal
-    '("SPC q f" with-editor-finish)
-    '("SPC q c" with-editor-cancel))
+  (defun user-with-editor-binds ()
+    (rbon-global-binds)
+    (evil-define-key '(normal visual emacs) 'local
+      (kbd "SPC q f") '("finish editing" . with-editor-finish)
+      (kbd "SPC q c") '("cancel editing" . with-editor-cancel)
+      ))
 
+  (add-hook 'with-editor-mode-hook 'user-with-editor-binds)
 #+end_src
 
-** Japanese Input
+** =messages-buffer-mode=
+The usual =add-hook= method doesn't work for the messages buffer, because it comes into existence before this code would be evaluated. As far as I'm concerned, this is a hack, but it works.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (evil-define-key '(normal visual emacs) 'global
-    (kbd "SPC i"  ) '("input"               . (keymap)            )
-    (kbd "SPC i t") '("toggle input method" . toggle-input-method))
+  (with-current-buffer "*Messages*" (rbon-global-binds))
+#+end_src
+
+** =emacs-lisp-mode=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
+  (add-hook 'emacs-lisp-mode-hook 'rbon-global-binds)
 #+end_src
 
 * Functions
 Be sure to read the docstrings of the functions themselves.
+** =buffer-mode=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/2-functions.el
+  (defun buffer-mode ()
+    (interactive)
+    (message "%s" major-mode))
+#+end_src
+
+** =buffer-state=
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/2-functions.el
+  (defun buffer-state ()
+    (interactive)
+    (message "%s" evil-state))
+#+end_src
+
 ** =efs/display-startup-time=
 Stolen from [[https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Scratch-12.org#lets-find-out-how-long-its-taking][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/2-functions.el
@@ -756,128 +747,128 @@ Shamelessly copied from [[https://kitchingroup.cheme.cmu.edu/blog/2016/06/16/Cop
 This section is pretty messy. I'm slowly trying to organize it.
 *** Misc
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/misc.el
-  (setq smex-prompt-string "Run command: ")
-  (setq confirm-kill-processes nil)
-  
-  (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
-    "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
-    :type '(repeat string))
-  
-  (global-set-key [remap next-buffer] 'my-next-buffer)
-  (global-set-key [remap previous-buffer] 'my-previous-buffer)
-  
-  (setq org-hide-emphasis-markers t)
-  
-  (setq default-directory "~/") 
-  
-  ;; dired stuff
-  (setq ls-lisp-use-insert-directory-program nil)
-  (require 'ls-lisp)
-  
-  (setq haskell-process-show-debug-tips nil)
-  (setq backup-directory-alist '(("." . "~/.emacs_saves")))
-  (ido-mode 1) ; better find-file
-  (exec-path-from-shell-initialize) ; fix PATH on macos
-  (set-custom-file-path (expand-file-name "config/custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
-  (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
-  (tool-bar-mode -1) ; disable toolbar
-  (menu-bar-mode -1) ; disable menubar
-  (scroll-bar-mode -1) ; disable scroll bar
-  ;; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
-  ;; (setq inhibit-splash-screen t) ; disable splash screen
-  ;; (which-key-setup-side-window-bottom)
-  (setq which-key-idle-secondary-delay 0)
-  (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
-  ;; (add-to-list 'load-path "~/.emacs.d") ; needed for 'require' to see my other configs
-  (setq help-window-select t) ; switch to help windows automatically
-  (setq initial-scratch-message "") ; make scratch empty
-  (setq-default indent-tabs-mode nil) ; use spaces, not tabs
-  (setq-default tab-width 2)
-  (setq lua-indent-level 2) ; why
-  (setq-default evil-shift-width 2) ; whyy
-  (blink-cursor-mode 0) ; stop the cursor from blinking
-  
-  ;; HOOKS
-  ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
-  ;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
-  ;;         (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
-  ;;         (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-  ;;         (add-hook 'haskell-mode-hook #'lsp)
-  ;;         (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  ;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
-  ;;         (add-hook 'haskell-literate-mode-hook #'lsp)
-  ;;         (add-hook 'error-mode-hook 'evil-emacs-state)
-  
-  (setq org-agenda-files (list "~/Documents/School/agenda.org"))
-  ;; recent file stuff
-  (recentf-mode 1)
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 25)
-  
-  (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
-  (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
-  (setq-default fill-column 80)
-  
-  ;; teach emacs how to spell
-  (setq some-var
-        (substring 
-         (shell-command-to-string "which ispell")
-         0 -1))
-  
-  ;; enable spell check for text-mode
-  (dolist (hook '(text-mode-hook))
-    (add-hook hook (lambda () (flyspell-mode 1))))
-  
-  
-  
-  
-;;   (autothemer-deftheme
-;;    thing "a test theme"
-;; 
-;;    ((((class color) (min-colors #xFFFFFF)))
-;; 
-;;     (thing-background "gray90"))
-;; 
-;;    ((default (:background "gray90"))))
-;; 
-;;   (provide-theme 'thing)
-  
-  
-  
-  
-  ;; (setq default-frame-alist
-  ;; (append (list '(width . 72) '(height . 40))))
-  
-                                          ; (set-face-attribute 'mode-line nil
-                                          ; :height 10
-                                          ; :underline "red"
-                                          ; :background "black"
-                                          ; :foreground "white"
-                                          ; :box nil)
-                                          ; 
-                                          ; (set-face-attribute 'mode-line-inactive nil
-                                          ; :box nil
-                                          ; :background "black"
-                                          ; :inherit 'mode-line)
-  
-                                          ; (set-face-attribute 'minibuffer-prompt nil
-                                          ; :height 10
-                                          ; :underline "red"
-                                          ; :background "red"
-                                          ; :foreground "blue"
-                                          ; :box "red")
-  
-  (pixel-scroll-mode t)
-  
-  (defvar booted nil)
-  (unless booted (progn 
-                                          ; (switch-to-buffer "Untitled")
-                                          ; (text-mode) ; needed for spell check
-                                          ; (dired ".")
-                   (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
-                       (recentf-open-files))
-                   (setq booted t))) 
-  
+    (setq smex-prompt-string "Run command: ")
+    (setq confirm-kill-processes nil)
+
+    (defcustom my-skippable-buffers '("*Messages*" "*scratch*" "*Help*" "Buffer List*")
+      "Buffer names ignored by `my-next-buffer' and `my-previous-buffer'."
+      :type '(repeat string))
+
+    (global-set-key [remap next-buffer] 'my-next-buffer)
+    (global-set-key [remap previous-buffer] 'my-previous-buffer)
+
+    (setq org-hide-emphasis-markers t)
+
+    (setq default-directory "~/") 
+
+    ;; dired stuff
+    (setq ls-lisp-use-insert-directory-program nil)
+    (require 'ls-lisp)
+
+    (setq haskell-process-show-debug-tips nil)
+    (setq backup-directory-alist '(("." . "~/.emacs_saves")))
+    ;; (ido-mode 1) ; better find-file
+    (exec-path-from-shell-initialize) ; fix PATH on macos
+    (set-custom-file-path (expand-file-name "config/custom.el" user-emacs-directory)) ; move custom set variables/faces out of init.el
+    (setq init-path (expand-file-name "init.el" user-emacs-directory)) ; assign init.el path to a variable
+    (tool-bar-mode -1) ; disable toolbar
+    (menu-bar-mode -1) ; disable menubar
+    (scroll-bar-mode -1) ; disable scroll bar
+    ;; (tab-bar-mode 1) ; enable tab bar (DOESN'T WORK ON MACOS COOL)
+    ;; (setq inhibit-splash-screen nil) ; enable splash screen
+    ;; (which-key-setup-side-window-bottom)
+    (setq which-key-idle-secondary-delay 0)
+    (when (fboundp 'windmove-default-keybindings) (windmove-default-keybindings)) ; enable windmove
+    ;; (add-to-list 'load-path "~/.emacs.d") ; needed for 'require' to see my other configs
+    (setq help-window-select t) ; switch to help windows automatically
+    (setq initial-scratch-message "") ; make scratch empty
+    (setq-default indent-tabs-mode nil) ; use spaces, not tabs
+    (setq-default tab-width 2)
+    (setq lua-indent-level 2) ; why
+    (setq-default evil-shift-width 2) ; whyy
+    (blink-cursor-mode 0) ; stop the cursor from blinking
+
+    ;; HOOKS
+    ;; (add-hook 'emacs-startup-hook 'toggle-frame-fullscreen) ; start emacs in fullscreen
+    ;;         (add-hook 'recentf-dialog-mode-hook 'evil-normal-state) ; fix recentf-mode for evil
+    ;;         (add-hook 'org-agenda-mode-hook 'evil-normal-state) ; fix org-agenda-mode for evil (DOESN'T WORK?)
+    ;;         (add-hook 'haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+    ;;         (add-hook 'haskell-mode-hook #'lsp)
+    ;;         (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+    ;;         (add-hook 'interactive-haskell-mode-hook 'hasklig-mode) ; use ligatures for Haskell
+    ;;         (add-hook 'haskell-literate-mode-hook #'lsp)
+    ;;         (add-hook 'error-mode-hook 'evil-emacs-state)
+
+    (setq org-agenda-files (list "~/Documents/School/agenda.org"))
+    ;; recent file stuff
+    (recentf-mode 1)
+    (setq recentf-max-menu-items 25)
+    (setq recentf-max-saved-items 25)
+
+    (add-hook 'haskell-mode-hook 'display-fill-column-indicator-mode)
+    (add-hook 'emacs-lisp-mode-hook 'display-fill-column-indicator-mode)
+    (setq-default fill-column 80)
+
+    ;; teach emacs how to spell
+    (setq some-var
+          (substring 
+           (shell-command-to-string "which ispell")
+           0 -1))
+
+    ;; enable spell check for text-mode
+    (dolist (hook '(text-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode 1))))
+
+
+
+
+  ;;   (autothemer-deftheme
+  ;;    thing "a test theme"
+  ;; 
+  ;;    ((((class color) (min-colors #xFFFFFF)))
+  ;; 
+  ;;     (thing-background "gray90"))
+  ;; 
+  ;;    ((default (:background "gray90"))))
+  ;; 
+  ;;   (provide-theme 'thing)
+
+
+
+
+    ;; (setq default-frame-alist
+    ;; (append (list '(width . 72) '(height . 40))))
+
+                                            ; (set-face-attribute 'mode-line nil
+                                            ; :height 10
+                                            ; :underline "red"
+                                            ; :background "black"
+                                            ; :foreground "white"
+                                            ; :box nil)
+                                            ; 
+                                            ; (set-face-attribute 'mode-line-inactive nil
+                                            ; :box nil
+                                            ; :background "black"
+                                            ; :inherit 'mode-line)
+
+                                            ; (set-face-attribute 'minibuffer-prompt nil
+                                            ; :height 10
+                                            ; :underline "red"
+                                            ; :background "red"
+                                            ; :foreground "blue"
+                                            ; :box "red")
+
+    (pixel-scroll-mode t)
+
+    ;; (defvar booted nil)
+    ;; (unless booted (progn 
+    ;;                                         ; (switch-to-buffer "Untitled")
+    ;;                                         ; (text-mode) ; needed for spell check
+    ;;                                         ; (dired ".")
+    ;;                  (if (file-exists-p (expand-file-name "recentf" user-emacs-directory))
+    ;;                      (recentf-open-files))
+    ;;                  (setq booted t))) 
+
 #+end_src
 
 ** Force certain buffers to use the current window
@@ -986,18 +977,24 @@ Strangely enough, if I eval this expression, then the buggy behavior returns, me
 ** Keybinds
 This needs to LITERALLY be '(keymap)'. This is LITERALLY A MAGICAL SEQUENCE OF LETTERS THAT MAKES THIS COMMAND WORK.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
-  (add-hook 'org-mode-hook (lambda ()
-    (evil-define-key 'normal 'local
-      (kbd "SPC o"  ) '("org mode"                 . (keymap)             )
-      (kbd "SPC o s") '("scedule a task"           . org-schedule         )
-      (kbd "SPC o d") '("set a deadline"           . org-deadline         )
-      (kbd "SPC o a") '("open the agenda"          . org-agenda           )
-      (kbd "SPC n"  ) '("narrow"                   . (keymap)             )
-      (kbd "SPC n t") '("narrow to subtree"        . org-narrow-to-subtree)
-      (kbd "SPC s"  ) '("selection"                . (keymap)             )
-      (kbd "SPC s b") '("make bold"                . make-bold            )
-      (kbd "SPC s w") '("count words in selection" . count-words-region))))
+  (defun user-org-binds ()
+    (rbon-global-binds)
+    (evil-define-key '(normal visual emacs) 'local
+      (kbd "SPC #"  ) '("toggle code comment" . org-comment-or-uncomment-region)
+      (kbd "SPC o"  ) '("org mode"            . (keymap)                       )
+      (kbd "SPC o s") '("scedule a task"      . org-schedule                   )
+      (kbd "SPC o d") '("set a deadline"      . org-deadline                   )
+      (kbd "SPC o a") '("open the agenda"     . org-agenda                     )
+      (kbd "SPC n"  ) '("narrow"              . (keymap)                       )
+      (kbd "SPC n t") '("narrow to subtree"   . org-narrow-to-subtree          )
+      (kbd "SPC s"  ) '("selection"           . (keymap)                       )
+      (kbd "SPC s b") '("make bold"           . make-bold                      )
+      (kbd "SPC s w") '("count words"         . count-words-region             )
+      ))
+
+  (add-hook 'org-mode-hook 'user-org-binds)
 #+end_src
+
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org.el
   (rbon-define-key 'org-mode '(normal visual emacs insert)
@@ -1052,13 +1049,13 @@ I don't know why but evil is overriding this for me.
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/3-keybinds.el
-  (add-hook 'emacs-lisp-mode-hook 'something)
-  (defun something ()
-      (defalias 'user-emacs-lisp-mode-buffer-map (make-sparse-keymap))
-    (evil-local-set-key 'normal
-                        (kbd "SPC b") '("buffer" . user-emacs-lisp-mode-buffer-map))
-    (define-key 'user-emacs-lisp-mode-buffer-map
-      (kbd "i") '("indent buffer" . rbon-indent-buffer)))
+  ;; (add-hook 'emacs-lisp-mode-hook 'something)
+  ;; (defun something ()
+  ;;     (defalias 'user-emacs-lisp-mode-buffer-map (make-sparse-keymap))
+  ;;   (evil-local-set-key 'normal
+  ;;                       (kbd "SPC b") '("buffer" . user-emacs-lisp-mode-buffer-map))
+  ;;   (define-key 'user-emacs-lisp-mode-buffer-map
+  ;;     (kbd "i") '("indent buffer" . rbon-indent-buffer)))
 #+end_src
 
 * Completion
@@ -1098,48 +1095,48 @@ Set a custom =M-x= prompt. Be default, =helm= doesn't let you do this, so I had 
 *** Local Keybinds
 Evil navigation of Helm buffers. Taken from [[https://github.com/abo-abo/hydra/wiki/Helm][here]].
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/helm.el
-  (with-eval-after-load 'helm
-    (defhydra helm-like-unite (:hint nil
-                                     :color pink)
-      "
-  Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
-  ^^^^^^^^^^------------^^----------------^^----------------------
-  _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
-  ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
-  _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
-  ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
-  "
-      ;; arrows
-      ("h" helm-beginning-of-buffer)
-      ("j" helm-next-line)
-      ("k" helm-previous-line)
-      ("l" helm-end-of-buffer)
-      ;; beginning/end
-      ("g" helm-beginning-of-buffer)
-      ("G" helm-end-of-buffer)
-      ;; scroll
-      ("K" helm-scroll-other-window-down)
-      ("J" helm-scroll-other-window)
-      ;; mark
-      ("m" helm-toggle-visible-mark)
-      ("t" helm-toggle-all-marks)
-      ("U" helm-unmark-all)
-      ;; exit
-      ("<escape>" keyboard-escape-quit "" :exit t)
-      ("o" keyboard-escape-quit :exit t)
-      ("i" nil)
-      ;; sources
-      ("}" helm-next-source)
-      ("{" helm-previous-source)
-      ;; rest
-      ("H" helm-help)
-      ("v" helm-execute-persistent-action)
-      ("d" helm-persistent-delete-marked)
-      ("f" helm-follow-mode))
+  ;; (with-eval-after-load 'helm
+  ;;   (defhydra helm-like-unite (:hint nil
+  ;;                                    :color pink)
+  ;;     "
+  ;; Nav ^^^^^^^^^        Mark ^^          Other ^^       Quit
+  ;; ^^^^^^^^^^------------^^----------------^^----------------------
+  ;; _K_ ^ ^ _k_ ^ ^     _m_ark           _v_iew         _i_: cancel
+  ;; ^↕^ _h_ ^✜^ _l_     _t_oggle mark    _H_elp         _o_: quit
+  ;; _J_ ^ ^ _j_ ^ ^     _U_nmark all     _d_elete
+  ;; ^^^^^^^^^^                           _f_ollow: %(helm-attr 'follow)
+  ;; "
+  ;;     ;; arrows
+  ;;     ("h" helm-beginning-of-buffer)
+  ;;     ("j" helm-next-line)
+  ;;     ("k" helm-previous-line)
+  ;;     ("l" helm-end-of-buffer)
+  ;;     ;; beginning/end
+  ;;     ("g" helm-beginning-of-buffer)
+  ;;     ("G" helm-end-of-buffer)
+  ;;     ;; scroll
+  ;;     ("K" helm-scroll-other-window-down)
+  ;;     ("J" helm-scroll-other-window)
+  ;;     ;; mark
+  ;;     ("m" helm-toggle-visible-mark)
+  ;;     ("t" helm-toggle-all-marks)
+  ;;     ("U" helm-unmark-all)
+  ;;     ;; exit
+  ;;     ("<escape>" keyboard-escape-quit "" :exit t)
+  ;;     ("o" keyboard-escape-quit :exit t)
+  ;;     ("i" nil)
+  ;;     ;; sources
+  ;;     ("}" helm-next-source)
+  ;;     ("{" helm-previous-source)
+  ;;     ;; rest
+  ;;     ("H" helm-help)
+  ;;     ("v" helm-execute-persistent-action)
+  ;;     ("d" helm-persistent-delete-marked)
+  ;;     ("f" helm-follow-mode))
 
-    (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
-    (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
-    (define-key helm-map (kbd "C-o") 'helm-like-unite/body))
+  ;;   (define-key helm-map (kbd "<escape>") 'helm-like-unite/body)
+  ;;   (define-key helm-map (kbd "C-k") 'helm-like-unite/body)
+  ;;   (define-key helm-map (kbd "C-o") 'helm-like-unite/body))
 #+end_src
 
 *** Global Keybinds
@@ -1296,11 +1293,24 @@ Making moving up and down lines behave like a modern text editor.
     (define-key evil-normal-state-map "k" 'evil-previous-visual-line))
 #+end_src
 
-* File Browser
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/ranger.el
-  (use-package ranger :defer t)
-  (evil-define-key 'normal 'global
-    (kbd "SPC a r") 'ranger)
+* File Browsing
+** Keybinds
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/file-browser.el
+  ;; (use-package ranger :defer t)
+  ;; (evil-define-key 'normal 'global
+  ;;   (kbd "SPC a r") 'ranger)
+
+  (add-hook 'dired-mode-hook 'rbon-global-binds)
+
+  ;; (rbon-define-key 'dired-mode 'normal
+  ;;   ;;    '("h" dired-up-directory)
+  ;;   ;;    '("j" dired-next-line)
+  ;;   ;;    '("k" dired-previous-line)
+  ;;   ;;    '("l" dired-find-file)
+  ;;   '("SPC" dired-find-file)
+  ;;   ;;    '("/" evil-search-forward)
+  ;;   ;;    '("t" touch-file))
+  ;;   )
 
 #+end_src
 
@@ -1490,11 +1500,11 @@ Best theme fight me.
 #+end_src
 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/appearance.el
-  (set-face-attribute 'default nil
-                      :family "Hasklig"
-                      :height 120
-                      :weight 'normal
-                      :width 'normal)
+  ;; (set-face-attribute 'default nil
+                      ;; :family "Hasklig"
+                      ;; :height 120
+                      ;; :weight 'normal
+                      ;; :width 'normal)
 #+end_src
 
 ** Modeline
